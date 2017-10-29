@@ -7,10 +7,10 @@ namespace System
 {
     public class ObjectExtensionsTest
     {
+        const BindingFlags allInstanceMembers = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
         public class Constructor : ObjectExtensionsTest
         {
-            const BindingFlags allInstanceMembers = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-
             [Theory, MemberData(nameof(TestInstances))]
             public void ReturnsConsturctorOfGivenInstance(object instance)
             {
@@ -63,6 +63,39 @@ namespace System
             class ClassWithPrivateConstructor
             {
                 ClassWithPrivateConstructor() { }
+            }
+        }
+
+        public class Constructors : ObjectExtensionsTest
+        {
+            [Fact]
+            public void ReturnsAllConstructorsOfGivenInstance()
+            {
+                object instance = new TestClass();
+                IEnumerable<ConstructorInfo> expected = instance.GetType().GetConstructors(allInstanceMembers);
+
+                IEnumerable<ConstructorInfo> actual = instance.Constructors();
+
+                Assert.Equal(expected, actual);
+            }
+
+            [Fact]
+            public void ReturnsAllConstructorsOfGivenTypeWhenInstanceIsNull()
+            {
+                TestClass instance = null;
+                IEnumerable<ConstructorInfo> expected = typeof(TestClass).GetConstructors(allInstanceMembers);
+
+                IEnumerable<ConstructorInfo> actual = instance.Constructors();
+
+                Assert.Equal(expected, actual);
+            }
+
+            class TestClass
+            {
+                public TestClass() { }
+                internal TestClass(string _) { }
+                protected TestClass(char _) { }
+                TestClass(bool _) { }
             }
         }
     }

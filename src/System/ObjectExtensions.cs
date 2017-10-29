@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace System
@@ -7,8 +8,13 @@ namespace System
     {
         public static ConstructorInfo Constructor<T>(this T instance)
         {
+            return instance.Constructors().Single();
+        }
+
+        public static IEnumerable<ConstructorInfo> Constructors<T>(this T instance)
+        {
             TypeInfo typeInfo = instance?.GetType().GetTypeInfo() ?? typeof(T).GetTypeInfo();
-            return typeInfo.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Single();
+            return typeInfo.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
         }
     }
 }
