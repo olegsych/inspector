@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Xunit;
@@ -10,11 +9,15 @@ namespace System
     {
         public class Constructor : ObjectExtensionsTest
         {
+            const BindingFlags allInstanceMembers = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
             [Theory, MemberData(nameof(TestInstances))]
             public void ReturnsConsturctorOfGivenInstance(object instance)
             {
+                ConstructorInfo expected = instance.GetType().GetConstructors(allInstanceMembers).Single();
+
                 ConstructorInfo actual = instance.Constructor();
-                ConstructorInfo expected = instance.GetType().GetConstructors().Single();
+
                 Assert.Equal(expected, actual);
             }
 
@@ -31,24 +34,35 @@ namespace System
             static void AssertConstructorReturnsParameterlessConstructorOfGivenType<T>()
             {
                 T instance = default;
+                ConstructorInfo expected = typeof(T).GetConstructors(allInstanceMembers).Single();
+
                 ConstructorInfo actual = instance.Constructor();
-                ConstructorInfo expected = typeof(T).GetConstructors().Single();
+
                 Assert.Equal(expected, actual);
             }
 
             public static IEnumerable<object[]> TestInstances() 
             {
-                yield return new object[] { new TestClass() };
-                yield return new object[] { new TestClassWithSingleParameterizedConstructor(null) };
+                yield return new object[] { new ClassWithPublicConstructor() };
+                yield return new object[] { new ClassWithParameterizedConstructor(null) };
+                yield return new object[] { new ClassWithInternalConstructor() };
             }
 
-            class TestClass { }
+            class ClassWithPublicConstructor { }
 
-            class TestClassWithSingleParameterizedConstructor
+            class ClassWithParameterizedConstructor
             {
-                public TestClassWithSingleParameterizedConstructor(TestClass _)
-                {
-                }
+                public ClassWithParameterizedConstructor(ClassWithPublicConstructor _) { }
+            }
+
+            class ClassWithInternalConstructor
+            {
+                internal ClassWithInternalConstructor() { }
+            }
+
+            class ClassWithPrivateConstructor
+            {
+                ClassWithPrivateConstructor() { }
             }
         }
     }

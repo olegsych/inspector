@@ -8,7 +8,7 @@ namespace System
         public static ConstructorInfo Constructor<T>(this T instance)
         {
             TypeInfo typeInfo = instance?.GetType().GetTypeInfo() ?? typeof(T).GetTypeInfo();
-            return typeInfo.GetConstructors().Single();
+            return typeInfo.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Single();
         }
     }
 }
