@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
+using Inspector;
 
 namespace System
 {
@@ -8,13 +8,14 @@ namespace System
     {
         public static ConstructorInfo Constructor<T>(this T instance)
         {
-            return instance.Constructors().Single();
+            var inspector = TypeInspector.Create(instance, typeof(T));
+            return inspector.GetConstructor();
         }
 
-        public static IEnumerable<ConstructorInfo> Constructors<T>(this T instance)
+        public static IReadOnlyList<ConstructorInfo> Constructors<T>(this T instance)
         {
-            TypeInfo typeInfo = instance?.GetType().GetTypeInfo() ?? typeof(T).GetTypeInfo();
-            return typeInfo.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            var inspector = TypeInspector.Create(instance, typeof(T));
+            return inspector.GetConstructors();
         }
     }
 }

@@ -1,102 +1,91 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Inspector;
+using NSubstitute;
+using System.Collections.Generic;
 using System.Reflection;
 using Xunit;
 
 namespace System
 {
-    public class ObjectExtensionsTest
+    [Collection(nameof(TypeInspector))]
+    public class ObjectExtensionsTest : IDisposable
     {
         const BindingFlags allInstanceMembers = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
+        readonly TypeInspector.Factory originalTypeInspectorCreate;
+        readonly TypeInspector.Factory typeInspectorCreate = Substitute.For<TypeInspector.Factory>();
+        readonly TypeInspector typeInspector = Substitute.For<TypeInspector>();
+
+        public ObjectExtensionsTest()
+        {
+            typeInspectorCreate.Invoke(Arg.Any<object>(), Arg.Any<Type>()).Returns(typeInspector);
+            originalTypeInspectorCreate = ReplaceTypeInspectorCreate(typeInspectorCreate);
+        }
+
+        void IDisposable.Dispose()
+        {
+            ReplaceTypeInspectorCreate(originalTypeInspectorCreate);
+        }
+
+        static TypeInspector.Factory ReplaceTypeInspectorCreate(TypeInspector.Factory replacement)
+        {
+            FieldInfo create = typeof(TypeInspector).GetField(nameof(TypeInspector.Create));
+            var current = (TypeInspector.Factory)create.GetValue(null);
+            create.SetValue(null, replacement);
+            return current;
+        }
+
         public class Constructor : ObjectExtensionsTest
         {
-            [Theory, MemberData(nameof(TestInstances))]
-            public void ReturnsConsturctorOfGivenInstance(object instance)
+            readonly Base instance = new Derived();
+
+            [Fact]
+            public void CreatesTypeInspectorForGivenInstanceDefaultingToItsDeclaredType()
             {
-                ConstructorInfo expected = instance.GetType().GetConstructors(allInstanceMembers).Single();
+                instance.Constructor();
+
+                typeInspectorCreate.Received().Invoke(instance, typeof(Base));
+                typeInspectorCreate.Received(1).Invoke(Arg.Any<object>(), Arg.Any<Type>());
+            }
+
+            [Fact]
+            public void ReturnsConstructorReceivedFromTypeInspector()
+            {
+                var expected = Substitute.For<ConstructorInfo>();
+                typeInspector.GetConstructor().Returns(expected);
 
                 ConstructorInfo actual = instance.Constructor();
 
-                Assert.Equal(expected, actual);
-            }
-
-            [Theory, MemberData(nameof(TestInstances))]
-            public void ReturnsParameterlessConstructorOfGivenTypeWhenInstanceIsNull(object instance)
-            {
-                var assert = (Action)GetType()
-                    .GetMethod(nameof(AssertConstructorReturnsParameterlessConstructorOfGivenType), BindingFlags.Static | BindingFlags.NonPublic)
-                    .MakeGenericMethod(instance.GetType())
-                    .CreateDelegate(typeof(Action));
-                assert();
-            }
-
-            static void AssertConstructorReturnsParameterlessConstructorOfGivenType<T>()
-            {
-                T instance = default;
-                ConstructorInfo expected = typeof(T).GetConstructors(allInstanceMembers).Single();
-
-                ConstructorInfo actual = instance.Constructor();
-
-                Assert.Equal(expected, actual);
-            }
-
-            public static IEnumerable<object[]> TestInstances() 
-            {
-                yield return new object[] { new ClassWithPublicConstructor() };
-                yield return new object[] { new ClassWithParameterizedConstructor(null) };
-                yield return new object[] { new ClassWithInternalConstructor() };
-            }
-
-            class ClassWithPublicConstructor { }
-
-            class ClassWithParameterizedConstructor
-            {
-                public ClassWithParameterizedConstructor(ClassWithPublicConstructor _) { }
-            }
-
-            class ClassWithInternalConstructor
-            {
-                internal ClassWithInternalConstructor() { }
-            }
-
-            class ClassWithPrivateConstructor
-            {
-                ClassWithPrivateConstructor() { }
+                Assert.Same(expected, actual);
             }
         }
 
         public class Constructors : ObjectExtensionsTest
         {
+            readonly Base instance = new Derived();
+
             [Fact]
-            public void ReturnsAllConstructorsOfGivenInstance()
+            public void CreatesTypeInspectorForGivenIstanceDefaultingToItsDeclaredType()
             {
-                object instance = new TestClass();
-                IEnumerable<ConstructorInfo> expected = instance.GetType().GetConstructors(allInstanceMembers);
+                instance.Constructors();
 
-                IEnumerable<ConstructorInfo> actual = instance.Constructors();
-
-                Assert.Equal(expected, actual);
+                typeInspectorCreate.Received().Invoke(instance, typeof(Base));
+                typeInspectorCreate.Received(1).Invoke(Arg.Any<object>(), Arg.Any<Type>());
             }
 
             [Fact]
-            public void ReturnsAllConstructorsOfGivenTypeWhenInstanceIsNull()
+            public void ReturnsConstructorsReceivedFromTypeInspector()
             {
-                TestClass instance = null;
-                IEnumerable<ConstructorInfo> expected = typeof(TestClass).GetConstructors(allInstanceMembers);
+                var expected = new ConstructorInfo[0];
+                typeInspector.GetConstructors().Returns(expected);
 
-                IEnumerable<ConstructorInfo> actual = instance.Constructors();
+                IReadOnlyList<ConstructorInfo> actual = instance.Constructors();
 
-                Assert.Equal(expected, actual);
-            }
-
-            class TestClass
-            {
-                public TestClass() { }
-                internal TestClass(string _) { }
-                protected TestClass(char _) { }
-                TestClass(bool _) { }
+                Assert.Same(expected, actual);
             }
         }
+
+        class Base { }
+
+        class Derived : Base { }
     }
 }
