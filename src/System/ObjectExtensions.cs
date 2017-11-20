@@ -8,13 +8,13 @@ namespace System
     {
         public static ConstructorInfo Constructor<T>(this T instance)
         {
-            var inspector = TypeInspector.Create(instance, typeof(T));
+            var inspector = TypeInspector.Create(typeof(T), instance);
             return inspector.GetConstructor();
         }
 
         public static IReadOnlyList<ConstructorInfo> Constructors<T>(this T instance)
         {
-            var inspector = TypeInspector.Create(instance, typeof(T));
+            var inspector = TypeInspector.Create(typeof(T), instance);
             return inspector.GetConstructors();
         }
     }

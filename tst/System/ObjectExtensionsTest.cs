@@ -17,8 +17,8 @@ namespace System
             {
                 instance.Constructor();
 
-                typeInspectorCreate.Received().Invoke(instance, typeof(Base));
-                typeInspectorCreate.Received(1).Invoke(Arg.Any<object>(), Arg.Any<Type>());
+                typeInspectorCreate.Received().Invoke(typeof(Base), instance);
+                typeInspectorCreate.Received(1).Invoke(Arg.Any<Type>(), Arg.Any<object>());
             }
 
             [Fact]
@@ -42,8 +42,8 @@ namespace System
             {
                 instance.Constructors();
 
-                typeInspectorCreate.Received().Invoke(instance, typeof(Base));
-                typeInspectorCreate.Received(1).Invoke(Arg.Any<object>(), Arg.Any<Type>());
+                typeInspectorCreate.Received().Invoke(typeof(Base), instance);
+                typeInspectorCreate.Received(1).Invoke(Arg.Any<Type>(), Arg.Any<object>());
             }
 
             [Fact]

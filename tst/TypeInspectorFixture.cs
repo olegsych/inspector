@@ -14,7 +14,7 @@ namespace Inspector
 
         public TypeInspectorFixture()
         {
-            typeInspectorCreate.Invoke(Arg.Any<object>(), Arg.Any<Type>()).Returns(typeInspector);
+            typeInspectorCreate.Invoke(Arg.Any<Type>(), Arg.Any<object>()).Returns(typeInspector);
             originalTypeInspectorCreate = ReplaceTypeInspectorCreate(typeInspectorCreate);
         }
 

@@ -15,11 +15,11 @@ namespace Inspector
         {
         }
 
-        public delegate TypeInspector Factory(object instance, Type defaultType);
+        public delegate TypeInspector Factory(Type declaredType, object instance = null);
 
-        public static readonly Factory Create = (object instance, Type defaultType) =>
+        public static readonly Factory Create = (Type declaredType, object instance) =>
         {
-            Type type = instance?.GetType() ?? defaultType;
+            Type type = instance?.GetType() ?? declaredType;
             return new TypeInspector(type.GetTypeInfo());
         };
 

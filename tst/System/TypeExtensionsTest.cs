@@ -15,8 +15,8 @@ namespace Inspector.System
             {
                 typeof(TestClass).Constructor();
 
-                typeInspectorCreate.Received().Invoke(null, typeof(TestClass));
-                typeInspectorCreate.Received(1).Invoke(Arg.Any<object>(), Arg.Any<Type>());
+                typeInspectorCreate.Received().Invoke(typeof(TestClass));
+                typeInspectorCreate.Received(1).Invoke(Arg.Any<Type>());
             }
 
             [Fact]
@@ -38,8 +38,8 @@ namespace Inspector.System
             {
                 typeof(TestClass).Constructors();
 
-                typeInspectorCreate.Received().Invoke(null, typeof(TestClass));
-                typeInspectorCreate.Received(1).Invoke(Arg.Any<object>(), Arg.Any<Type>());
+                typeInspectorCreate.Received().Invoke(typeof(TestClass));
+                typeInspectorCreate.Received(1).Invoke(Arg.Any<Type>());
             }
 
             [Fact]

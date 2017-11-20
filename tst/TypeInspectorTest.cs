@@ -14,14 +14,14 @@ namespace Inspector
             [Fact]
             public void CreatesInspectorOfGivenInstanceType()
             {
-                var inspector = TypeInspector.Create(new TestClass(), typeof(object));
+                var inspector = TypeInspector.Create(typeof(object), new TestClass());
                 AssertInspectorType(typeof(TestClass), inspector);
             }
 
             [Fact]
-            public void CreatesInspectorOfDefaultTypeWhenInstanceIsNull()
+            public void CreatesInspectorOfDeclaredTypeWhenInstanceIsNull()
             {
-                var inspector = TypeInspector.Create(null, typeof(TestClass));
+                var inspector = TypeInspector.Create(typeof(TestClass), null);
                 AssertInspectorType(typeof(TestClass), inspector);
             }
 
