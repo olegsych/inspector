@@ -6,34 +6,8 @@ using Xunit;
 
 namespace System
 {
-    [Collection(nameof(TypeInspector))]
-    public class ObjectExtensionsTest : IDisposable
+    public class ObjectExtensionsTest : TypeInspectorFixture
     {
-        const BindingFlags allInstanceMembers = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-
-        readonly TypeInspector.Factory originalTypeInspectorCreate;
-        readonly TypeInspector.Factory typeInspectorCreate = Substitute.For<TypeInspector.Factory>();
-        readonly TypeInspector typeInspector = Substitute.For<TypeInspector>();
-
-        public ObjectExtensionsTest()
-        {
-            typeInspectorCreate.Invoke(Arg.Any<object>(), Arg.Any<Type>()).Returns(typeInspector);
-            originalTypeInspectorCreate = ReplaceTypeInspectorCreate(typeInspectorCreate);
-        }
-
-        void IDisposable.Dispose()
-        {
-            ReplaceTypeInspectorCreate(originalTypeInspectorCreate);
-        }
-
-        static TypeInspector.Factory ReplaceTypeInspectorCreate(TypeInspector.Factory replacement)
-        {
-            FieldInfo create = typeof(TypeInspector).GetField(nameof(TypeInspector.Create));
-            var current = (TypeInspector.Factory)create.GetValue(null);
-            create.SetValue(null, replacement);
-            return current;
-        }
-
         public class Constructor : ObjectExtensionsTest
         {
             readonly Base instance = new Derived();
