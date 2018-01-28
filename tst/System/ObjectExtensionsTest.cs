@@ -22,6 +22,17 @@ namespace System
             }
 
             [Fact]
+            public void PassesGivenParametersToTypeInspector()
+            {
+                var parameters = new Type[2];
+
+                instance.Constructor(parameters);
+
+                typeInspector.Received().GetConstructor(parameters);
+                typeInspector.Received(1).GetConstructor(Arg.Any<Type[]>());
+            }
+
+            [Fact]
             public void ReturnsConstructorReceivedFromTypeInspector()
             {
                 var expected = Substitute.For<ConstructorInfo>();
