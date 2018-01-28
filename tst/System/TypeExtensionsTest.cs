@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NSubstitute;
 using Xunit;
@@ -37,6 +38,40 @@ namespace Inspector.System
                 typeInspector.GetConstructor().Returns(expected);
 
                 ConstructorInfo actual = typeof(TestClass).Constructor();
+
+                Assert.Same(expected, actual);
+            }
+        }
+
+        class P1 { }
+
+        public class ConstructorT : TypeExtensionsTest
+        {
+            [Fact]
+            public void CreatesTypeInspectorForGivenType()
+            {
+                typeof(TestClass).Constructor<P1>();
+
+                typeInspectorCreate.Received().Invoke(typeof(TestClass));
+                typeInspectorCreate.Received(1).Invoke(Arg.Any<Type>());
+            }
+
+            [Fact]
+            public void PassesGivenParametersToTypeInspector()
+            {
+                typeof(TestClass).Constructor<P1>();
+
+                typeInspector.Received().GetConstructor(typeof(P1));
+                typeInspector.Received(1).GetConstructor(Arg.Any<Type[]>());
+            }
+
+            [Fact]
+            public void ReturnsConstructorObtainedFromTypeInspector()
+            {
+                var expected = Substitute.For<ConstructorInfo>();
+                typeInspector.GetConstructor(Arg.Any<Type[]>()).Returns(expected);
+
+                ConstructorInfo actual = typeof(TestClass).Constructor<P1>();
 
                 Assert.Same(expected, actual);
             }
