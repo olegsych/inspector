@@ -52,6 +52,7 @@ namespace Inspector.System
             class P5 { }
             class P6 { }
             class P7 { }
+            class P8 { }
 
             public static IEnumerable<object[]> ConstructorTypeParameters = new[]
             {
@@ -61,7 +62,7 @@ namespace Inspector.System
                 new object[] { new[] { typeof(P1), typeof(P2), typeof(P3), typeof(P4) } },
                 new object[] { new[] { typeof(P1), typeof(P2), typeof(P3), typeof(P4), typeof(P5) } },
                 new object[] { new[] { typeof(P1), typeof(P2), typeof(P3), typeof(P4), typeof(P5), typeof(P6) } },
-                new object[] { new[] { typeof(P1), typeof(P2), typeof(P3), typeof(P4), typeof(P5), typeof(P6), typeof(P7) } },
+                new object[] { new[] { typeof(P1), typeof(P2), typeof(P3), typeof(P4), typeof(P5), typeof(P6), typeof(P7), typeof(P8) } },
             };
 
             [Theory, MemberData(nameof(ConstructorTypeParameters))]
