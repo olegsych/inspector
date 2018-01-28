@@ -42,6 +42,12 @@ namespace System
             return inspector.GetConstructor(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6));
         }
 
+        public static ConstructorInfo Constructor<T1, T2, T3, T4, T5, T6, T7>(this Type type)
+        {
+            var inspector = TypeInspector.Create(type);
+            return inspector.GetConstructor(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6), typeof(T7));
+        }
+
         public static ConstructorInfo Constructor(this Type type, params Type[] parameters)
         {
             var inspector = TypeInspector.Create(type);
