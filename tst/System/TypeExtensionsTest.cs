@@ -43,7 +43,7 @@ namespace Inspector.System
             }
         }
 
-        public class ConstructorT : TypeExtensionsTest
+        public class GenericConstructor : TypeExtensionsTest
         {
             class P1 { }
             class P2 { }
@@ -54,18 +54,14 @@ namespace Inspector.System
             class P7 { }
             class P8 { }
 
-            public static IEnumerable<object[]> ConstructorTypeParameters = new[]
+            public static IEnumerable<object[]> GenericParameters()
             {
-                new object[] { new[] { typeof(P1) } },
-                new object[] { new[] { typeof(P1), typeof(P2) } },
-                new object[] { new[] { typeof(P1), typeof(P2), typeof(P3) } },
-                new object[] { new[] { typeof(P1), typeof(P2), typeof(P3), typeof(P4) } },
-                new object[] { new[] { typeof(P1), typeof(P2), typeof(P3), typeof(P4), typeof(P5) } },
-                new object[] { new[] { typeof(P1), typeof(P2), typeof(P3), typeof(P4), typeof(P5), typeof(P6) } },
-                new object[] { new[] { typeof(P1), typeof(P2), typeof(P3), typeof(P4), typeof(P5), typeof(P6), typeof(P7), typeof(P8) } },
-            };
+                Type[] parameters = new[] { typeof(P1), typeof(P2), typeof(P3), typeof(P4), typeof(P5), typeof(P6), typeof(P7), typeof(P8) };
+                for (byte numberOfParameters = 1; numberOfParameters <= 8; numberOfParameters++)
+                    yield return new object[] { parameters.Take(numberOfParameters).ToArray() };
+            }
 
-            [Theory, MemberData(nameof(ConstructorTypeParameters))]
+            [Theory, MemberData(nameof(GenericParameters))]
             public void CreatesTypeInspectorForGivenType(Type[] parameters)
             {
                 InvokeGenericConstructorMethod(parameters);
@@ -74,7 +70,7 @@ namespace Inspector.System
                 typeInspectorCreate.Received(1).Invoke(Arg.Any<Type>());
             }
 
-            [Theory, MemberData(nameof(ConstructorTypeParameters))]
+            [Theory, MemberData(nameof(GenericParameters))]
             public void PassesGivenParametersToTypeInspector(Type[] parameters)
             {
                 InvokeGenericConstructorMethod(parameters);
@@ -83,7 +79,7 @@ namespace Inspector.System
                 typeInspector.Received(1).GetConstructor(Arg.Any<Type[]>());
             }
 
-            [Theory, MemberData(nameof(ConstructorTypeParameters))]
+            [Theory, MemberData(nameof(GenericParameters))]
             public void ReturnsConstructorObtainedFromTypeInspector(Type[] parameters)
             {
                 var expected = Substitute.For<ConstructorInfo>();
