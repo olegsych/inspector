@@ -43,103 +43,60 @@ namespace Inspector.System
             }
         }
 
-        class P1 { }
-        class P2 { }
-        class P3 { }
-
         public class ConstructorT : TypeExtensionsTest
         {
-            [Fact]
-            public void CreatesTypeInspectorForGivenType()
+            class P1 { }
+            class P2 { }
+            class P3 { }
+
+            public static IEnumerable<object[]> ConstructorTypeParameters = new[]
             {
-                typeof(TestClass).Constructor<P1>();
+                new object[] { new[] { typeof(P1) } },
+                new object[] { new[] { typeof(P1), typeof(P2) } },
+                new object[] { new[] { typeof(P1), typeof(P2), typeof(P3) } },
+            };
+
+            [Theory, MemberData(nameof(ConstructorTypeParameters))]
+            public void CreatesTypeInspectorForGivenType(Type[] parameters)
+            {
+                InvokeGenericConstructorMethod(parameters);
 
                 typeInspectorCreate.Received().Invoke(typeof(TestClass));
                 typeInspectorCreate.Received(1).Invoke(Arg.Any<Type>());
             }
 
-            [Fact]
-            public void PassesGivenParametersToTypeInspector()
+            [Theory, MemberData(nameof(ConstructorTypeParameters))]
+            public void PassesGivenParametersToTypeInspector(Type[] parameters)
             {
-                typeof(TestClass).Constructor<P1>();
+                InvokeGenericConstructorMethod(parameters);
 
-                typeInspector.Received().GetConstructor(typeof(P1));
+                typeInspector.Received().GetConstructor(parameters);
                 typeInspector.Received(1).GetConstructor(Arg.Any<Type[]>());
             }
 
-            [Fact]
-            public void ReturnsConstructorObtainedFromTypeInspector()
+            [Theory, MemberData(nameof(ConstructorTypeParameters))]
+            public void ReturnsConstructorObtainedFromTypeInspector(Type[] parameters)
             {
                 var expected = Substitute.For<ConstructorInfo>();
                 typeInspector.GetConstructor(Arg.Any<Type[]>()).Returns(expected);
 
-                ConstructorInfo actual = typeof(TestClass).Constructor<P1>();
+                ConstructorInfo actual = InvokeGenericConstructorMethod(parameters);
 
                 Assert.Same(expected, actual);
             }
-        }
 
-        public class ConstructorT1T2 : TypeExtensionsTest
-        {
-            [Fact]
-            public void CreatesTypeInspectorForGivenType()
+            ConstructorInfo InvokeGenericConstructorMethod(Type[] parameters)
             {
-                typeof(TestClass).Constructor<P1, P2>();
+                MethodInfo genericDefinition = typeof(global::System.TypeExtensions)
+                    .GetMethods(BindingFlags.Static | BindingFlags.Public)
+                    .Where(_ => _.IsGenericMethod
+                             && _.Name == nameof(global::System.TypeExtensions.Constructor)
+                             && _.GetGenericArguments().Length == parameters.Length)
+                    .Single();
 
-                typeInspectorCreate.Received().Invoke(typeof(TestClass));
-                typeInspectorCreate.Received(1).Invoke(Arg.Any<Type>());
-            }
+                MethodInfo genericMethod = genericDefinition.MakeGenericMethod(parameters);
 
-            [Fact]
-            public void PassesGivenParametersToTypeInspector()
-            {
-                typeof(TestClass).Constructor<P1, P2>();
-
-                typeInspector.Received().GetConstructor(typeof(P1), typeof(P2));
-                typeInspector.Received(1).GetConstructor(Arg.Any<Type[]>());
-            }
-
-            [Fact]
-            public void ReturnsConstructorObtainedFromTypeInspector()
-            {
-                var expected = Substitute.For<ConstructorInfo>();
-                typeInspector.GetConstructor(Arg.Any<Type[]>()).Returns(expected);
-
-                ConstructorInfo actual = typeof(TestClass).Constructor<P1, P2>();
-
-                Assert.Same(expected, actual);
-            }
-        }
-
-        public class ConstructorT1T2T3 : TypeExtensionsTest
-        {
-            [Fact]
-            public void CreatesTypeInspectorForGivenType()
-            {
-                typeof(TestClass).Constructor<P1, P2, P3>();
-
-                typeInspectorCreate.Received().Invoke(typeof(TestClass));
-                typeInspectorCreate.Received(1).Invoke(Arg.Any<Type>());
-            }
-
-            [Fact]
-            public void PassesGivenParametersToTypeInspector()
-            {
-                typeof(TestClass).Constructor<P1, P2, P3>();
-
-                typeInspector.Received().GetConstructor(typeof(P1), typeof(P2), typeof(P3));
-                typeInspector.Received(1).GetConstructor(Arg.Any<Type[]>());
-            }
-
-            [Fact]
-            public void ReturnsConstructorObtainedFromTypeInspector()
-            {
-                var expected = Substitute.For<ConstructorInfo>();
-                typeInspector.GetConstructor(Arg.Any<Type[]>()).Returns(expected);
-
-                ConstructorInfo actual = typeof(TestClass).Constructor<P1, P2, P3>();
-
-                Assert.Same(expected, actual);
+                return (ConstructorInfo)genericMethod.Invoke(null, new object[] { typeof(TestClass) });
             }
         }
 
