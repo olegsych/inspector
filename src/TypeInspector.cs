@@ -23,9 +23,23 @@ namespace Inspector
             return new TypeInspector(type.GetTypeInfo());
         };
 
-        public virtual ConstructorInfo GetConstructor()
+        public virtual ConstructorInfo GetConstructor(params Type[] parameterTypes)
         {
-            return GetConstructors().Single();
+            if (parameterTypes == null)
+                throw new ArgumentNullException(nameof(parameterTypes));
+
+            ConstructorInfo constructor = GetConstructors()
+                .Where(c => c.GetParameters().Select(p => p.ParameterType).SequenceEqual(parameterTypes))
+                .SingleOrDefault();
+
+            if (constructor == null)
+            {
+                var parameterTypeNames = string.Join(", ", parameterTypes.Select(p => p.Name));
+                string message = $"Type {type.Name} doesn't have a constructor with parameter types({parameterTypeNames})";
+                throw new ArgumentException(message, nameof(parameterTypes));
+            }
+
+            return constructor;
         }
 
         public virtual IReadOnlyList<ConstructorInfo> GetConstructors()

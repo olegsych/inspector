@@ -39,7 +39,7 @@ namespace Inspector
         public class GetConstructor : TypeInspectorTest
         {
             [Fact]
-            public void ReturnsSingleConstructorOfGivenType()
+            public void ReturnsSingleParameterlessConstructorOfGivenType()
             {
                 var sut = Substitute.ForPartsOf<TypeInspector>(typeof(TestClass).GetTypeInfo());
                 var expected = Substitute.For<ConstructorInfo>();
@@ -50,7 +50,61 @@ namespace Inspector
                 Assert.Same(expected, actual);
             }
 
+            [Fact]
+            public void ReturnsConstructorWithMatchingParameterTypes()
+            {
+                var sut = Substitute.ForPartsOf<TypeInspector>(typeof(TestClass).GetTypeInfo());
+                ConstructorInfo expected = ConstructorInfo(typeof(Foo), typeof(Bar));
+                sut.GetConstructors().Returns(new[] { expected });
+
+                ConstructorInfo actual = sut.GetConstructor(typeof(Foo), typeof(Bar));
+
+                Assert.Same(expected, actual);
+            }
+
+            [Fact]
+            public void ThrowsDescriptiveExceptionWhenTypeDoesntHaveConstructorWithMatchingParameters()
+            {
+                var sut = Substitute.ForPartsOf<TypeInspector>(typeof(TestClass).GetTypeInfo());
+                ConstructorInfo unexpected = ConstructorInfo(typeof(Bar), typeof(Foo));
+                sut.GetConstructors().Returns(new[] { unexpected });
+
+                var thrown = Assert.Throws<ArgumentException>(() => sut.GetConstructor(typeof(Foo), typeof(Bar)));
+
+                Assert.Equal("parameterTypes", thrown.ParamName);
+                Assert.StartsWith($"Type {nameof(TestClass)} doesn't have a constructor with parameter types({nameof(Foo)}, {nameof(Bar)})", thrown.Message);
+            }
+
+            [Fact]
+            public void ThrowsDescriptiveExceptionWhenParameterTypesIsNullToFailFast()
+            {
+                var sut = Substitute.ForPartsOf<TypeInspector>(typeof(TestClass).GetTypeInfo());
+
+                var thrown = Assert.Throws<ArgumentNullException>(() => sut.GetConstructor(default(Type[])));
+
+                Assert.Equal("parameterTypes", thrown.ParamName);
+            }
+
             class TestClass { }
+
+            class Foo { }
+
+            class Bar { }
+
+            static ConstructorInfo ConstructorInfo(params Type[] parameterTypes)
+            {
+                var constructor = Substitute.For<ConstructorInfo>();
+                ParameterInfo[] parameters = parameterTypes.Select(t => ParameterInfo(t)).ToArray();
+                constructor.GetParameters().Returns(parameters);
+                return constructor;
+            }
+
+            static ParameterInfo ParameterInfo(Type parameterType)
+            {
+                var parameter = Substitute.For<ParameterInfo>();
+                parameter.ParameterType.Returns(parameterType);
+                return parameter;
+            }
         }
 
         public class GetConstructors : TypeInspectorTest
