@@ -20,6 +20,17 @@ namespace Inspector.System
             }
 
             [Fact]
+            public void PassesGivenParametersToTypeInspector()
+            {
+                var parameters = new Type[2];
+
+                typeof(TestClass).Constructor(parameters);
+
+                typeInspector.Received().GetConstructor(parameters);
+                typeInspector.Received(1).GetConstructor(Arg.Any<Type[]>());
+            }
+
+            [Fact]
             public void ReturnsConstructorObtainedFromTypeInspector()
             {
                 var expected = Substitute.For<ConstructorInfo>();
