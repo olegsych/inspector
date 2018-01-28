@@ -48,12 +48,14 @@ namespace Inspector.System
             class P1 { }
             class P2 { }
             class P3 { }
+            class P4 { }
 
             public static IEnumerable<object[]> ConstructorTypeParameters = new[]
             {
                 new object[] { new[] { typeof(P1) } },
                 new object[] { new[] { typeof(P1), typeof(P2) } },
                 new object[] { new[] { typeof(P1), typeof(P2), typeof(P3) } },
+                new object[] { new[] { typeof(P1), typeof(P2), typeof(P3), typeof(P4) } },
             };
 
             [Theory, MemberData(nameof(ConstructorTypeParameters))]
@@ -92,7 +94,9 @@ namespace Inspector.System
                     .Where(_ => _.IsGenericMethod
                              && _.Name == nameof(global::System.TypeExtensions.Constructor)
                              && _.GetGenericArguments().Length == parameters.Length)
-                    .Single();
+                    .SingleOrDefault();
+
+                Assert.True(genericDefinition != null, $"No Constructor<> method with {parameters.Length} type parameters");
 
                 MethodInfo genericMethod = genericDefinition.MakeGenericMethod(parameters);
 
