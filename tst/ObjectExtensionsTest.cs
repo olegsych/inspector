@@ -1,10 +1,10 @@
-﻿using Inspector;
-using NSubstitute;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using NSubstitute;
 using Xunit;
 
-namespace System
+namespace Inspector
 {
     public class ObjectExtensionsTest : TypeInspectorFixture
     {
