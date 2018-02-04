@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Xunit;
+using static Inspector.Substitutes;
 
 namespace Inspector
 {
@@ -97,13 +98,6 @@ namespace Inspector
                 ParameterInfo[] parameters = parameterTypes.Select(t => ParameterInfo(t)).ToArray();
                 constructor.GetParameters().Returns(parameters);
                 return constructor;
-            }
-
-            static ParameterInfo ParameterInfo(Type parameterType)
-            {
-                var parameter = Substitute.For<ParameterInfo>();
-                parameter.ParameterType.Returns(parameterType);
-                return parameter;
             }
         }
 
