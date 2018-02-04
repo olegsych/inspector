@@ -5,7 +5,7 @@ using System.Reflection;
 using NSubstitute;
 using Xunit;
 
-namespace Inspector.System
+namespace Inspector
 {
     public class TypeExtensionsTest : TypeInspectorFixture
     {
@@ -92,10 +92,10 @@ namespace Inspector.System
 
             ConstructorInfo InvokeGenericConstructorMethod(Type[] parameters)
             {
-                MethodInfo genericDefinition = typeof(global::System.TypeExtensions)
+                MethodInfo genericDefinition = typeof(TypeExtensions)
                     .GetMethods(BindingFlags.Static | BindingFlags.Public)
                     .Where(_ => _.IsGenericMethod
-                             && _.Name == nameof(global::System.TypeExtensions.Constructor)
+                             && _.Name == nameof(TypeExtensions.Constructor)
                              && _.GetGenericArguments().Length == parameters.Length)
                     .SingleOrDefault();
 

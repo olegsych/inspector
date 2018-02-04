@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
-using Inspector;
 
-namespace System
+namespace Inspector
 {
     public static class TypeExtensions
     {
