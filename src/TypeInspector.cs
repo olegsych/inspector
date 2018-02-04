@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace Inspector
 {
-    public class TypeInspector
+    class TypeInspector
     {
         readonly TypeInfo type;
 

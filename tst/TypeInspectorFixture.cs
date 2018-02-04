@@ -9,8 +9,8 @@ namespace Inspector
     public class TypeInspectorFixture : IDisposable
     {
         readonly TypeInspector.Factory originalTypeInspectorCreate;
-        protected readonly TypeInspector.Factory typeInspectorCreate = Substitute.For<TypeInspector.Factory>();
-        protected readonly TypeInspector typeInspector = Substitute.For<TypeInspector>();
+        internal readonly TypeInspector.Factory typeInspectorCreate = Substitute.For<TypeInspector.Factory>();
+        internal readonly TypeInspector typeInspector = Substitute.For<TypeInspector>();
 
         public TypeInspectorFixture()
         {
