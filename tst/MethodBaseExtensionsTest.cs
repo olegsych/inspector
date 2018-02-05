@@ -8,8 +8,6 @@ namespace Inspector
 {
     public class MethodBaseExtensionsTest
     {
-        static readonly Func<int> random = new Random().Next;
-
         public class Parameter : MethodBaseExtensionsTest
         {
             readonly MethodBase method = MethodBase();
@@ -50,7 +48,7 @@ namespace Inspector
             [Fact]
             public void ThrowsDescriptiveExceptionWhenParameterTypeIsNull()
             {
-                var thrown = Assert.Throws<ArgumentNullException>(() => method.Parameter((Type)null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => method.Parameter(null));
                 Assert.Equal("parameterType", thrown.ParamName);
             }
         }
