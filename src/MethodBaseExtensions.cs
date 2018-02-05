@@ -6,6 +6,11 @@ namespace Inspector
 {
     public static class MethodBaseExtensions
     {
+        public static ParameterInfo Parameter<T>(this MethodBase method)
+        {
+            return method.Parameter(typeof(T));
+        }
+
         public static ParameterInfo Parameter(this MethodBase method, Type parameterType)
         {
             if (method == null)
