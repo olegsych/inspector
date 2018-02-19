@@ -12,9 +12,13 @@ namespace Inspector
             if (instance == null)
                 throw new ArgumentNullException(nameof(instance));
 
-            Type instanceType = instance.GetType();
+            TypeInfo instanceType = instance.GetType().GetTypeInfo();
+
+            if (IsCastleDynamicProxy(instanceType))
+                instanceType = instanceType.BaseType.GetTypeInfo();
+
             Type fieldType = typeof(T);
-            IReadOnlyList<FieldInfo> info = instanceType.GetTypeInfo()
+            IReadOnlyList<FieldInfo> info = instanceType
                 .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                 .Where(_ => _.FieldType == fieldType).ToList();
             if (info.Count == 0)
@@ -23,6 +27,11 @@ namespace Inspector
                 throw new ArgumentException($"{instanceType} has more than one instance field of type {fieldType}.", nameof(T));
 
             return new Field<T>(info[0], instance);
+        }
+
+        static bool IsCastleDynamicProxy(TypeInfo instanceType)
+        {
+            return instanceType.Assembly.GetName().Name == "DynamicProxyGenAssembly2";
         }
     }
 }

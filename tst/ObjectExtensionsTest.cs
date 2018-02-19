@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using NSubstitute;
 using Xunit;
 
 namespace Inspector
@@ -54,6 +55,28 @@ namespace Inspector
             }
 
             [Fact]
+            public void ReturnsFieldOfInstanceDynamicallyGeneratedByCastleProxy()
+            {
+                var instance = Substitute.ForPartsOf<AbstractType>();
+                FieldInfo expectedInfo = instance.GetType().BaseType
+                    .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Single(_ => _.FieldType == typeof(FieldType));
+
+                Field<FieldType> field = instance.Field<FieldType>();
+
+                object actualInstance = typeof(Field<FieldType>)
+                    .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Single(_ => _.FieldType == typeof(object))
+                    .GetValue(field);
+                var actualInfo = (FieldInfo)typeof(Field<FieldType>)
+                    .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Single(_ => _.FieldType == typeof(FieldInfo))
+                    .GetValue(field);
+                Assert.Same(instance, actualInstance);
+                Assert.Equal(expectedInfo, actualInfo);
+            }
+
+            [Fact]
             public void ThrowsDescriptiveExceptionWhenInstanceIsNull()
             {
                 var thrown = Assert.Throws<ArgumentNullException>(() => default(object).Field<FieldType>());
@@ -78,7 +101,7 @@ namespace Inspector
                 Assert.StartsWith($"{instance.GetType()} has more than one instance field of type {typeof(FieldType)}.", thrown.Message);
             }
 
-            class FieldType { }
+            public class FieldType { }
 
             class UnexpectedFieldType { }
 
@@ -89,6 +112,11 @@ namespace Inspector
                 public FieldType field;
 
                 #pragma warning restore 649
+            }
+
+            public class AbstractType
+            {
+                FieldType field;
             }
 
             #pragma warning disable 169 // private fields used only via reflection
