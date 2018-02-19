@@ -1,76 +1,110 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
-using NSubstitute;
 using Xunit;
 
 namespace Inspector
 {
-    public class ObjectExtensionsTest : TypeInspectorFixture
+    public class ObjectExtensionsTest
     {
-        public class Constructor : ObjectExtensionsTest
+        public class FieldTest : ObjectExtensionsTest
         {
-            readonly Base instance = new Derived();
-
             [Fact]
-            public void CreatesTypeInspectorForGivenInstanceDefaultingToItsDeclaredType()
+            public void ReturnsPrivateFieldOfGivenIstanceAndFieldType()
             {
-                instance.Constructor();
+                var instance = new TypeWithPrivateField();
+                FieldInfo expectedInfo = instance.GetType()
+                    .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Single(_ => _.FieldType == typeof(FieldType));
 
-                typeInspectorCreate.Received().Invoke(typeof(Base), instance);
-                typeInspectorCreate.Received(1).Invoke(Arg.Any<Type>(), Arg.Any<object>());
+                Field<FieldType> field = instance.Field<FieldType>();
+
+                object actualInstance = typeof(Field<FieldType>)
+                    .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Single(_ => _.FieldType == typeof(object))
+                    .GetValue(field);
+                var actualInfo = (FieldInfo)typeof(Field<FieldType>)
+                    .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Single(_ => _.FieldType == typeof(FieldInfo))
+                    .GetValue(field);
+                Assert.Same(instance, actualInstance);
+                Assert.Same(expectedInfo, actualInfo);
             }
 
             [Fact]
-            public void PassesGivenParametersToTypeInspector()
+            public void ReturnsPublicFieldOfGivenIstanceAndFieldType()
             {
-                var parameters = new Type[2];
+                var instance = new TypeWithPublicField();
+                FieldInfo expectedInfo = instance.GetType()
+                    .GetFields(BindingFlags.Instance | BindingFlags.Public)
+                    .Single(_ => _.FieldType == typeof(FieldType));
 
-                instance.Constructor(parameters);
+                Field<FieldType> field = instance.Field<FieldType>();
 
-                typeInspector.Received().GetConstructor(parameters);
-                typeInspector.Received(1).GetConstructor(Arg.Any<Type[]>());
+                object actualInstance = typeof(Field<FieldType>)
+                    .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Single(_ => _.FieldType == typeof(object))
+                    .GetValue(field);
+                var actualInfo = (FieldInfo)typeof(Field<FieldType>)
+                    .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Single(_ => _.FieldType == typeof(FieldInfo))
+                    .GetValue(field);
+                Assert.Same(instance, actualInstance);
+                Assert.Same(expectedInfo, actualInfo);
             }
 
             [Fact]
-            public void ReturnsConstructorReceivedFromTypeInspector()
+            public void ThrowsDescriptiveExceptionWhenInstanceIsNull()
             {
-                var expected = Substitute.For<ConstructorInfo>();
-                typeInspector.GetConstructor().Returns(expected);
-
-                ConstructorInfo actual = instance.Constructor();
-
-                Assert.Same(expected, actual);
+                var thrown = Assert.Throws<ArgumentNullException>(() => default(object).Field<FieldType>());
+                Assert.Equal("instance", thrown.ParamName);
             }
+
+            [Fact]
+            public void ThrowsDescriptiveExceptionWhenInstanceDoesNotHaveFieldOfGivenType()
+            {
+                var instance = new TypeWithPublicField();
+                var thrown = Assert.Throws<ArgumentException>(() => instance.Field<UnexpectedFieldType>());
+                Assert.Equal("T", thrown.ParamName);
+                Assert.StartsWith($"{instance.GetType()} doesn't have instance fields of type {typeof(UnexpectedFieldType)}.", thrown.Message);
+            }
+
+            [Fact]
+            public void ThrowsDescriptiveExceptionsWhenInstanceHasMoreThanOneFieldOfGivenType()
+            {
+                var instance = new TypeWithMultipleFields();
+                var thrown = Assert.Throws<ArgumentException>(() => instance.Field<FieldType>());
+                Assert.Equal("T", thrown.ParamName);
+                Assert.StartsWith($"{instance.GetType()} has more than one instance field of type {typeof(FieldType)}.", thrown.Message);
+            }
+
+            class FieldType { }
+
+            class UnexpectedFieldType { }
+
+            class TypeWithPublicField
+            {
+                #pragma warning disable 649 // public field used only via reflection
+
+                public FieldType field;
+
+                #pragma warning restore 649
+            }
+
+            #pragma warning disable 169 // private fields used only via reflection
+
+            class TypeWithPrivateField
+            {
+                FieldType field;
+            }
+
+            class TypeWithMultipleFields
+            {
+                FieldType field1;
+                FieldType field2;
+            }
+
+            #pragma warning restore 169
         }
-
-        public class Constructors : ObjectExtensionsTest
-        {
-            readonly Base instance = new Derived();
-
-            [Fact]
-            public void CreatesTypeInspectorForGivenIstanceDefaultingToItsDeclaredType()
-            {
-                instance.Constructors();
-
-                typeInspectorCreate.Received().Invoke(typeof(Base), instance);
-                typeInspectorCreate.Received(1).Invoke(Arg.Any<Type>(), Arg.Any<object>());
-            }
-
-            [Fact]
-            public void ReturnsConstructorsReceivedFromTypeInspector()
-            {
-                var expected = new ConstructorInfo[0];
-                typeInspector.GetConstructors().Returns(expected);
-
-                IReadOnlyList<ConstructorInfo> actual = instance.Constructors();
-
-                Assert.Same(expected, actual);
-            }
-        }
-
-        class Base { }
-
-        class Derived : Base { }
     }
 }

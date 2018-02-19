@@ -1,21 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Inspector
 {
     public static class ObjectExtensions
     {
-        public static ConstructorInfo Constructor<T>(this T instance, params Type[] parameters)
+        public static Field<T> Field<T>(this object instance)
         {
-            var inspector = TypeInspector.Create(typeof(T), instance);
-            return inspector.GetConstructor(parameters);
-        }
+            if (instance == null)
+                throw new ArgumentNullException(nameof(instance));
 
-        public static IReadOnlyList<ConstructorInfo> Constructors<T>(this T instance)
-        {
-            var inspector = TypeInspector.Create(typeof(T), instance);
-            return inspector.GetConstructors();
+            Type instanceType = instance.GetType();
+            Type fieldType = typeof(T);
+            IReadOnlyList<FieldInfo> info = instanceType.GetTypeInfo()
+                .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .Where(_ => _.FieldType == fieldType).ToList();
+            if (info.Count == 0)
+                throw new ArgumentException($"{instanceType} doesn't have instance fields of type {fieldType}.", nameof(T));
+            if (info.Count > 1)
+                throw new ArgumentException($"{instanceType} has more than one instance field of type {fieldType}.", nameof(T));
+
+            return new Field<T>(info[0], instance);
         }
     }
 }
