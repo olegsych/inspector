@@ -14,22 +14,13 @@ namespace Inspector
             public void ReturnsPrivateFieldOfGivenIstanceAndFieldType()
             {
                 var instance = new TypeWithPrivateField();
-                FieldInfo expectedInfo = instance.GetType()
+                FieldInfo info = instance.GetType()
                     .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
                     .Single(_ => _.FieldType == typeof(FieldType));
 
                 Field<FieldType> field = instance.Field<FieldType>();
 
-                object actualInstance = typeof(Field<FieldType>)
-                    .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
-                    .Single(_ => _.FieldType == typeof(object))
-                    .GetValue(field);
-                var actualInfo = (FieldInfo)typeof(Field<FieldType>)
-                    .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
-                    .Single(_ => _.FieldType == typeof(FieldInfo))
-                    .GetValue(field);
-                Assert.Same(instance, actualInstance);
-                Assert.Same(expectedInfo, actualInfo);
+                VerifyField(instance, info, field);
             }
 
             [Fact]
@@ -42,16 +33,7 @@ namespace Inspector
 
                 Field<FieldType> field = instance.Field<FieldType>();
 
-                object actualInstance = typeof(Field<FieldType>)
-                    .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
-                    .Single(_ => _.FieldType == typeof(object))
-                    .GetValue(field);
-                var actualInfo = (FieldInfo)typeof(Field<FieldType>)
-                    .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
-                    .Single(_ => _.FieldType == typeof(FieldInfo))
-                    .GetValue(field);
-                Assert.Same(instance, actualInstance);
-                Assert.Same(expectedInfo, actualInfo);
+                VerifyField(instance, expectedInfo, field);
             }
 
             [Fact]
@@ -64,16 +46,7 @@ namespace Inspector
 
                 Field<FieldType> field = instance.Field<FieldType>();
 
-                object actualInstance = typeof(Field<FieldType>)
-                    .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
-                    .Single(_ => _.FieldType == typeof(object))
-                    .GetValue(field);
-                var actualInfo = (FieldInfo)typeof(Field<FieldType>)
-                    .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
-                    .Single(_ => _.FieldType == typeof(FieldInfo))
-                    .GetValue(field);
-                Assert.Same(instance, actualInstance);
-                Assert.Equal(expectedInfo, actualInfo);
+                VerifyField(instance, expectedInfo, field);
             }
 
             [Fact]
@@ -99,6 +72,20 @@ namespace Inspector
                 var thrown = Assert.Throws<ArgumentException>(() => instance.Field<FieldType>());
                 Assert.Equal("T", thrown.ParamName);
                 Assert.StartsWith($"{instance.GetType()} has more than one instance field of type {typeof(FieldType)}.", thrown.Message);
+            }
+
+            static void VerifyField(object expectedInstance, FieldInfo expectedInfo, Field<FieldType> field)
+            {
+                object actualInstance = typeof(Field<FieldType>)
+                    .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Single(_ => _.FieldType == typeof(object))
+                    .GetValue(field);
+                var actualInfo = (FieldInfo)typeof(Field<FieldType>)
+                    .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Single(_ => _.FieldType == typeof(FieldInfo))
+                    .GetValue(field);
+                Assert.Same(expectedInstance, actualInstance);
+                Assert.Same(expectedInfo, actualInfo);
             }
 
             public class FieldType { }
