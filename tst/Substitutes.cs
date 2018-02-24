@@ -2,16 +2,14 @@ using System;
 using System.Reflection;
 using NSubstitute;
 
-namespace Inspector
-{
-    static class Substitutes
-    {
+namespace Inspector {
+
+    static class Substitutes {
         static uint seed = 1;
 
         static uint Next => seed++;
 
-        public static MethodBase MethodBase()
-        {
+        public static MethodBase MethodBase() {
             var method = Substitute.For<MethodBase>();
             Type declaringType = Type();
             method.DeclaringType.Returns(declaringType);
@@ -20,16 +18,14 @@ namespace Inspector
             return method;
         }
 
-        public static ParameterInfo ParameterInfo(Type parameterType = default)
-        {
+        public static ParameterInfo ParameterInfo(Type parameterType = default) {
             parameterType = parameterType ?? Type();
             var parameter = Substitute.For<ParameterInfo>();
             parameter.ParameterType.Returns(parameterType);
             return parameter;
         }
 
-        public static Type Type()
-        {
+        public static Type Type() {
             var type = Substitute.For<Type>();
             type.Name.Returns($"Type{Next}");
             type.Namespace.Returns($"Namespace{Next}");

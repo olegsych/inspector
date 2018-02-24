@@ -4,15 +4,13 @@ using System.Reflection;
 using NSubstitute;
 using Xunit;
 
-namespace Inspector
-{
-    public class ObjectExtensionsTest
-    {
-        public class FieldTest : ObjectExtensionsTest
-        {
+namespace Inspector {
+
+    public class ObjectExtensionsTest {
+
+        public class FieldTest : ObjectExtensionsTest {
             [Fact]
-            public void ReturnsPrivateFieldOfGivenIstanceAndFieldType()
-            {
+            public void ReturnsPrivateFieldOfGivenIstanceAndFieldType() {
                 var instance = new TypeWithPrivateField();
                 FieldInfo info = instance.GetType()
                     .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
@@ -24,8 +22,7 @@ namespace Inspector
             }
 
             [Fact]
-            public void ReturnsPublicFieldOfGivenIstanceAndFieldType()
-            {
+            public void ReturnsPublicFieldOfGivenIstanceAndFieldType() {
                 var instance = new TypeWithPublicField();
                 FieldInfo expectedInfo = instance.GetType()
                     .GetFields(BindingFlags.Instance | BindingFlags.Public)
@@ -37,8 +34,7 @@ namespace Inspector
             }
 
             [Fact]
-            public void ReturnsFieldOfInstanceDynamicallyGeneratedByCastleProxy()
-            {
+            public void ReturnsFieldOfInstanceDynamicallyGeneratedByCastleProxy() {
                 var instance = Substitute.ForPartsOf<AbstractType>();
                 FieldInfo expectedInfo = instance.GetType().BaseType
                     .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
@@ -50,15 +46,13 @@ namespace Inspector
             }
 
             [Fact]
-            public void ThrowsDescriptiveExceptionWhenInstanceIsNull()
-            {
+            public void ThrowsDescriptiveExceptionWhenInstanceIsNull() {
                 var thrown = Assert.Throws<ArgumentNullException>(() => default(object).Field<FieldType>());
                 Assert.Equal("instance", thrown.ParamName);
             }
 
             [Fact]
-            public void ThrowsDescriptiveExceptionWhenInstanceDoesNotHaveFieldOfGivenType()
-            {
+            public void ThrowsDescriptiveExceptionWhenInstanceDoesNotHaveFieldOfGivenType() {
                 var instance = new TypeWithPublicField();
                 var thrown = Assert.Throws<ArgumentException>(() => instance.Field<UnexpectedFieldType>());
                 Assert.Equal("T", thrown.ParamName);
@@ -66,16 +60,14 @@ namespace Inspector
             }
 
             [Fact]
-            public void ThrowsDescriptiveExceptionsWhenInstanceHasMoreThanOneFieldOfGivenType()
-            {
+            public void ThrowsDescriptiveExceptionsWhenInstanceHasMoreThanOneFieldOfGivenType() {
                 var instance = new TypeWithMultipleFields();
                 var thrown = Assert.Throws<ArgumentException>(() => instance.Field<FieldType>());
                 Assert.Equal("T", thrown.ParamName);
                 Assert.StartsWith($"{instance.GetType()} has more than one instance field of type {typeof(FieldType)}.", thrown.Message);
             }
 
-            static void VerifyField(object expectedInstance, FieldInfo expectedInfo, Field<FieldType> field)
-            {
+            static void VerifyField(object expectedInstance, FieldInfo expectedInfo, Field<FieldType> field) {
                 object actualInstance = typeof(Field<FieldType>)
                     .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
                     .Single(_ => _.FieldType == typeof(object))
@@ -92,34 +84,30 @@ namespace Inspector
 
             class UnexpectedFieldType { }
 
-            class TypeWithPublicField
-            {
-                #pragma warning disable 649 // public field used only via reflection
+            class TypeWithPublicField {
+#pragma warning disable 649 // public field used only via reflection
 
                 public FieldType field;
 
-                #pragma warning restore 649
+#pragma warning restore 649
             }
 
-            public class AbstractType
-            {
+            public class AbstractType {
                 FieldType field;
             }
 
-            #pragma warning disable 169 // private fields used only via reflection
+#pragma warning disable 169 // private fields used only via reflection
 
-            class TypeWithPrivateField
-            {
+            class TypeWithPrivateField {
                 FieldType field;
             }
 
-            class TypeWithMultipleFields
-            {
+            class TypeWithMultipleFields {
                 FieldType field1;
                 FieldType field2;
             }
 
-            #pragma warning restore 169
+#pragma warning restore 169
         }
     }
 }

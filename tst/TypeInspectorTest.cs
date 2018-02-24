@@ -6,28 +6,25 @@ using System.Reflection;
 using Xunit;
 using static Inspector.Substitutes;
 
-namespace Inspector
-{
-    public class TypeInspectorTest
-    {
-        public class Create : TypeInspectorTest
-        {
+namespace Inspector {
+
+    public class TypeInspectorTest {
+
+        public class Create : TypeInspectorTest {
+
             [Fact]
-            public void CreatesInspectorOfGivenInstanceType()
-            {
+            public void CreatesInspectorOfGivenInstanceType() {
                 var inspector = TypeInspector.Create(typeof(object), new TestClass());
                 AssertInspectorType(typeof(TestClass), inspector);
             }
 
             [Fact]
-            public void CreatesInspectorOfDeclaredTypeWhenInstanceIsNull()
-            {
+            public void CreatesInspectorOfDeclaredTypeWhenInstanceIsNull() {
                 var inspector = TypeInspector.Create(typeof(TestClass), null);
                 AssertInspectorType(typeof(TestClass), inspector);
             }
 
-            static void AssertInspectorType(Type expected, TypeInspector inspector)
-            {
+            static void AssertInspectorType(Type expected, TypeInspector inspector) {
                 var actualType = (TypeInfo)inspector.GetType()
                     .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
                     .Single(_ => _.FieldType == typeof(TypeInfo)).GetValue(inspector);
@@ -37,11 +34,10 @@ namespace Inspector
             class TestClass { }
         }
 
-        public class GetConstructor : TypeInspectorTest
-        {
+        public class GetConstructor : TypeInspectorTest {
+
             [Fact]
-            public void ReturnsSingleParameterlessConstructorOfGivenType()
-            {
+            public void ReturnsSingleParameterlessConstructorOfGivenType() {
                 var sut = Substitute.ForPartsOf<TypeInspector>(typeof(TestClass).GetTypeInfo());
                 var expected = Substitute.For<ConstructorInfo>();
                 sut.GetConstructors().Returns(new[] { expected });
@@ -52,8 +48,7 @@ namespace Inspector
             }
 
             [Fact]
-            public void ReturnsConstructorWithMatchingParameterTypes()
-            {
+            public void ReturnsConstructorWithMatchingParameterTypes() {
                 var sut = Substitute.ForPartsOf<TypeInspector>(typeof(TestClass).GetTypeInfo());
                 ConstructorInfo expected = ConstructorInfo(typeof(Foo), typeof(Bar));
                 sut.GetConstructors().Returns(new[] { expected });
@@ -64,8 +59,7 @@ namespace Inspector
             }
 
             [Fact]
-            public void ThrowsDescriptiveExceptionWhenTypeDoesntHaveConstructorWithMatchingParameters()
-            {
+            public void ThrowsDescriptiveExceptionWhenTypeDoesntHaveConstructorWithMatchingParameters() {
                 var sut = Substitute.ForPartsOf<TypeInspector>(typeof(TestClass).GetTypeInfo());
                 ConstructorInfo unexpected = ConstructorInfo(typeof(Bar), typeof(Foo));
                 sut.GetConstructors().Returns(new[] { unexpected });
@@ -77,8 +71,7 @@ namespace Inspector
             }
 
             [Fact]
-            public void ThrowsDescriptiveExceptionWhenParameterTypesIsNullToFailFast()
-            {
+            public void ThrowsDescriptiveExceptionWhenParameterTypesIsNullToFailFast() {
                 var sut = Substitute.ForPartsOf<TypeInspector>(typeof(TestClass).GetTypeInfo());
 
                 var thrown = Assert.Throws<ArgumentNullException>(() => sut.GetConstructor(default(Type[])));
@@ -92,8 +85,7 @@ namespace Inspector
 
             class Bar { }
 
-            static ConstructorInfo ConstructorInfo(params Type[] parameterTypes)
-            {
+            static ConstructorInfo ConstructorInfo(params Type[] parameterTypes) {
                 var constructor = Substitute.For<ConstructorInfo>();
                 ParameterInfo[] parameters = parameterTypes.Select(t => ParameterInfo(t)).ToArray();
                 constructor.GetParameters().Returns(parameters);
@@ -101,11 +93,10 @@ namespace Inspector
             }
         }
 
-        public class GetConstructors : TypeInspectorTest
-        {
+        public class GetConstructors : TypeInspectorTest {
+
             [Fact]
-            public void ReturnsAllConstructorsOfGivenType()
-            {
+            public void ReturnsAllConstructorsOfGivenType() {
                 var sut = Substitute.ForPartsOf<TypeInspector>(typeof(TestClass).GetTypeInfo());
                 IEnumerable<ConstructorInfo> expected = typeof(TestClass).GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
@@ -114,8 +105,7 @@ namespace Inspector
                 Assert.Equal(expected, actual);
             }
 
-            class TestClass
-            {
+            class TestClass {
                 public TestClass() { }
                 internal TestClass(string _) { }
                 protected TestClass(char _) { }

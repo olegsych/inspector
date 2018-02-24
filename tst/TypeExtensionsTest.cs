@@ -5,15 +5,13 @@ using System.Reflection;
 using NSubstitute;
 using Xunit;
 
-namespace Inspector
-{
-    public class TypeExtensionsTest : TypeInspectorFixture
-    {
-        public class Constructor : TypeExtensionsTest
-        {
+namespace Inspector {
+
+    public class TypeExtensionsTest : TypeInspectorFixture {
+
+        public class Constructor : TypeExtensionsTest {
             [Fact]
-            public void CreatesTypeInspectorForGivenType()
-            {
+            public void CreatesTypeInspectorForGivenType() {
                 typeof(TestClass).Constructor();
 
                 typeInspectorCreate.Received().Invoke(typeof(TestClass));
@@ -21,8 +19,7 @@ namespace Inspector
             }
 
             [Fact]
-            public void PassesGivenParametersToTypeInspector()
-            {
+            public void PassesGivenParametersToTypeInspector() {
                 var parameters = new Type[2];
 
                 typeof(TestClass).Constructor(parameters);
@@ -32,8 +29,7 @@ namespace Inspector
             }
 
             [Fact]
-            public void ReturnsConstructorObtainedFromTypeInspector()
-            {
+            public void ReturnsConstructorObtainedFromTypeInspector() {
                 var expected = Substitute.For<ConstructorInfo>();
                 typeInspector.GetConstructor().Returns(expected);
 
@@ -43,8 +39,7 @@ namespace Inspector
             }
         }
 
-        public class GenericConstructor : TypeExtensionsTest
-        {
+        public class GenericConstructor : TypeExtensionsTest {
             class P1 { }
             class P2 { }
             class P3 { }
@@ -54,16 +49,14 @@ namespace Inspector
             class P7 { }
             class P8 { }
 
-            public static IEnumerable<object[]> GenericParameters()
-            {
+            public static IEnumerable<object[]> GenericParameters() {
                 Type[] parameters = new[] { typeof(P1), typeof(P2), typeof(P3), typeof(P4), typeof(P5), typeof(P6), typeof(P7), typeof(P8) };
-                for (byte numberOfParameters = 1; numberOfParameters <= 8; numberOfParameters++)
+                for(byte numberOfParameters = 1; numberOfParameters <= 8; numberOfParameters++)
                     yield return new object[] { parameters.Take(numberOfParameters).ToArray() };
             }
 
             [Theory, MemberData(nameof(GenericParameters))]
-            public void CreatesTypeInspectorForGivenType(Type[] parameters)
-            {
+            public void CreatesTypeInspectorForGivenType(Type[] parameters) {
                 InvokeGenericConstructorMethod(parameters);
 
                 typeInspectorCreate.Received().Invoke(typeof(TestClass));
@@ -71,8 +64,7 @@ namespace Inspector
             }
 
             [Theory, MemberData(nameof(GenericParameters))]
-            public void PassesGivenParametersToTypeInspector(Type[] parameters)
-            {
+            public void PassesGivenParametersToTypeInspector(Type[] parameters) {
                 InvokeGenericConstructorMethod(parameters);
 
                 typeInspector.Received().GetConstructor(parameters);
@@ -80,8 +72,7 @@ namespace Inspector
             }
 
             [Theory, MemberData(nameof(GenericParameters))]
-            public void ReturnsConstructorObtainedFromTypeInspector(Type[] parameters)
-            {
+            public void ReturnsConstructorObtainedFromTypeInspector(Type[] parameters) {
                 var expected = Substitute.For<ConstructorInfo>();
                 typeInspector.GetConstructor(Arg.Any<Type[]>()).Returns(expected);
 
@@ -90,8 +81,7 @@ namespace Inspector
                 Assert.Same(expected, actual);
             }
 
-            ConstructorInfo InvokeGenericConstructorMethod(Type[] parameters)
-            {
+            ConstructorInfo InvokeGenericConstructorMethod(Type[] parameters) {
                 MethodInfo genericDefinition = typeof(TypeExtensions)
                     .GetMethods(BindingFlags.Static | BindingFlags.Public)
                     .Where(_ => _.IsGenericMethod
@@ -107,11 +97,9 @@ namespace Inspector
             }
         }
 
-        public class Constructors : TypeExtensionsTest
-        {
+        public class Constructors : TypeExtensionsTest {
             [Fact]
-            public void CreatesTypeInspectorForGivenType()
-            {
+            public void CreatesTypeInspectorForGivenType() {
                 typeof(TestClass).Constructors();
 
                 typeInspectorCreate.Received().Invoke(typeof(TestClass));
@@ -119,8 +107,7 @@ namespace Inspector
             }
 
             [Fact]
-            public void ReturnsConstructorsObtainedFromTypeInspector()
-            {
+            public void ReturnsConstructorsObtainedFromTypeInspector() {
                 IReadOnlyList<ConstructorInfo> expected = new ConstructorInfo[0];
                 typeInspector.GetConstructors().Returns(expected);
 

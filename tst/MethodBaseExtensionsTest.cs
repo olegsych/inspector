@@ -4,19 +4,15 @@ using NSubstitute;
 using Xunit;
 using static Inspector.Substitutes;
 
-namespace Inspector
-{
-    public class MethodBaseExtensionsTest
-    {
+namespace Inspector {
+    public class MethodBaseExtensionsTest {
         readonly MethodBase method = MethodBase();
 
-        public class Parameter : MethodBaseExtensionsTest
-        {
+        public class Parameter : MethodBaseExtensionsTest {
             readonly Type parameterType = Type();
 
             [Fact]
-            public void ReturnsParameterOfGivenType()
-            {
+            public void ReturnsParameterOfGivenType() {
                 ParameterInfo expected = ParameterInfo(parameterType);
                 method.GetParameters().Returns(new[] { expected });
 
@@ -26,8 +22,7 @@ namespace Inspector
             }
 
             [Fact]
-            public void ThrowsDescriptiveExceptionWhenMethodDoesNotHaveParameterOfGivenType()
-            {
+            public void ThrowsDescriptiveExceptionWhenMethodDoesNotHaveParameterOfGivenType() {
                 ParameterInfo[] unexpected = { ParameterInfo(), ParameterInfo() };
                 method.GetParameters().Returns(unexpected);
 
@@ -40,27 +35,23 @@ namespace Inspector
             }
 
             [Fact]
-            public void ThrowsDescriptiveExceptionWhenMethodIsNull()
-            {
+            public void ThrowsDescriptiveExceptionWhenMethodIsNull() {
                 var thrown = Assert.Throws<ArgumentNullException>(() => default(MethodBase).Parameter(parameterType));
                 Assert.Equal("method", thrown.ParamName);
             }
 
             [Fact]
-            public void ThrowsDescriptiveExceptionWhenParameterTypeIsNull()
-            {
+            public void ThrowsDescriptiveExceptionWhenParameterTypeIsNull() {
                 var thrown = Assert.Throws<ArgumentNullException>(() => method.Parameter(null));
                 Assert.Equal("parameterType", thrown.ParamName);
             }
         }
 
-        public class ParameterOfT : MethodBaseExtensionsTest
-        {
+        public class ParameterOfT : MethodBaseExtensionsTest {
             class P { };
 
             [Fact]
-            public void ReturnsParameterOfGivenType()
-            {
+            public void ReturnsParameterOfGivenType() {
                 ParameterInfo expected = ParameterInfo(typeof(P));
                 method.GetParameters().Returns(new[] { expected });
 
@@ -70,8 +61,7 @@ namespace Inspector
             }
 
             [Fact]
-            public void ThrowsDescriptiveExceptionWhenMethodDoesNotHaveParameterOfGivenType()
-            {
+            public void ThrowsDescriptiveExceptionWhenMethodDoesNotHaveParameterOfGivenType() {
                 ParameterInfo[] unexpected = { ParameterInfo(), ParameterInfo() };
                 method.GetParameters().Returns(unexpected);
 
@@ -84,8 +74,7 @@ namespace Inspector
             }
 
             [Fact]
-            public void ThrowsDescriptiveExceptionWhenMethodIsNull()
-            {
+            public void ThrowsDescriptiveExceptionWhenMethodIsNull() {
                 var thrown = Assert.Throws<ArgumentNullException>(() => default(MethodBase).Parameter<P>());
                 Assert.Equal("method", thrown.ParamName);
             }
