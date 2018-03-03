@@ -85,18 +85,16 @@ namespace Inspector {
             class UnexpectedFieldType { }
 
             class TypeWithPublicField {
-#pragma warning disable 649 // public field used only via reflection
-
+                #pragma warning disable 649 // public field used only via reflection
                 public FieldType field;
-
-#pragma warning restore 649
+                #pragma warning restore 649
             }
+
+            #pragma warning disable 169 // private fields used only via reflection
 
             public class AbstractType {
                 FieldType field;
             }
-
-#pragma warning disable 169 // private fields used only via reflection
 
             class TypeWithPrivateField {
                 FieldType field;
@@ -107,7 +105,7 @@ namespace Inspector {
                 FieldType field2;
             }
 
-#pragma warning restore 169
+            #pragma warning restore 169
         }
     }
 }
