@@ -7,6 +7,12 @@ namespace Inspector {
 
     public static class ObjectExtensions {
 
+        public static ObjectInspector Declared(this object instance)
+            => throw new NotImplementedException();
+
+        public static ObjectInspector Declared<TDeclaringType>(this object instance)
+            => throw new NotImplementedException();
+
         public static Field<T> Field<T>(this object instance) {
             if(instance == null)
                 throw new ArgumentNullException(nameof(instance));
@@ -27,6 +33,30 @@ namespace Inspector {
 
             return new Field<T>(info[0], instance);
         }
+
+        public static Field<T> Field<T>(this object instance, string name)
+            => throw new NotImplementedException();
+
+        public static ObjectInspector Inherited(this object instance)
+            => throw new NotImplementedException();
+
+        public static ObjectInspector Inherited<TBaseType>(this object instance)
+            => throw new NotImplementedException();
+
+        public static ObjectInspector Internal(this object instance)
+            => throw new NotImplementedException();
+
+        public static ObjectInspector Private(this object instance)
+            => throw new NotImplementedException();
+
+        public static ObjectInspector Protected(this object instance)
+            => throw new NotImplementedException();
+
+        public static Property<T> Property<T>(this object instance)
+            => throw new NotImplementedException();
+
+        public static ObjectInspector Public(this object instance)
+            => throw new NotImplementedException();
 
         static bool IsCastleDynamicProxy(TypeInfo instanceType)
             => instanceType.Assembly.GetName().Name == "DynamicProxyGenAssembly2";

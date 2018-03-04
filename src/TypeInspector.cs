@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Inspector {
-    class TypeInspector {
+namespace Inspector
+{
+    class TypeInspector
+    {
         readonly TypeInfo type;
 
         protected TypeInspector(TypeInfo type)

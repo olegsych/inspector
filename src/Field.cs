@@ -1,9 +1,10 @@
 using System;
 using System.Reflection;
 
-namespace Inspector {
-
-    public class Field<T> {
+namespace Inspector
+{
+    public class Field<T> : ValueMemberInspector<T, FieldInfo>
+    {
         readonly FieldInfo info;
         readonly object instance;
 
@@ -25,5 +26,9 @@ namespace Inspector {
             get => (T)info.GetValue(instance);
             set => info.SetValue(instance, value);
         }
+
+        public override T Get() => throw new NotImplementedException();
+
+        public override void Set(T value) => throw new NotImplementedException();
     }
 }
