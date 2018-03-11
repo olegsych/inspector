@@ -6,7 +6,7 @@ namespace Inspector
     /// <summary>
     /// Provides operations common for accessing properties and fields.
     /// </summary>
-    public abstract class ValueMemberInspector<TValue, TInfo> : MemberInspector<TInfo> where TInfo : MemberInfo
+    public abstract class ValueMemberInspector<TValue, TInfo> : Member<TInfo> where TInfo : MemberInfo
     {
         public abstract TValue Get();
 
