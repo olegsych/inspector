@@ -3,14 +3,20 @@ using System.Reflection;
 
 namespace Inspector
 {
-    public class Field
+    /// <summary>
+    /// Provides access to a field of type not accessible at compile time.
+    /// </summary>
+    public class Field : ValueMember<FieldInfo>
     {
-        public object Value {
-            get => throw new NotImplementedException();
-            set => throw new NotImplementedException();
-        }
+        public override object Get() => throw new NotImplementedException();
+
+        public override void Set(object value) => throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Provides access to a field of type <typeparamref name="T"/>
+    /// </summary>
+    /// <typeparam name="T">Field type</typeparam>
     public class Field<T> : ValueMember<T, FieldInfo>
     {
         readonly FieldInfo info;
@@ -28,11 +34,6 @@ namespace Inspector
             if(!info.DeclaringType.GetTypeInfo().IsInstanceOfType(instance))
                 throw new ArgumentException($"Instance type {instance.GetType()} doesn't match type {info.DeclaringType} where field is declared.", nameof(instance));
             this.instance = instance;
-        }
-
-        public T Value {
-            get => (T)info.GetValue(instance);
-            set => info.SetValue(instance, value);
         }
 
         public override T Get() => throw new NotImplementedException();
