@@ -3,6 +3,11 @@ using System.Reflection;
 
 namespace Inspector
 {
+    public class Property
+    {
+
+    }
+
     /// <summary>
     /// Provides access to a property.
     /// </summary>

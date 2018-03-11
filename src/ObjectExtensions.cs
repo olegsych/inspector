@@ -34,7 +34,13 @@ namespace Inspector {
             return new Field<T>(info[0], instance);
         }
 
-        public static Field<T> Field<T>(this object instance, string name)
+        public static Field<T> Field<T>(this object instance, string fieldName)
+            => throw new NotImplementedException();
+
+        public static Field Field(this object instance, Type fieldType, string fieldName = null)
+            => throw new NotImplementedException();
+
+        public static Field Field(this object instance, string fieldName)
             => throw new NotImplementedException();
 
         public static ObjectInspector Inherited(this object instance)

@@ -4,7 +4,11 @@ namespace Inspector
 {
     public class ObjectInspector : IDeclarationFilter<ObjectInspector>, IAccessFilter<ObjectInspector> 
     {
-        public Field<T> Field<T>(string fieldName = default) => throw new NotImplementedException();
+        public Field Field(Type fieldType = null, string fieldName = null) => throw new NotImplementedException();
+
+        public Delegate Method(Type delegateType = null, string methodName = null) => throw new NotImplementedException();
+
+        public Property Property(Type propertyType = null, string propertyName = null) => throw new NotImplementedException();
 
         public ObjectInspector Public() => throw new NotImplementedException();
 

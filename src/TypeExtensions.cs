@@ -39,5 +39,17 @@ namespace Inspector {
             var inspector = TypeInspector.Create(type);
             return inspector.GetConstructors();
         }
+
+        public static Field<T> Field<T>(this Type type, string name = default)
+            => throw new NotImplementedException();
+
+        public static object New(this Type type, params object[] parameters)
+            => throw new NotImplementedException();
+
+        public static Property<T> Property<T>(this Type type, string name = default)
+            => throw new NotImplementedException();
+
+        public static object Uninitialized(this Type type)
+            => throw new NotImplementedException();
     }
 }

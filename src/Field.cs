@@ -3,6 +3,14 @@ using System.Reflection;
 
 namespace Inspector
 {
+    public class Field
+    {
+        public object Value {
+            get => throw new NotImplementedException();
+            set => throw new NotImplementedException();
+        }
+    }
+
     public class Field<T> : ValueMemberInspector<T, FieldInfo>
     {
         readonly FieldInfo info;
