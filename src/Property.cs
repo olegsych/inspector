@@ -11,7 +11,7 @@ namespace Inspector
     /// <summary>
     /// Provides access to a property.
     /// </summary>
-    public class Property<T> : ValueMemberInspector<T, PropertyInfo>
+    public class Property<T> : ValueMember<T, PropertyInfo>
     {
         public override T Get() => throw new NotImplementedException();
 

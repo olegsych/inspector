@@ -11,7 +11,7 @@ namespace Inspector
         }
     }
 
-    public class Field<T> : ValueMemberInspector<T, FieldInfo>
+    public class Field<T> : ValueMember<T, FieldInfo>
     {
         readonly FieldInfo info;
         readonly object instance;
