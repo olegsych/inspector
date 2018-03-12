@@ -24,8 +24,8 @@ namespace Inspector
         public static Func<T1, T2, T3, T4, T5, T6, T7, TResult> Func<T1, T2, T3, T4, T5, T6, T7, TResult>(this object instance, string methodName = null) => throw new NotImplementedException();
         public static Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult> Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(this object instance, string methodName = null) => throw new NotImplementedException();
 
-        public static T Method<T>(this object instance, string methodName = null) => throw new NotImplementedException();
-        public static Delegate Method(this object instance, string methodName) => throw new NotImplementedException();
-        public static Delegate Method(this object instance, params Type[] parameterTypes) => throw new NotImplementedException();
+        public static Method<T> Method<T>(this object instance, string methodName = null) => throw new NotImplementedException();
+        public static Method Method(this object instance, string methodName) => throw new NotImplementedException();
+        public static Method Method(this object instance, params Type[] parameterTypes) => throw new NotImplementedException();
     }
 }

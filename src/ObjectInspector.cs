@@ -8,7 +8,7 @@ namespace Inspector
 
         public Field Field(Type fieldType = null, string fieldName = null) => throw new NotImplementedException();
 
-        public Delegate Method(Type delegateType = null, string methodName = null) => throw new NotImplementedException();
+        public Method Method(Type delegateType = null, string methodName = null) => throw new NotImplementedException();
 
         public Property Property(Type propertyType = null, string propertyName = null) => throw new NotImplementedException();
 
