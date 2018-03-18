@@ -2,7 +2,7 @@
 
 namespace Inspector
 {
-    public class ObjectInspector : IDeclarationFilter<ObjectInspector>, IAccessFilter<ObjectInspector> 
+    public class ObjectInspector : IDeclarationFilter<ObjectInspector>, IAccessFilter<ObjectInspector>
     {
         public Event Event(Type eventType = null, string eventName = null) => throw new NotImplementedException();
 

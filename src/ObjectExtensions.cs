@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Inspector {
-
-    public static class ObjectExtensions {
-
+namespace Inspector
+{
+    public static class ObjectExtensions
+    {
         public static ObjectInspector Declared(this object instance)
             => throw new NotImplementedException();
 

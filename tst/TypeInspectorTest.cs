@@ -6,12 +6,12 @@ using System.Reflection;
 using Xunit;
 using static Inspector.Substitutes;
 
-namespace Inspector {
-
-    public class TypeInspectorTest {
-
-        public class Create : TypeInspectorTest {
-
+namespace Inspector
+{
+    public class TypeInspectorTest
+    {
+        public class Create : TypeInspectorTest
+        {
             [Fact]
             public void CreatesInspectorOfGivenInstanceType() {
                 var inspector = TypeInspector.Create(typeof(object), new TestClass());
@@ -34,8 +34,8 @@ namespace Inspector {
             class TestClass { }
         }
 
-        public class GetConstructor : TypeInspectorTest {
-
+        public class GetConstructor : TypeInspectorTest
+        {
             [Fact]
             public void ReturnsSingleParameterlessConstructorOfGivenType() {
                 var sut = Substitute.ForPartsOf<TypeInspector>(typeof(TestClass).GetTypeInfo());
@@ -93,8 +93,8 @@ namespace Inspector {
             }
         }
 
-        public class GetConstructors : TypeInspectorTest {
-
+        public class GetConstructors : TypeInspectorTest
+        {
             [Fact]
             public void ReturnsAllConstructorsOfGivenType() {
                 var sut = Substitute.ForPartsOf<TypeInspector>(typeof(TestClass).GetTypeInfo());
@@ -105,7 +105,8 @@ namespace Inspector {
                 Assert.Equal(expected, actual);
             }
 
-            class TestClass {
+            class TestClass
+            {
                 public TestClass() { }
                 internal TestClass(string _) { }
                 protected TestClass(char _) { }

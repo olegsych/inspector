@@ -2,9 +2,10 @@ using System;
 using System.Reflection;
 using NSubstitute;
 
-namespace Inspector {
-
-    static class Substitutes {
+namespace Inspector
+{
+    static class Substitutes
+    {
         static uint seed = 1;
 
         static uint Next => seed++;

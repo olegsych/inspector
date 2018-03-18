@@ -4,11 +4,14 @@ using NSubstitute;
 using Xunit;
 using static Inspector.Substitutes;
 
-namespace Inspector {
-    public class MethodBaseExtensionsTest {
+namespace Inspector
+{
+    public class MethodBaseExtensionsTest
+    {
         readonly MethodBase method = MethodBase();
 
-        public class Parameter : MethodBaseExtensionsTest {
+        public class Parameter : MethodBaseExtensionsTest
+        {
             readonly Type parameterType = Type();
 
             [Fact]
@@ -47,7 +50,8 @@ namespace Inspector {
             }
         }
 
-        public class ParameterOfT : MethodBaseExtensionsTest {
+        public class ParameterOfT : MethodBaseExtensionsTest
+        {
             class P { };
 
             [Fact]

@@ -3,11 +3,11 @@ using System.Reflection;
 using NSubstitute;
 using Xunit;
 
-namespace Inspector {
-
+namespace Inspector
+{
     [Collection(nameof(TypeInspector))]
-    public class TypeInspectorFixture : IDisposable {
-
+    public class TypeInspectorFixture : IDisposable
+    {
         readonly TypeInspector.Factory originalTypeInspectorCreate;
         internal readonly TypeInspector.Factory typeInspectorCreate = Substitute.For<TypeInspector.Factory>();
         internal readonly TypeInspector typeInspector = Substitute.For<TypeInspector>();

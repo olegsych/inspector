@@ -4,11 +4,12 @@ using System.Reflection;
 using NSubstitute;
 using Xunit;
 
-namespace Inspector {
-
-    public class ObjectExtensionsTest {
-
-        public class FieldTest : ObjectExtensionsTest {
+namespace Inspector
+{
+    public class ObjectExtensionsTest
+    {
+        public class FieldTest : ObjectExtensionsTest
+        {
             [Fact]
             public void ReturnsPrivateFieldOfGivenIstanceAndFieldType() {
                 var instance = new TypeWithPrivateField();
@@ -84,28 +85,32 @@ namespace Inspector {
 
             class UnexpectedFieldType { }
 
-            class TypeWithPublicField {
-                #pragma warning disable 649 // public field used only via reflection
+            class TypeWithPublicField
+            {
+#pragma warning disable 649 // public field used only via reflection
                 public FieldType field;
-                #pragma warning restore 649
+#pragma warning restore 649
             }
 
-            #pragma warning disable 169 // private fields used only via reflection
+#pragma warning disable 169 // private fields used only via reflection
 
-            public class AbstractType {
+            public class AbstractType
+            {
                 FieldType field;
             }
 
-            class TypeWithPrivateField {
+            class TypeWithPrivateField
+            {
                 FieldType field;
             }
 
-            class TypeWithMultipleFields {
+            class TypeWithMultipleFields
+            {
                 FieldType field1;
                 FieldType field2;
             }
 
-            #pragma warning restore 169
+#pragma warning restore 169
         }
     }
 }

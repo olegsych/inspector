@@ -104,17 +104,17 @@ namespace Inspector
         {
             class Foo
             {
-                #pragma warning disable 169
+#pragma warning disable 169
                 Bar privateField;
-                #pragma warning disable 169
+#pragma warning disable 169
 
-                #pragma warning disable 649
+#pragma warning disable 649
                 protected Bar protectedField;
                 internal Bar internalField;
                 public readonly Bar publicField;
                 protected internal Bar protectedInternalField;
                 private protected Bar privateProtectedField;
-                #pragma warning restore 649
+#pragma warning restore 649
             }
 
             readonly Foo foo = new Foo();
@@ -165,7 +165,7 @@ namespace Inspector
 
         public class FilterByDeclaringType
         {
-            #pragma warning disable 649
+#pragma warning disable 649
 
             class Foo
             {
@@ -177,7 +177,7 @@ namespace Inspector
                 public Baz barField;
             }
 
-            #pragma warning restore 649
+#pragma warning restore 649
 
             class Baz { }
 
@@ -218,7 +218,7 @@ namespace Inspector
 
         public class FilterByName
         {
-            #pragma warning disable 649
+#pragma warning disable 649
 
             class Foo
             {
@@ -238,7 +238,7 @@ namespace Inspector
                 public new Qux field2;
             }
 
-            #pragma warning restore 649
+#pragma warning restore 649
 
             class Qux { }
 

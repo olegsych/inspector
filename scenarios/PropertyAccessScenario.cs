@@ -10,7 +10,7 @@ namespace Inspector
         class Foo
         {
             Bar Bar { get; set; }
-            public Foo(Bar bar) => Bar = bar; 
+            public Foo(Bar bar) => Bar = bar;
         }
 
         class Bar { }

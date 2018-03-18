@@ -2,12 +2,12 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace Inspector {
-
-    public static class MethodBaseExtensions {
-
-        public static ParameterInfo Parameter<T>(this MethodBase method)
-            => method.Parameter(typeof(T));
+namespace Inspector
+{
+    public static class MethodBaseExtensions
+    {
+        public static ParameterInfo Parameter<T>(this MethodBase method) =>
+            method.Parameter(typeof(T));
 
         public static ParameterInfo Parameter(this MethodBase method, Type parameterType) {
             if(method == null)

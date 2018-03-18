@@ -127,7 +127,7 @@ namespace Inspector
                     Bar barField;
                     Baz bazField;
 
-                    Foo() : this (new Bar(), new Baz()) { }
+                    Foo() : this(new Bar(), new Baz()) { }
 
                     Foo(Bar bar, Baz baz) {
                         barField = bar;

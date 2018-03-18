@@ -9,11 +9,10 @@ namespace Inspector
     {
         readonly TypeInfo type;
 
-        protected TypeInspector(TypeInfo type)
-            => this.type = type;
+        protected TypeInspector(TypeInfo type) =>
+            this.type = type;
 
-        protected TypeInspector() {
-        }
+        protected TypeInspector() {}
 
         public delegate TypeInspector Factory(Type declaredType, object instance = null);
 
@@ -39,7 +38,7 @@ namespace Inspector
             return constructor;
         }
 
-        public virtual IReadOnlyList<ConstructorInfo> GetConstructors()
-            => type.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        public virtual IReadOnlyList<ConstructorInfo> GetConstructors() =>
+            type.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
     }
 }

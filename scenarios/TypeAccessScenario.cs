@@ -9,15 +9,15 @@ namespace Inspector
     {
         static class Foo
         {
-            #pragma warning disable 414
+#pragma warning disable 414
             public static Bar barField;
-            #pragma warning restore 414
+#pragma warning restore 414
 
             public static Bar BarProperty { get; set; }
 
-            #pragma warning disable 67
+#pragma warning disable 67
             public static event EventHandler<Bar> BarEvent;
-            #pragma warning restore 67
+#pragma warning restore 67
 
             public static Baz BarFunc(Bar _) => default;
 

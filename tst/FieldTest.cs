@@ -3,8 +3,10 @@ using System.Linq;
 using System.Reflection;
 using Xunit;
 
-namespace Inspector {
-    public class FieldTest {
+namespace Inspector
+{
+    public class FieldTest
+    {
         readonly Field<FieldType> sut;
 
         // Constructor parameters
@@ -14,7 +16,8 @@ namespace Inspector {
         public FieldTest()
             => sut = new Field<FieldType>(info, instance);
 
-        public class Constructor : FieldTest {
+        public class Constructor : FieldTest
+        {
             [Fact]
             public void InitializesInfoWithGivenArgument() {
                 var actual = (FieldInfo)sut.GetType()
@@ -62,7 +65,8 @@ namespace Inspector {
             }
         }
 
-        public class Value : FieldTest {
+        public class Value : FieldTest
+        {
             [Fact]
             public void GetsFieldValue() {
                 var expected = new FieldType();
@@ -86,12 +90,14 @@ namespace Inspector {
 
 #pragma warning disable 649 // Unassigned fields are accessed via Reflection
 
-        class InstanceType {
+        class InstanceType
+        {
             public FieldType field;
             public string anotherField;
         }
 
-        class AnotherType {
+        class AnotherType
+        {
             public FieldType field;
         }
 
