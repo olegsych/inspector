@@ -8,6 +8,9 @@ namespace Inspector
     /// </summary>
     public class Property : ValueMember<PropertyInfo>
     {
+        protected Property(PropertyInfo info, object instance) : base(info, instance) =>
+            throw new NotImplementedException();
+
         public override object Get() => throw new NotImplementedException();
 
         public override void Set(object value) => throw new NotImplementedException();
@@ -19,6 +22,9 @@ namespace Inspector
     /// <typeparam name="T">Property type</typeparam>
     public class Property<T> : ValueMember<T, PropertyInfo>
     {
+        protected Property(PropertyInfo info, object instance) : base(info, instance) =>
+            throw new NotImplementedException();
+
         public override T Get() => throw new NotImplementedException();
 
         public override void Set(T value) => throw new NotImplementedException();

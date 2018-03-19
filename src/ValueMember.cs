@@ -5,6 +5,9 @@ namespace Inspector
 {
     public abstract class ValueMember<TInfo> : Member<TInfo> where TInfo : MemberInfo
     {
+        protected ValueMember(TInfo info, object instance) : base(info, instance) =>
+            throw new NotImplementedException();
+
         public object Value {
             get => throw new NotImplementedException();
             set => throw new NotImplementedException();
@@ -20,6 +23,9 @@ namespace Inspector
     /// </summary>
     public abstract class ValueMember<TValue, TInfo> : Member<TInfo> where TInfo : MemberInfo
     {
+        protected ValueMember(TInfo info, object instance) : base(info, instance) =>
+            throw new NotImplementedException();
+
         public TValue Value {
             get => throw new NotImplementedException();
             set => throw new NotImplementedException();
