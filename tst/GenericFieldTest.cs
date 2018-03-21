@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Inspector
 {
-    public class FieldTest
+    public class GenericFieldTest
     {
         readonly Field<FieldType> sut;
 
@@ -13,10 +13,10 @@ namespace Inspector
         readonly FieldInfo info = typeof(InstanceType).GetFields().Single(_ => _.FieldType == typeof(FieldType));
         readonly object instance = new InstanceType();
 
-        public FieldTest()
+        public GenericFieldTest()
             => sut = new Field<FieldType>(info, instance);
 
-        public class Constructor : FieldTest
+        public class Constructor : GenericFieldTest
         {
             [Fact]
             public void InitializesInfoWithGivenArgument() {
@@ -65,7 +65,7 @@ namespace Inspector
             }
         }
 
-        public class Value : FieldTest
+        public class Value : GenericFieldTest
         {
             [Fact]
             public void GetsFieldValue() {
