@@ -4,22 +4,26 @@ using System.Reflection;
 namespace Inspector
 {
     /// <summary>
-    /// Provides access to a property of type not accessible at compile time.
+    /// Provides access to a property of type <typeparamref name="T"/>.
     /// </summary>
-    public class Property : Member<PropertyInfo>
+    /// <typeparam name="T">Property type</typeparam>
+    public class Property<T> : Property
     {
         public Property(PropertyInfo info, object instance) : base(null, null) =>
             throw new NotImplementedException();
 
-        public object Value {
+        public new T Value {
             get => throw new NotImplementedException();
             set => throw new NotImplementedException();
         }
 
-        public object Get() =>
+        public new T Get() =>
             throw new NotImplementedException();
 
-        public void Set(object value) =>
+        public void Set(T value) =>
+            throw new NotImplementedException();
+
+        public static implicit operator T(Property<T> field) =>
             throw new NotImplementedException();
     }
 }

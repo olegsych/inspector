@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Inspector
 {
@@ -14,8 +15,6 @@ namespace Inspector
 
     class InstanceScope : IScope
     {
-        readonly object instance;
-
         public InstanceScope(object instance) => throw new NotImplementedException();
 
         IEnumerable<Constructor> IScope.Constructors() => throw new NotImplementedException();
@@ -27,8 +26,6 @@ namespace Inspector
 
     class StaticScope : IScope
     {
-        readonly Type type;
-
         public StaticScope(Type type) => throw new NotImplementedException();
 
         IEnumerable<Constructor> IScope.Constructors() => throw new NotImplementedException();
@@ -50,8 +47,6 @@ namespace Inspector
 
     class AccessScope : IScope
     {
-        readonly IScope previous;
-
         public AccessScope(IScope previous) => throw new NotImplementedException();
 
         IEnumerable<Constructor> IScope.Constructors() => throw new NotImplementedException();
@@ -117,7 +112,7 @@ namespace Inspector
         public static Property Property(this IScope scope, Type propertyType, string propertyName = null) =>
             throw new NotImplementedException();
 
-        public static Property<T> Property<T>(this IScope scope, string propertyName = null) =>
+        public static Field<T> Property<T>(this IScope scope, string propertyName = null) =>
             throw new NotImplementedException();
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using Shouldly;
 using Xunit;
@@ -54,13 +54,13 @@ namespace Inspector
                 foo.Field<Bar>().Value.ShouldBe(baz);
             }
 
-            [Fact]
-            public void CompareImplicitly() {
-                (foo.Field<Bar>() == bar).ShouldBeTrue();
-                (foo.Field<Bar>() != bar).ShouldBeFalse();
-                (bar == foo.Field<Bar>()).ShouldBeTrue();
-                (bar != foo.Field<Bar>()).ShouldBeFalse();
-            }
+            //[Fact]
+            //public void CompareImplicitly() {
+            //    (foo.Field<Bar>() == bar).ShouldBeTrue();
+            //    (foo.Field<Bar>() != bar).ShouldBeFalse();
+            //    (bar == foo.Field<Bar>()).ShouldBeTrue();
+            //    (bar != foo.Field<Bar>()).ShouldBeFalse();
+            //}
         }
 
         public class FieldInfoScenario : FieldAccessScenario

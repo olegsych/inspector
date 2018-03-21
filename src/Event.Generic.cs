@@ -4,20 +4,21 @@ using System.Reflection;
 namespace Inspector
 {
     /// <summary>
-    /// Provides access to events of type not accessible at compile time.
+    /// Provides access to events of type <typeparamref name="TEventHandler"/>.
     /// </summary>
-    public class Event : Member<EventInfo>
+    /// <typeparam name="TEventHandler">Type of event handler</typeparam>
+    public class Event<TEventHandler> : Event
     {
         protected Event(EventInfo info, object instance) : base(null, null) =>
             throw new NotImplementedException();
 
-        public void Add(Delegate handler) =>
+        public void Add(TEventHandler handler) =>
             throw new NotImplementedException();
 
-        public void Raise(params object[] args) =>
+        public new TEventHandler Raise =>
             throw new NotImplementedException();
 
-        public void Remove(Delegate handler) =>
+        public void Remove(TEventHandler handler) =>
             throw new NotImplementedException();
     }
 }

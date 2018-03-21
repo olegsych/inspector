@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 
 namespace Inspector
 {
-    public class ObjectInspector : IDeclarationFilter<ObjectInspector>, IAccessFilter<ObjectInspector>
+    public class ObjectInspector
     {
         public Event Event(Type eventType = null, string eventName = null) => throw new NotImplementedException();
 

@@ -11,13 +11,4 @@ namespace Inspector
         public object Invoke(params object[] args) =>
             throw new NotImplementedException();
     }
-
-    public class Constructor<TSignature> : Constructor
-    {
-        protected Constructor(ConstructorInfo info, object instance) : base(info, instance) =>
-            throw new NotImplementedException();
-
-        public new TSignature Invoke =>
-            throw new NotImplementedException();
-    }
 }
