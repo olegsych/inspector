@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace Inspector
 {
-    public static class TypeExtensions
+    public static partial class TypeExtensions
     {
         public static ConstructorInfo Constructor<T>(this Type type) =>
             Constructor(type, typeof(T));
@@ -39,9 +39,6 @@ namespace Inspector
             var inspector = TypeInspector.Create(type);
             return inspector.GetConstructors();
         }
-
-        public static Field<T> Field<T>(this Type type, string name = default) =>
-            throw new NotImplementedException();
 
         public static object New(this Type type, params object[] parameters) =>
             throw new NotImplementedException();
