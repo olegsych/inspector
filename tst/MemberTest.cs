@@ -61,9 +61,7 @@ namespace Inspector
 
         class InstanceType
         {
-#pragma warning disable 649 // Field accessed only via reflection
-            public object Field;
-#pragma warning restore 649
+            public object Field = new object();
         }
     }
 }

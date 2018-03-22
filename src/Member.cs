@@ -11,6 +11,9 @@ namespace Inspector
     /// </typeparam>
     public abstract class Member<TMemberInfo> where TMemberInfo : MemberInfo
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Member{TMemberInfo}"/> class.
+        /// </summary>
         protected Member(TMemberInfo info, object instance) {
             Info = info ?? throw new ArgumentNullException(nameof(info));
             Instance = instance;
