@@ -80,18 +80,6 @@ namespace Inspector
             throw new NotImplementedException();
     }
 
-    public static class ScopeFieldExtensions
-    {
-        public static Field Field(this IScope scope, string fieldName) =>
-            throw new NotImplementedException();
-
-        public static Field Field(this IScope scope, Type fieldType, string fieldName = null) =>
-            throw new NotImplementedException();
-
-        public static Field<T> Field<T>(this IScope scope, string fieldName = null) =>
-            throw new NotImplementedException();
-    }
-
     public static class ScopeMethodExtensions
     {
         public static Method Method(this IScope scope, string methodName) =>
