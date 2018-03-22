@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace Inspector
 {
-    public static class ObjectExtensions
+    public static partial class ObjectExtensions
     {
         public static ObjectInspector Declared(this object instance)
             => throw new NotImplementedException();
@@ -33,15 +33,6 @@ namespace Inspector
 
             return new Field<T>(info[0], instance);
         }
-
-        public static Field<T> Field<T>(this object instance, string fieldName)
-            => throw new NotImplementedException();
-
-        public static Field Field(this object instance, Type fieldType, string fieldName = null)
-            => throw new NotImplementedException();
-
-        public static Field Field(this object instance, string fieldName)
-            => throw new NotImplementedException();
 
         public static ObjectInspector Inherited(this object instance)
             => throw new NotImplementedException();
