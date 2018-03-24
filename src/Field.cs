@@ -43,5 +43,10 @@ namespace Inspector
         /// </summary>
         public void Set(object value) =>
             Info.SetValue(Instance, value);
+
+        internal delegate Field Selector(IScope scope, Type fieldType = null, string fieldName = null);
+
+        internal static readonly Selector Select = (scope, fieldType, fieldName) =>
+            throw new NotImplementedException();
     }
 }
