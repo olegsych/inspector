@@ -183,7 +183,7 @@ namespace Inspector
 
             class TestType
             {
-                public FieldValue Field;
+                public FieldValue Field = new FieldValue();
             }
 
             class FieldValue { }
