@@ -40,6 +40,21 @@ namespace Inspector
             return inspector.GetConstructors();
         }
 
+        #region Field
+
+        public static Field Field(this Type type, string fieldName = null) =>
+           Field(type, null, fieldName);
+
+        public static Field Field(this Type type, Type fieldType, string fieldName = null) =>
+            Inspector.Field.Select(new StaticScope(type), fieldType, fieldName);
+
+        public static Field<T> Field<T>(this Type type, string fieldName = null) {
+            Field field = Field(type, typeof(T), fieldName);
+            return new Field<T>(field.Info, field.Instance);
+        }
+
+        #endregion
+
         public static object New(this Type type, params object[] parameters) =>
             throw new NotImplementedException();
 

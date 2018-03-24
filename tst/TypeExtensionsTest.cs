@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using NSubstitute;
 using Xunit;
@@ -118,6 +119,74 @@ namespace Inspector
 
                 Assert.Same(expected, actual);
             }
+        }
+
+        public class FieldMethod : FieldFixture
+        {
+            // Method parameters
+            readonly Type testType = typeof(TestType);
+            readonly Type fieldType = typeof(FieldValue);
+            readonly string fieldName = Guid.NewGuid().ToString();
+
+            // Fixture
+            readonly object instance = new TestType();
+            readonly Expression<Predicate<StaticScope>> staticScopeOfTestType = (scope) =>
+                scope.TypeInfo == typeof(TestType).GetTypeInfo();
+            readonly Field expectedField;
+
+            public FieldMethod() =>
+                expectedField = new Field(testType.GetField(nameof(TestType.Field)), instance);
+
+            [Fact]
+            public void ReturnsFieldWithGivenTypeAndName() {
+                selector.Invoke(Arg.Is(staticScopeOfTestType), fieldType, fieldName).Returns(expectedField);
+                Assert.Same(expectedField, testType.Field(fieldType, fieldName));
+            }
+
+            [Fact]
+            public void ReturnsFieldWithGivenType() {
+                selector.Invoke(Arg.Is(staticScopeOfTestType), fieldType, null).Returns(expectedField);
+                Assert.Same(expectedField, testType.Field(fieldType));
+            }
+
+            [Fact]
+            public void ReturnsFieldWithGivenName() {
+                selector.Invoke(Arg.Is(staticScopeOfTestType), null, fieldName).Returns(expectedField);
+                Assert.Same(expectedField, testType.Field(fieldName));
+            }
+
+            [Fact]
+            public void ReturnsSingleFieldInGivenType() {
+                selector.Invoke(Arg.Is(staticScopeOfTestType), null, null).Returns(expectedField);
+                Assert.Same(expectedField, testType.Field());
+            }
+
+            [Fact]
+            public void ReturnsGenericFieldOfGivenType() {
+                selector.Invoke(Arg.Is(staticScopeOfTestType), fieldType, null).Returns(expectedField);
+
+                Field<FieldValue> genericField = testType.Field<FieldValue>();
+
+                Assert.Same(expectedField.Info, genericField.Info);
+                Assert.Same(expectedField.Instance, genericField.Instance);
+            }
+
+            [Fact]
+            public void ReturnsGenericFieldWithGivenTypeAndName() {
+                selector.Invoke(Arg.Is(staticScopeOfTestType), fieldType, fieldName).Returns(expectedField);
+
+                Field<FieldValue> genericField = testType.Field<FieldValue>(fieldName);
+
+                Assert.Same(expectedField.Info, genericField.Info);
+                Assert.Same(expectedField.Instance, genericField.Instance);
+            }
+
+            class TestType
+            {
+                public FieldValue Field;
+            }
+
+            class FieldValue { }
         }
 
         class TestClass { }
