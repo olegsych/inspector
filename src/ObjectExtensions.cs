@@ -13,26 +13,20 @@ namespace Inspector
         public static ObjectInspector Declared<TDeclaringType>(this object instance)
             => throw new NotImplementedException();
 
-        public static Field<T> Field<T>(this object instance) {
-            if(instance == null)
-                throw new ArgumentNullException(nameof(instance));
+        #region Field
 
-            TypeInfo instanceType = instance.GetType().GetTypeInfo();
+        public static Field Field(this object instance, string fieldName = null) =>
+            Field(instance, null, fieldName);
 
-            if(IsCastleDynamicProxy(instanceType))
-                instanceType = instanceType.BaseType.GetTypeInfo();
+        public static Field Field(this object instance, Type fieldType, string fieldName = null) =>
+            Inspector.Field.Select(new InstanceScope(instance), fieldType, fieldName);
 
-            Type fieldType = typeof(T);
-            IReadOnlyList<FieldInfo> info = instanceType
-                .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                .Where(_ => _.FieldType == fieldType).ToList();
-            if(info.Count == 0)
-                throw new ArgumentException($"{instanceType} doesn't have instance fields of type {fieldType}.", nameof(T));
-            if(info.Count > 1)
-                throw new ArgumentException($"{instanceType} has more than one instance field of type {fieldType}.", nameof(T));
-
-            return new Field<T>(info[0], instance);
+        public static Field<T> Field<T>(this object instance, string fieldName = null) {
+            Field field = Field(instance, typeof(T), fieldName);
+            return new Field<T>(field.Info, field.Instance);
         }
+
+        #endregion
 
         public static ObjectInspector Inherited(this object instance)
             => throw new NotImplementedException();

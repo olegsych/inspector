@@ -5,7 +5,10 @@ namespace Inspector
 {
     class InstanceScope : IScope
     {
-        public InstanceScope(object instance) => throw new NotImplementedException();
+        public InstanceScope(object instance) =>
+            Instance = instance ?? throw new ArgumentNullException(nameof(instance));
+
+        public object Instance { get; }
 
         IEnumerable<Constructor> IScope.Constructors() => throw new NotImplementedException();
         IEnumerable<Event> IScope.Events() => throw new NotImplementedException();

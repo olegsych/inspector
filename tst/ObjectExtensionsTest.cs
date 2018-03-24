@@ -1,6 +1,5 @@
 using System;
-using System.Linq;
-using System.Reflection;
+using System.Linq.Expressions;
 using NSubstitute;
 using Xunit;
 
@@ -8,109 +7,72 @@ namespace Inspector
 {
     public class ObjectExtensionsTest
     {
-        public class FieldTest : ObjectExtensionsTest
+        public class FieldMethod : FieldFixture
         {
-            [Fact]
-            public void ReturnsPrivateFieldOfGivenIstanceAndFieldType() {
-                var instance = new TypeWithPrivateField();
-                FieldInfo info = instance.GetType()
-                    .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
-                    .Single(_ => _.FieldType == typeof(FieldType));
+            // Method parameters
+            readonly object instance = new TestType();
+            readonly Type fieldType = typeof(FieldValue);
+            readonly string fieldName = Guid.NewGuid().ToString();
 
-                Field<FieldType> field = instance.Field<FieldType>();
+            // Test fixture
+            readonly Expression<Predicate<InstanceScope>> instanceScope;
+            readonly Field expectedField;
 
-                VerifyField(instance, info, field);
+            public FieldMethod() {
+                instanceScope = scope => instance == scope.Instance;
+                expectedField = new Field(typeof(TestType).GetField(nameof(TestType.Field)), instance);
             }
 
             [Fact]
-            public void ReturnsPublicFieldOfGivenIstanceAndFieldType() {
-                var instance = new TypeWithPublicField();
-                FieldInfo expectedInfo = instance.GetType()
-                    .GetFields(BindingFlags.Instance | BindingFlags.Public)
-                    .Single(_ => _.FieldType == typeof(FieldType));
-
-                Field<FieldType> field = instance.Field<FieldType>();
-
-                VerifyField(instance, expectedInfo, field);
+            public void ReturnsFieldWithGivenTypeAndName() {
+                selector.Invoke(Arg.Is(instanceScope), fieldType, fieldName).Returns(expectedField);
+                Assert.Same(expectedField, instance.Field(fieldType, fieldName));
             }
 
             [Fact]
-            public void ReturnsFieldOfInstanceDynamicallyGeneratedByCastleProxy() {
-                var instance = Substitute.ForPartsOf<AbstractType>();
-                FieldInfo expectedInfo = instance.GetType().BaseType
-                    .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
-                    .Single(_ => _.FieldType == typeof(FieldType));
-
-                Field<FieldType> field = instance.Field<FieldType>();
-
-                VerifyField(instance, expectedInfo, field);
+            public void ReturnsFieldWithGivenType() {
+                selector.Invoke(Arg.Is(instanceScope), fieldType, null).Returns(expectedField);
+                Assert.Same(expectedField, instance.Field(fieldType));
             }
 
             [Fact]
-            public void ThrowsDescriptiveExceptionWhenInstanceIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => default(object).Field<FieldType>());
-                Assert.Equal("instance", thrown.ParamName);
+            public void ReturnsFieldWithGivenName() {
+                selector.Invoke(Arg.Is(instanceScope), null, fieldName).Returns(expectedField);
+                Assert.Same(expectedField, instance.Field(fieldName));
             }
 
             [Fact]
-            public void ThrowsDescriptiveExceptionWhenInstanceDoesNotHaveFieldOfGivenType() {
-                var instance = new TypeWithPublicField();
-                var thrown = Assert.Throws<ArgumentException>(() => instance.Field<UnexpectedFieldType>());
-                Assert.Equal("T", thrown.ParamName);
-                Assert.StartsWith($"{instance.GetType()} doesn't have instance fields of type {typeof(UnexpectedFieldType)}.", thrown.Message);
+            public void ReturnsSingleFieldInGivenType() {
+                selector.Invoke(Arg.Is(instanceScope), null, null).Returns(expectedField);
+                Assert.Same(expectedField, instance.Field());
             }
 
             [Fact]
-            public void ThrowsDescriptiveExceptionsWhenInstanceHasMoreThanOneFieldOfGivenType() {
-                var instance = new TypeWithMultipleFields();
-                var thrown = Assert.Throws<ArgumentException>(() => instance.Field<FieldType>());
-                Assert.Equal("T", thrown.ParamName);
-                Assert.StartsWith($"{instance.GetType()} has more than one instance field of type {typeof(FieldType)}.", thrown.Message);
+            public void ReturnsGenericFieldOfGivenType() {
+                selector.Invoke(Arg.Is(instanceScope), fieldType, null).Returns(expectedField);
+
+                Field<FieldValue> genericField = instance.Field<FieldValue>();
+
+                Assert.Same(expectedField.Info, genericField.Info);
+                Assert.Same(expectedField.Instance, genericField.Instance);
             }
 
-            static void VerifyField(object expectedInstance, FieldInfo expectedInfo, Field<FieldType> field) {
-                object actualInstance = typeof(Field<FieldType>)
-                    .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
-                    .Single(_ => _.FieldType == typeof(object))
-                    .GetValue(field);
-                var actualInfo = (FieldInfo)typeof(Field<FieldType>)
-                    .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
-                    .Single(_ => _.FieldType == typeof(FieldInfo))
-                    .GetValue(field);
-                Assert.Same(expectedInstance, actualInstance);
-                Assert.Same(expectedInfo, actualInfo);
+            [Fact]
+            public void ReturnsGenericFieldWithGivenTypeAndName() {
+                selector.Invoke(Arg.Is(instanceScope), fieldType, fieldName).Returns(expectedField);
+
+                Field<FieldValue> genericField = instance.Field<FieldValue>(fieldName);
+
+                Assert.Same(expectedField.Info, genericField.Info);
+                Assert.Same(expectedField.Instance, genericField.Instance);
             }
 
-            public class FieldType { }
-
-            class UnexpectedFieldType { }
-
-            class TypeWithPublicField
+            class TestType
             {
-#pragma warning disable 649 // public field used only via reflection
-                public FieldType field;
-#pragma warning restore 649
+                public FieldValue Field = new FieldValue();
             }
 
-#pragma warning disable 169 // private fields used only via reflection
-
-            public class AbstractType
-            {
-                FieldType field;
-            }
-
-            class TypeWithPrivateField
-            {
-                FieldType field;
-            }
-
-            class TypeWithMultipleFields
-            {
-                FieldType field1;
-                FieldType field2;
-            }
-
-#pragma warning restore 169
+            class FieldValue { }
         }
     }
 }
