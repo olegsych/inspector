@@ -11,7 +11,7 @@ namespace Inspector
         /// <summary>
         /// Initializes a new instance of the <see cref="Field"/> class.
         /// </summary>
-        public Field(FieldInfo info, object instance) : base(info, instance) {
+        public Field(FieldInfo info, object instance = null) : base(info, instance) {
             if(info.IsStatic) {
                 if(instance != null)
                     throw new ArgumentException($"Instance shouldn't be specified for static field {info.Name}.", nameof(instance));

@@ -10,6 +10,14 @@ namespace Inspector
 
         static uint Next => seed++;
 
+        public static FieldInfo FieldInfo(FieldAttributes attributes, Type fieldType = default) {
+            fieldType = fieldType ?? Type();
+            var field = Substitute.For<FieldInfo>();
+            field.Attributes.Returns(attributes);
+            field.FieldType.Returns(fieldType);
+            return field;
+        }
+
         public static MethodBase MethodBase() {
             var method = Substitute.For<MethodBase>();
             Type declaringType = Type();
