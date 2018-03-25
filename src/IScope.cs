@@ -17,9 +17,11 @@ namespace Inspector
         Public = 6
     }
 
-    class AccessScope : IScope
+    sealed class AccessScope : IScope, IDecorator<IScope>
     {
         public AccessScope(IScope previous) => throw new NotImplementedException();
+
+        public IScope Previous => throw new NotImplementedException();
 
         string IDescriptor.Describe() => throw new NotImplementedException();
 

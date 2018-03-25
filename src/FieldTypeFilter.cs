@@ -4,20 +4,21 @@ using System.Linq;
 
 namespace Inspector
 {
-    sealed class FieldTypeFilter : IFilter<Field>
+    sealed class FieldTypeFilter : IFilter<Field>, IDecorator<IFilter<Field>>
     {
-        readonly IFilter<Field> fields;
         readonly Type fieldType;
 
-        internal FieldTypeFilter(IFilter<Field> fields, Type fieldType) {
-            this.fields = fields ?? throw new ArgumentNullException(nameof(fields));
+        public FieldTypeFilter(IFilter<Field> previous, Type fieldType) {
+            Previous = previous ?? throw new ArgumentNullException(nameof(previous));
             this.fieldType = fieldType ?? throw new ArgumentNullException(nameof(fieldType));
         }
+
+        public IFilter<Field> Previous { get; }
 
         string IDescriptor.Describe() =>
             throw new NotImplementedException();
 
         IEnumerable<Field> IFilter<Field>.Get() =>
-            fields.Get().Where(field => field.Info.FieldType == fieldType);
+            Previous.Get().Where(field => field.Info.FieldType == fieldType);
     }
 }

@@ -12,24 +12,33 @@ namespace Inspector
         readonly IFilter<Field> sut;
 
         // Constructor parameters
-        readonly IFilter<Field> fields = Substitute.For<IFilter<Field>>();
+        readonly IFilter<Field> previous = Substitute.For<IFilter<Field>>();
         readonly Type fieldType = Type();
 
         public FieldTypeFilterTest() =>
-            sut = new FieldTypeFilter(fields, fieldType);
+            sut = new FieldTypeFilter(previous, fieldType);
 
         public class Constructor : FieldTypeFilterTest
         {
             [Fact]
             public void ThrowsArgumentNullExceptionIfFieldsArgumentIsNull() {
                 var thrown = Assert.Throws<ArgumentNullException>(() => new FieldTypeFilter(null, fieldType));
-                Assert.Equal("fields", thrown.ParamName);
+                Assert.Equal("previous", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsArgumentNullExceptionIfFieldTypeArgumentIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new FieldTypeFilter(fields, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new FieldTypeFilter(previous, null));
                 Assert.Equal("fieldType", thrown.ParamName);
+            }
+        }
+
+        public class Previous : FieldTypeFilterTest
+        {
+            [Fact]
+            public void ImplementsIDecoratorAndReturnsValueGivenToConstructor() {
+                var decorator = (IDecorator<IFilter<Field>>)sut;
+                Assert.Same(previous, decorator.Previous);
             }
         }
 
@@ -50,7 +59,7 @@ namespace Inspector
                     new Field(FieldInfo(FieldAttributes.Static))
                 };
 
-                fields.Get().Returns(mixed);
+                previous.Get().Returns(mixed);
 
                 // Act
                 IEnumerable<Field> actual = sut.Get();
