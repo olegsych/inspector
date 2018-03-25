@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Inspector
@@ -23,12 +22,12 @@ namespace Inspector
         public AccessScope(IScope previous) => throw new NotImplementedException();
 
         string IDescriptor.Describe() => throw new NotImplementedException();
-        IEnumerator IEnumerable.GetEnumerator() => throw new NotImplementedException();
-        IEnumerator<Constructor> IEnumerable<Constructor>.GetEnumerator() => throw new NotImplementedException();
-        IEnumerator<Event> IEnumerable<Event>.GetEnumerator() => throw new NotImplementedException();
-        IEnumerator<Field> IEnumerable<Field>.GetEnumerator() => throw new NotImplementedException();
-        IEnumerator<Method> IEnumerable<Method>.GetEnumerator() => throw new NotImplementedException();
-        IEnumerator<Property> IEnumerable<Property>.GetEnumerator() => throw new NotImplementedException();
+
+        IEnumerable<Constructor> IFilter<Constructor>.Get() => throw new NotImplementedException();
+        IEnumerable<Event> IFilter<Event>.Get() => throw new NotImplementedException();
+        IEnumerable<Field> IFilter<Field>.Get() => throw new NotImplementedException();
+        IEnumerable<Method> IFilter<Method>.Get() => throw new NotImplementedException();
+        IEnumerable<Property> IFilter<Property>.Get() => throw new NotImplementedException();
     }
 
     public static class ScopeConstructorExtensions
