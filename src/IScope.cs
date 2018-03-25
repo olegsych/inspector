@@ -1,16 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace Inspector
 {
-    public interface IScope
+    public interface IScope : IFilter<Constructor>, IFilter<Event>, IFilter<Field>, IFilter<Method>, IFilter<Property>
     {
-        IEnumerable<Constructor> Constructors();
-        IEnumerable<Event> Events();
-        IEnumerable<Field> Fields();
-        IEnumerable<Method> Methods();
-        IEnumerable<Property> Properties();
     }
 
     enum Access
@@ -27,11 +22,13 @@ namespace Inspector
     {
         public AccessScope(IScope previous) => throw new NotImplementedException();
 
-        IEnumerable<Constructor> IScope.Constructors() => throw new NotImplementedException();
-        IEnumerable<Event> IScope.Events() => throw new NotImplementedException();
-        IEnumerable<Field> IScope.Fields() => throw new NotImplementedException();
-        IEnumerable<Method> IScope.Methods() => throw new NotImplementedException();
-        IEnumerable<Property> IScope.Properties() => throw new NotImplementedException();
+        string IDescriptor.Describe() => throw new NotImplementedException();
+        IEnumerator IEnumerable.GetEnumerator() => throw new NotImplementedException();
+        IEnumerator<Constructor> IEnumerable<Constructor>.GetEnumerator() => throw new NotImplementedException();
+        IEnumerator<Event> IEnumerable<Event>.GetEnumerator() => throw new NotImplementedException();
+        IEnumerator<Field> IEnumerable<Field>.GetEnumerator() => throw new NotImplementedException();
+        IEnumerator<Method> IEnumerable<Method>.GetEnumerator() => throw new NotImplementedException();
+        IEnumerator<Property> IEnumerable<Property>.GetEnumerator() => throw new NotImplementedException();
     }
 
     public static class ScopeConstructorExtensions

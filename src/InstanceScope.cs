@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Inspector
@@ -10,10 +11,12 @@ namespace Inspector
 
         public object Instance { get; }
 
-        IEnumerable<Constructor> IScope.Constructors() => throw new NotImplementedException();
-        IEnumerable<Event> IScope.Events() => throw new NotImplementedException();
-        IEnumerable<Field> IScope.Fields() => throw new NotImplementedException();
-        IEnumerable<Method> IScope.Methods() => throw new NotImplementedException();
-        IEnumerable<Property> IScope.Properties() => throw new NotImplementedException();
+        string IDescriptor.Describe() => throw new NotImplementedException();
+        IEnumerator IEnumerable.GetEnumerator() => throw new NotImplementedException();
+        IEnumerator<Constructor> IEnumerable<Constructor>.GetEnumerator() => throw new NotImplementedException();
+        IEnumerator<Event> IEnumerable<Event>.GetEnumerator() => throw new NotImplementedException();
+        IEnumerator<Field> IEnumerable<Field>.GetEnumerator() => throw new NotImplementedException();
+        IEnumerator<Method> IEnumerable<Method>.GetEnumerator() => throw new NotImplementedException();
+        IEnumerator<Property> IEnumerable<Property>.GetEnumerator() => throw new NotImplementedException();
     }
 }
