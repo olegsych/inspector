@@ -7,7 +7,7 @@ using static Inspector.Substitutes;
 
 namespace Inspector
 {
-    public class TypedFieldFilterTest
+    public class FieldTypeFilterTest
     {
         readonly IFilter<Field> sut;
 
@@ -15,25 +15,25 @@ namespace Inspector
         readonly IFilter<Field> fields = Substitute.For<IFilter<Field>>();
         readonly Type fieldType = Type();
 
-        public TypedFieldFilterTest() =>
-            sut = new TypedFieldFilter(fields, fieldType);
+        public FieldTypeFilterTest() =>
+            sut = new FieldTypeFilter(fields, fieldType);
 
-        public class Constructor : TypedFieldFilterTest
+        public class Constructor : FieldTypeFilterTest
         {
             [Fact]
             public void ThrowsArgumentNullExceptionIfFieldsArgumentIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new TypedFieldFilter(null, fieldType));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new FieldTypeFilter(null, fieldType));
                 Assert.Equal("fields", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsArgumentNullExceptionIfFieldTypeArgumentIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new TypedFieldFilter(fields, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new FieldTypeFilter(fields, null));
                 Assert.Equal("fieldType", thrown.ParamName);
             }
         }
 
-        public class Get : TypedFieldFilterTest
+        public class Get : FieldTypeFilterTest
         {
             [Fact]
             public void ReturnsFieldsWithGivenFieldType() {

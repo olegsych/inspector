@@ -4,12 +4,12 @@ using System.Linq;
 
 namespace Inspector
 {
-    sealed class TypedFieldFilter : IFilter<Field>
+    sealed class FieldTypeFilter : IFilter<Field>
     {
         readonly IFilter<Field> fields;
         readonly Type fieldType;
 
-        internal TypedFieldFilter(IFilter<Field> fields, Type fieldType) {
+        internal FieldTypeFilter(IFilter<Field> fields, Type fieldType) {
             this.fields = fields ?? throw new ArgumentNullException(nameof(fields));
             this.fieldType = fieldType ?? throw new ArgumentNullException(nameof(fieldType));
         }
