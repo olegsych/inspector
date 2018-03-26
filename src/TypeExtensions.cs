@@ -42,39 +42,23 @@ namespace Inspector
 
         #region Field
 
-        public static Field Field(this Type type) {
-            var scope = new StaticScope(type);
-            return Selector<Field>.Select(scope);
-        }
+        public static Field Field(this Type type) =>
+            new StaticScope(type).Field();
 
-        public static Field Field(this Type type, Type fieldType) {
-            var scope = new StaticScope(type);
-            var typed = new FieldTypeFilter(scope, fieldType);
-            return Selector<Field>.Select(typed);
-        }
+        public static Field Field(this Type type, Type fieldType) =>
+            new StaticScope(type).Field(fieldType);
 
-        public static Field Field(this Type type, string fieldName) {
-            var scope = new StaticScope(type);
-            var named = new FieldNameFilter(scope, fieldName);
-            return Selector<Field>.Select(named);
-        }
+        public static Field Field(this Type type, string fieldName) =>
+            new StaticScope(type).Field(fieldName);
 
-        public static Field Field(this Type type, Type fieldType, string fieldName) {
-            var scope = new StaticScope(type);
-            var typed = new FieldTypeFilter(scope, fieldType);
-            var named = new FieldNameFilter(typed, fieldName);
-            return Selector<Field>.Select(named);
-        }
+        public static Field Field(this Type type, Type fieldType, string fieldName) =>
+            new StaticScope(type).Field(fieldType, fieldName);
 
-        public static Field<T> Field<T>(this Type type) {
-            Field field = Field(type, typeof(T));
-            return new Field<T>(field.Info, field.Instance);
-        }
+        public static Field<T> Field<T>(this Type type) =>
+            new StaticScope(type).Field<T>();
 
-        public static Field<T> Field<T>(this Type type, string fieldName) {
-            Field field = Field(type, typeof(T), fieldName);
-            return new Field<T>(field.Info, field.Instance);
-        }
+        public static Field<T> Field<T>(this Type type, string fieldName) =>
+            new StaticScope(type).Field<T>(fieldName);
 
         #endregion
 
