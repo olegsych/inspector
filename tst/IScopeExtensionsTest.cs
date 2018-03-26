@@ -74,23 +74,6 @@ namespace Inspector
                 Assert.Same(scope, typeFilter.Previous);
             }
 
-            static void VerifyGenericField<T>(Field selected, Field<T> generic) {
-                Assert.Same(selected.Info, generic.Info);
-                Assert.Same(selected.Instance, generic.Instance);
-            }
-
-            static FieldNameFilter VerifyFilter(IFilter<Field> selection, string fieldName) {
-                var filter = Assert.IsType<FieldNameFilter>(selection);
-                Assert.Equal(fieldName, filter.FieldName);
-                return filter;
-            }
-
-            static FieldTypeFilter VerifyFilter(IFilter<Field> selection, Type expectedFieldType) {
-                var filter = Assert.IsType<FieldTypeFilter>(selection);
-                Assert.Equal(expectedFieldType, filter.FieldType);
-                return filter;
-            }
-
             class TestType
             {
                 public FieldValue Field = new FieldValue();

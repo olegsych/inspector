@@ -15,13 +15,36 @@ namespace Inspector
 
         #region Field
 
-        public static Field Field(this object instance, string fieldName = null) =>
-            Field(instance, null, fieldName);
+        public static Field Field(this object instance) {
+            var scope = new InstanceScope(instance);
+            return Selector<Field>.Select(scope);
+        }
 
-        public static Field Field(this object instance, Type fieldType, string fieldName = null) =>
-            Inspector.Field.Select(new InstanceScope(instance), fieldType, fieldName);
+        public static Field Field(this object instance, string fieldName) {
+            var scope = new InstanceScope(instance);
+            var named = new FieldNameFilter(scope, fieldName);
+            return Selector<Field>.Select(named);
+        }
 
-        public static Field<T> Field<T>(this object instance, string fieldName = null) {
+        public static Field Field(this object instance, Type fieldType) {
+            var scope = new InstanceScope(instance);
+            var named = new FieldTypeFilter(scope, fieldType);
+            return Selector<Field>.Select(named);
+        }
+
+        public static Field Field(this object instance, Type fieldType, string fieldName) {
+            var scope = new InstanceScope(instance);
+            var typed = new FieldTypeFilter(scope, fieldType);
+            var named = new FieldNameFilter(typed, fieldName);
+            return Selector<Field>.Select(named);
+        }
+
+        public static Field<T> Field<T>(this object instance) {
+            Field field = Field(instance, typeof(T));
+            return new Field<T>(field.Info, field.Instance);
+        }
+
+        public static Field<T> Field<T>(this object instance, string fieldName) {
             Field field = Field(instance, typeof(T), fieldName);
             return new Field<T>(field.Info, field.Instance);
         }
