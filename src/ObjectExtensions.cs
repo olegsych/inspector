@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Inspector
 {
-    public static partial class ObjectExtensions
+    public static class ObjectExtensions
     {
         public static ObjectInspector Declared(this object instance)
             => throw new NotImplementedException();
@@ -13,39 +13,23 @@ namespace Inspector
 
         #region Field
 
-        public static Field Field(this object instance) {
-            var scope = new InstanceScope(instance);
-            return Selector<Field>.Select(scope);
-        }
+        public static Field Field(this object instance) =>
+            new InstanceScope(instance).Field();
 
-        public static Field Field(this object instance, string fieldName) {
-            var scope = new InstanceScope(instance);
-            var named = new FieldNameFilter(scope, fieldName);
-            return Selector<Field>.Select(named);
-        }
+        public static Field Field(this object instance, string fieldName) =>
+            new InstanceScope(instance).Field(fieldName);
 
-        public static Field Field(this object instance, Type fieldType) {
-            var scope = new InstanceScope(instance);
-            var named = new FieldTypeFilter(scope, fieldType);
-            return Selector<Field>.Select(named);
-        }
+        public static Field Field(this object instance, Type fieldType) =>
+            new InstanceScope(instance).Field(fieldType);
 
-        public static Field Field(this object instance, Type fieldType, string fieldName) {
-            var scope = new InstanceScope(instance);
-            var typed = new FieldTypeFilter(scope, fieldType);
-            var named = new FieldNameFilter(typed, fieldName);
-            return Selector<Field>.Select(named);
-        }
+        public static Field Field(this object instance, Type fieldType, string fieldName) =>
+            new InstanceScope(instance).Field(fieldType, fieldName);
 
-        public static Field<T> Field<T>(this object instance) {
-            Field field = Field(instance, typeof(T));
-            return new Field<T>(field.Info, field.Instance);
-        }
+        public static Field<T> Field<T>(this object instance) =>
+            new InstanceScope(instance).Field<T>();
 
-        public static Field<T> Field<T>(this object instance, string fieldName) {
-            Field field = Field(instance, typeof(T), fieldName);
-            return new Field<T>(field.Info, field.Instance);
-        }
+        public static Field<T> Field<T>(this object instance, string fieldName) =>
+            new InstanceScope(instance).Field<T>(fieldName);
 
         #endregion
 
