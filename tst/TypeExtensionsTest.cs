@@ -125,18 +125,6 @@ namespace Inspector
         {
             // Method parameters
             readonly Type testType = typeof(TestType);
-            readonly Type fieldType = typeof(FieldValue);
-            readonly string fieldName = Guid.NewGuid().ToString();
-
-            // Fixture
-            readonly object instance = new TestType();
-            readonly Field selected;
-            IFilter<Field> selection;
-
-            public FieldMethod() {
-                selected = new Field(testType.GetField(nameof(TestType.Field)), instance);
-                select.Invoke(Arg.Do<IFilter<Field>>(f => selection = f)).Returns(selected);
-            }
 
             [Fact]
             public void ReturnsSingleFieldInGivenType() {
@@ -193,13 +181,6 @@ namespace Inspector
                 var scope = Assert.IsType<StaticScope>(selection);
                 Assert.Equal(expected.GetTypeInfo(), scope.TypeInfo);
             }
-
-            class TestType
-            {
-                public FieldValue Field = new FieldValue();
-            }
-
-            class FieldValue { }
         }
 
         class TestClass { }

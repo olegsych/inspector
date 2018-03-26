@@ -9,20 +9,6 @@ namespace Inspector
     {
         public class FieldMethod : FieldSelectorFixture
         {
-            // Method parameters
-            readonly object instance = new TestType();
-            readonly Type fieldType = typeof(FieldValue);
-            readonly string fieldName = Guid.NewGuid().ToString();
-
-            // Test fixture
-            readonly Field selected;
-            IFilter<Field> selection;
-
-            public FieldMethod() {
-                selected = new Field(typeof(TestType).GetField(nameof(TestType.Field)), instance);
-                select.Invoke(Arg.Do<IFilter<Field>>(f => selection = f)).Returns(selected);
-            }
-
             [Fact]
             public void ReturnsSingleFieldInGivenType() {
                 Assert.Same(selected, instance.Field());
@@ -78,13 +64,6 @@ namespace Inspector
                 var scope = Assert.IsType<InstanceScope>(filter);
                 Assert.Same(instance, scope.Instance);
             }
-
-            class TestType
-            {
-                public FieldValue Field = new FieldValue();
-            }
-
-            class FieldValue { }
         }
     }
 }

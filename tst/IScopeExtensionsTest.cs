@@ -1,4 +1,3 @@
-using System;
 using NSubstitute;
 using Xunit;
 
@@ -10,18 +9,6 @@ namespace Inspector
         {
             // Method parameters
             readonly IScope scope = Substitute.For<IScope>();
-            readonly string fieldName = Guid.NewGuid().ToString();
-            readonly Type fieldType = typeof(FieldValue);
-
-            // Shared test fixture
-            readonly TestType instance = new TestType();
-            readonly Field selected;
-            IFilter<Field> selection;
-
-            public FieldMethod() {
-                selected = new Field(typeof(TestType).GetField(nameof(TestType.Field)), instance);
-                select.Invoke(Arg.Do<IFilter<Field>>(f => selection = f)).Returns(selected);
-            }
 
             [Fact]
             public void ReturnsSingleFieldInGivenScope() {
@@ -73,13 +60,6 @@ namespace Inspector
                 FieldTypeFilter typeFilter = VerifyFilter(nameFilter.Previous, fieldType);
                 Assert.Same(scope, typeFilter.Previous);
             }
-
-            class TestType
-            {
-                public FieldValue Field = new FieldValue();
-            }
-
-            class FieldValue { }
         }
     }
 }
