@@ -33,6 +33,13 @@ namespace Inspector
             }
         }
 
+        public class FieldName : FieldNameFilterTest
+        {
+            [Fact]
+            public void ReturnsValueGivenToConstructor() =>
+                Assert.Same(fieldName, ((FieldNameFilter)sut).FieldName);
+        }
+
         public class Previous : FieldNameFilterTest
         {
             [Fact]
