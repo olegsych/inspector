@@ -121,7 +121,7 @@ namespace Inspector
             }
         }
 
-        public class FieldMethod : FieldSelectorFixture
+        public class FieldMethod : FieldExtensionFixture
         {
             // Method parameters
             readonly Type testType = typeof(TestType);

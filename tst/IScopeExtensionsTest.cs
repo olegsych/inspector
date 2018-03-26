@@ -5,7 +5,7 @@ namespace Inspector
 {
     public class IScopeExtensionsTest
     {
-        public class FieldMethod : FieldSelectorFixture
+        public class FieldMethod : FieldExtensionFixture
         {
             // Method parameters
             readonly IScope scope = Substitute.For<IScope>();

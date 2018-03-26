@@ -5,10 +5,10 @@ using Xunit;
 namespace Inspector
 {
     /// <summary>
-    /// Base class for tests that need to substitute static <see cref="Selector{Field}.Select"/> method.
+    /// Base class for tests of extension methods that return <see cref="Field"/> and <see cref="Field{T}"/>.
     /// </summary>
-    [Collection(nameof(FieldSelectorFixture))]
-    public class FieldSelectorFixture : SelectorFixture<Field>
+    [Collection(nameof(FieldExtensionFixture))]
+    public class FieldExtensionFixture : SelectorFixture<Field>
     {
         // Method parameters
         protected readonly Type fieldType = typeof(FieldValue);
@@ -19,7 +19,7 @@ namespace Inspector
         protected readonly Field selected;
         protected IFilter<Field> selection;
 
-        public FieldSelectorFixture() {
+        public FieldExtensionFixture() {
             selected = new Field(typeof(TestType).GetField(nameof(TestType.Field)), instance);
             select.Invoke(Arg.Do<IFilter<Field>>(f => selection = f)).Returns(selected);
         }

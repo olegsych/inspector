@@ -7,7 +7,7 @@ namespace Inspector
 {
     public class ObjectExtensionsTest
     {
-        public class FieldMethod : FieldSelectorFixture
+        public class FieldMethod : FieldExtensionFixture
         {
             [Fact]
             public void ReturnsSingleFieldInGivenType() {
