@@ -121,7 +121,7 @@ namespace Inspector
             }
         }
 
-        public class FieldMethod : FieldFixture
+        public class FieldMethod : FieldSelectorFixture
         {
             // Method parameters
             readonly Type testType = typeof(TestType);
@@ -130,55 +130,68 @@ namespace Inspector
 
             // Fixture
             readonly object instance = new TestType();
-            readonly Expression<Predicate<StaticScope>> staticScopeOfTestType = (scope) =>
-                scope.TypeInfo == typeof(TestType).GetTypeInfo();
-            readonly Field expectedField;
+            readonly Field selected;
+            IFilter<Field> selection;
 
-            public FieldMethod() =>
-                expectedField = new Field(testType.GetField(nameof(TestType.Field)), instance);
-
-            [Fact]
-            public void ReturnsFieldWithGivenTypeAndName() {
-                selector.Invoke(Arg.Is(staticScopeOfTestType), fieldType, fieldName).Returns(expectedField);
-                Assert.Same(expectedField, testType.Field(fieldType, fieldName));
-            }
-
-            [Fact]
-            public void ReturnsFieldWithGivenType() {
-                selector.Invoke(Arg.Is(staticScopeOfTestType), fieldType, null).Returns(expectedField);
-                Assert.Same(expectedField, testType.Field(fieldType));
-            }
-
-            [Fact]
-            public void ReturnsFieldWithGivenName() {
-                selector.Invoke(Arg.Is(staticScopeOfTestType), null, fieldName).Returns(expectedField);
-                Assert.Same(expectedField, testType.Field(fieldName));
+            public FieldMethod() {
+                selected = new Field(testType.GetField(nameof(TestType.Field)), instance);
+                select.Invoke(Arg.Do<IFilter<Field>>(f => selection = f)).Returns(selected);
             }
 
             [Fact]
             public void ReturnsSingleFieldInGivenType() {
-                selector.Invoke(Arg.Is(staticScopeOfTestType), null, null).Returns(expectedField);
-                Assert.Same(expectedField, testType.Field());
+                Assert.Same(selected, testType.Field());
+
+                VerifyScope(selection, testType);
+            }
+
+            [Fact]
+            public void ReturnsFieldWithGivenType() {
+                Assert.Same(selected, testType.Field(fieldType));
+
+                FieldTypeFilter typed = VerifyFilter(selection, fieldType);
+                VerifyScope(typed.Previous, testType);
+            }
+
+            [Fact]
+            public void ReturnsFieldWithGivenName() {
+                Assert.Same(selected, testType.Field(fieldName));
+
+                FieldNameFilter named = VerifyFilter(selection, fieldName);
+                VerifyScope(named.Previous, testType);
+            }
+
+            [Fact]
+            public void ReturnsFieldWithGivenTypeAndName() {
+                Assert.Same(selected, testType.Field(fieldType, fieldName));
+
+                FieldNameFilter named = VerifyFilter(selection, fieldName);
+                FieldTypeFilter typed = VerifyFilter(named.Previous, fieldType);
+                VerifyScope(typed.Previous, testType);
             }
 
             [Fact]
             public void ReturnsGenericFieldOfGivenType() {
-                selector.Invoke(Arg.Is(staticScopeOfTestType), fieldType, null).Returns(expectedField);
+                Field<FieldValue> generic = testType.Field<FieldValue>();
 
-                Field<FieldValue> genericField = testType.Field<FieldValue>();
-
-                Assert.Same(expectedField.Info, genericField.Info);
-                Assert.Same(expectedField.Instance, genericField.Instance);
+                VerifyGenericField(selected, generic);
+                FieldTypeFilter typed = VerifyFilter(selection, typeof(FieldValue));
+                VerifyScope(typed.Previous, testType);
             }
 
             [Fact]
             public void ReturnsGenericFieldWithGivenTypeAndName() {
-                selector.Invoke(Arg.Is(staticScopeOfTestType), fieldType, fieldName).Returns(expectedField);
+                Field<FieldValue> generic = testType.Field<FieldValue>(fieldName);
 
-                Field<FieldValue> genericField = testType.Field<FieldValue>(fieldName);
+                VerifyGenericField(selected, generic);
+                FieldNameFilter named = VerifyFilter(selection, fieldName);
+                FieldTypeFilter typed = VerifyFilter(named.Previous, typeof(FieldValue));
+                VerifyScope(typed.Previous, testType);
+            }
 
-                Assert.Same(expectedField.Info, genericField.Info);
-                Assert.Same(expectedField.Instance, genericField.Instance);
+            static void VerifyScope(IFilter<Field> selection, Type expected) {
+                var scope = Assert.IsType<StaticScope>(selection);
+                Assert.Equal(expected.GetTypeInfo(), scope.TypeInfo);
             }
 
             class TestType
