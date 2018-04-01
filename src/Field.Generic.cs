@@ -12,9 +12,9 @@ namespace Inspector
         /// <summary>
         /// Initializes a new instance of the <see cref="Field{T}"/> class.
         /// </summary>
-        public Field(FieldInfo info, object instance) : base(info, instance) {
-            if(typeof(T) != info.FieldType)
-                throw new ArgumentException($"Field type {info.FieldType.FullName} doesn't match expected {typeof(T).FullName}.", nameof(info));
+        public Field(Field field) : base(NotNull(field).Info, field.Instance) {
+            if(typeof(T) != Info.FieldType)
+                throw new ArgumentException($"Field type {Info.FieldType.FullName} doesn't match expected {typeof(T).FullName}.", nameof(field));
         }
 
         /// <summary>
@@ -42,6 +42,8 @@ namespace Inspector
         /// </summary>
         public static implicit operator T(Field<T> field) =>
             field != null ? field.Get() : default;
-    }
 
+        static Field NotNull(Field field) =>
+            field ?? throw new ArgumentNullException(nameof(field));
+    }
 }

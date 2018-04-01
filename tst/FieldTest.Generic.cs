@@ -10,26 +10,38 @@ namespace Inspector
         readonly Field<FieldType> sut;
 
         // Constructor parameters
-        readonly FieldInfo info = typeof(InstanceType).GetFields().Single(_ => _.FieldType == typeof(FieldType));
-        readonly object instance = new InstanceType();
+        readonly Field field;
 
-        public GenericFieldTest() =>
-            sut = new Field<FieldType>(info, instance);
+        // Test fixture
+        readonly InstanceType instance = new InstanceType();
+
+        public GenericFieldTest() {
+            FieldInfo info = typeof(InstanceType).GetFields().Single(_ => _.FieldType == typeof(FieldType));
+            field = new Field(info, instance);
+
+            sut = new Field<FieldType>(field);
+        }
 
         public class Constructor : GenericFieldTest
         {
             [Fact]
             public void InitializesBaseWithGivenArgument() {
-                Field field = sut;
-                Assert.Same(info, field.Info);
-                Assert.Same(instance, field.Instance);
+                Field @base = sut;
+                Assert.Same(field.Info, @base.Info);
+                Assert.Same(field.Instance, @base.Instance);
+            }
+
+            [Fact]
+            public void ThrowsDescriptiveExceptionWhenFieldIsNull() {
+                var thrown = Assert.Throws<ArgumentNullException>(() => new Field<FieldType>(null));
+                Assert.Equal("field", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenInfoDoesNotHaveExpectedFieldType() {
                 FieldInfo unexpected = typeof(InstanceType).GetFields().Single(_ => _.FieldType != typeof(FieldType));
-                var thrown = Assert.Throws<ArgumentException>(() => new Field<FieldType>(unexpected, instance));
-                Assert.Equal("info", thrown.ParamName);
+                var thrown = Assert.Throws<ArgumentException>(() => new Field<FieldType>(new Field(unexpected, new InstanceType())));
+                Assert.Equal("field", thrown.ParamName);
                 Assert.StartsWith($"Field type {unexpected.FieldType} doesn't match expected {typeof(FieldType)}.", thrown.Message);
             }
         }
@@ -39,7 +51,7 @@ namespace Inspector
             [Fact]
             public void GetsFieldValue() {
                 FieldType value = sut.Get();
-                Assert.Same(((InstanceType)instance).field, value);
+                Assert.Same(instance.field, value);
             }
         }
 
@@ -49,7 +61,7 @@ namespace Inspector
             public void SetsFieldValue() {
                 var value = new FieldType();
                 sut.Set(value);
-                Assert.Same(value, ((InstanceType)instance).field);
+                Assert.Same(value, instance.field);
             }
         }
 
@@ -58,14 +70,14 @@ namespace Inspector
             [Fact]
             public void GetsFieldValue() {
                 FieldType value = sut.Value;
-                Assert.Same(((InstanceType)instance).field, value);
+                Assert.Same(instance.field, value);
             }
 
             [Fact]
             public void SetsFieldValue() {
                 var value = new FieldType();
                 sut.Value = value;
-                Assert.Same(value, ((InstanceType)instance).field);
+                Assert.Same(value, instance.field);
             }
         }
 
@@ -74,7 +86,7 @@ namespace Inspector
             [Fact]
             public void ImplicitlyConvertsFieldToValueType() {
                 FieldType value = sut;
-                Assert.Same(value, ((InstanceType)instance).field);
+                Assert.Same(value, instance.field);
             }
 
             [Fact]

@@ -19,14 +19,10 @@ namespace Inspector
             return Selector<Field>.Select(named);
         }
 
-        public static Field<T> Field<T>(this IScope scope) {
-            Field field = Field(scope, typeof(T));
-            return new Field<T>(field.Info, field.Instance);
-        }
+        public static Field<T> Field<T>(this IScope scope) =>
+            new Field<T>(scope.Field(typeof(T)));
 
-        public static Field<T> Field<T>(this IScope scope, string fieldName) {
-            Field field = Field(scope, typeof(T), fieldName);
-            return new Field<T>(field.Info, field.Instance);
-        }
+        public static Field<T> Field<T>(this IScope scope, string fieldName) =>
+            new Field<T>(scope.Field(typeof(T), fieldName));
     }
 }
