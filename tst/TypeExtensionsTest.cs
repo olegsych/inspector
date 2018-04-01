@@ -179,7 +179,7 @@ namespace Inspector
 
             static void VerifyScope(IFilter<Field> selection, Type expected) {
                 var scope = Assert.IsType<StaticScope>(selection);
-                Assert.Equal(expected.GetTypeInfo(), scope.TypeInfo);
+                Assert.Same(expected, scope.Type);
             }
         }
 
