@@ -17,12 +17,13 @@ namespace Inspector
 
         IEnumerable<Field> IFilter<Field>.Get() {
             Type type = Instance.GetType();
-            while (type != null) {
+            do {
                 TypeInfo typeInfo = type.GetTypeInfo();
                 foreach(FieldInfo field in typeInfo.GetFields(declaredOnly))
                     yield return new Field(field, Instance);
                 type = typeInfo.BaseType;
             }
+            while(type != null);
         }
 
         IEnumerable<Method> IFilter<Method>.Get() => throw new NotImplementedException();
