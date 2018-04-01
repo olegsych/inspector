@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Inspector
 {
@@ -13,8 +14,20 @@ namespace Inspector
         string IDescriptor.Describe() => throw new NotImplementedException();
         IEnumerable<Constructor> IFilter<Constructor>.Get() => throw new NotImplementedException();
         IEnumerable<Event> IFilter<Event>.Get() => throw new NotImplementedException();
-        IEnumerable<Field> IFilter<Field>.Get() => throw new NotImplementedException();
+
+        IEnumerable<Field> IFilter<Field>.Get() {
+            Type type = Instance.GetType();
+            while (type != null) {
+                TypeInfo typeInfo = type.GetTypeInfo();
+                foreach(FieldInfo field in typeInfo.GetFields(declaredOnly))
+                    yield return new Field(field, Instance);
+                type = typeInfo.BaseType;
+            }
+        }
+
         IEnumerable<Method> IFilter<Method>.Get() => throw new NotImplementedException();
         IEnumerable<Property> IFilter<Property>.Get() => throw new NotImplementedException();
+
+        const BindingFlags declaredOnly = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
     }
 }
