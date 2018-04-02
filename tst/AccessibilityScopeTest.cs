@@ -11,7 +11,7 @@ namespace Inspector
     {
         // Constructor parameters
         readonly IScope previous = Substitute.For<IScope>();
-        readonly IEnumerable<Accessibility> accessibility = Substitute.For<IEnumerable<Accessibility>>();
+        readonly Accessibility accessibility = Accessibility.PrivateProtected;
 
         public class Constructor : AccessibilityScopeTest
         {
@@ -19,12 +19,6 @@ namespace Inspector
             public void ThrowsDescriptiveExceptionWhenPreviousScopeIsNull() {
                 var thrown = Assert.Throws<ArgumentNullException>(() => new AccessibilityScope(null, accessibility));
                 Assert.Equal("previous", thrown.ParamName);
-            }
-
-            [Fact]
-            public void ThrowsDescriptiveExceptoinWhenAccessibilityIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new AccessibilityScope(previous, null));
-                Assert.Equal("accessibility", thrown.ParamName);
             }
 
             [Fact]
@@ -36,7 +30,7 @@ namespace Inspector
             [Fact]
             public void InitializesAccessiblityPropertyForUseInTests() {
                 var sut = new AccessibilityScope(previous, accessibility);
-                Assert.Same(accessibility, sut.Accessibility);
+                Assert.Equal(accessibility, sut.Accessibility);
             }
         }
 
@@ -45,10 +39,10 @@ namespace Inspector
             [Fact]
             public void ReturnsFieldsWithWithExpectedAccessibility() {
                 // Arrange
-                var sut = new AccessibilityScope(previous, new[] { Accessibility.Internal, Accessibility.ProtectedInternal });
+                var sut = new AccessibilityScope(previous, Accessibility.ProtectedInternal);
 
                 Field[] expected = {
-                    new Field(FieldInfo(FieldAttributes.Assembly | FieldAttributes.Static)),
+                    new Field(FieldInfo(FieldAttributes.FamORAssem | FieldAttributes.Static)),
                     new Field(FieldInfo(FieldAttributes.FamORAssem | FieldAttributes.Static)),
                 };
 

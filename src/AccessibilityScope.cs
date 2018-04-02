@@ -7,12 +7,12 @@ namespace Inspector
 {
     class AccessibilityScope : IScope, IDecorator<IScope>
     {
-        public AccessibilityScope(IScope previous, IEnumerable<Accessibility> accessibility) {
+        public AccessibilityScope(IScope previous, Accessibility accessibility) {
             Previous = previous ?? throw new ArgumentNullException(nameof(previous));
-            Accessibility = accessibility ?? throw new ArgumentNullException(nameof(accessibility));
+            Accessibility = accessibility;
         }
 
-        public IEnumerable<Accessibility> Accessibility { get; }
+        public Accessibility Accessibility { get; }
 
         public IScope Previous { get; }
 
@@ -28,6 +28,6 @@ namespace Inspector
         IEnumerable<Property> IFilter<Property>.Get() => throw new NotImplementedException();
 
         bool AccessibilityMatches(Field field) =>
-            Accessibility.Contains((Accessibility)(field.Info.Attributes & FieldAttributes.FieldAccessMask));
+            Accessibility == (Accessibility)(field.Info.Attributes & FieldAttributes.FieldAccessMask);
     }
 }
