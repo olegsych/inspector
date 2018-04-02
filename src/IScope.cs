@@ -7,21 +7,6 @@ namespace Inspector
     {
     }
 
-    sealed class AccessScope : IScope, IDecorator<IScope>
-    {
-        public AccessScope(IScope previous) => throw new NotImplementedException();
-
-        public IScope Previous => throw new NotImplementedException();
-
-        string IDescriptor.Describe() => throw new NotImplementedException();
-
-        IEnumerable<Constructor> IFilter<Constructor>.Get() => throw new NotImplementedException();
-        IEnumerable<Event> IFilter<Event>.Get() => throw new NotImplementedException();
-        IEnumerable<Field> IFilter<Field>.Get() => throw new NotImplementedException();
-        IEnumerable<Method> IFilter<Method>.Get() => throw new NotImplementedException();
-        IEnumerable<Property> IFilter<Property>.Get() => throw new NotImplementedException();
-    }
-
     public static class ScopeConstructorExtensions
     {
         public static Constructor Constructor(this IScope scope, Type signatureDelegate) =>
