@@ -7,16 +7,6 @@ namespace Inspector
     {
     }
 
-    enum Access
-    {
-        Private = 1,
-        PrivateProtected = 2,
-        Internal = 3,
-        Protected = 4,
-        ProtectedInternal = 5,
-        Public = 6
-    }
-
     sealed class AccessScope : IScope, IDecorator<IScope>
     {
         public AccessScope(IScope previous) => throw new NotImplementedException();
