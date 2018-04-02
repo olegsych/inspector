@@ -3,10 +3,10 @@ using System.Reflection;
 namespace Inspector
 {
     /// <summary>
-    /// An access modifier of a type member.
+    /// Accessibility of a type member.
     /// Matches items in <see cref="FieldAttributes.FieldAccessMask"/> and <see cref="MethodAttributes.MemberAccessMask"/>.
     /// </summary>
-    enum AccessModifier
+    enum Accessibility
     {
         Private = 1,
         PrivateProtected = 2,

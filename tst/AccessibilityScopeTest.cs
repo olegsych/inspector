@@ -11,47 +11,41 @@ namespace Inspector
     {
         // Constructor parameters
         readonly IScope previous = Substitute.For<IScope>();
-        readonly IEnumerable<AccessModifier> accessModifiers = Substitute.For<IEnumerable<AccessModifier>>();
+        readonly IEnumerable<Accessibility> accessibility = Substitute.For<IEnumerable<Accessibility>>();
 
         public class Constructor : AccessibilityScopeTest
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenPreviousScopeIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new AccessibilityScope(null, accessModifiers));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new AccessibilityScope(null, accessibility));
                 Assert.Equal("previous", thrown.ParamName);
             }
 
             [Fact]
-            public void ThrowsDescriptiveExceptoinWhenAccessModifiersIsNull() {
+            public void ThrowsDescriptiveExceptoinWhenAccessibilityIsNull() {
                 var thrown = Assert.Throws<ArgumentNullException>(() => new AccessibilityScope(previous, null));
-                Assert.Equal("accessModifiers", thrown.ParamName);
+                Assert.Equal("accessibility", thrown.ParamName);
             }
-        }
 
-        public class Previous : AccessibilityScopeTest
-        {
             [Fact]
-            public void ImplementsIDecoratorToAllowSelectorAccessToEntireFilterChain() {
-                IDecorator<IScope> sut = new AccessibilityScope(previous, accessModifiers);
+            public void InitializesIDecoratorPreviousPropertyForSelectorAccessToEntireFilterChain() {
+                IDecorator<IScope> sut = new AccessibilityScope(previous, accessibility);
                 Assert.Same(previous, sut.Previous);
             }
-        }
 
-        public class AccessModifiers : AccessibilityScopeTest
-        {
             [Fact]
-            public void ReturnsValueGivenToConstructorForUseInTests() {
-                var sut = new AccessibilityScope(previous, accessModifiers);
-                Assert.Same(accessModifiers, sut.AccessModifiers);
+            public void InitializesAccessiblityPropertyForUseInTests() {
+                var sut = new AccessibilityScope(previous, accessibility);
+                Assert.Same(accessibility, sut.Accessibility);
             }
         }
 
         public class GetFields : AccessibilityScopeTest
         {
             [Fact]
-            public void ReturnsFieldsWithWithExpectedAccessModifiers() {
+            public void ReturnsFieldsWithWithExpectedAccessibility() {
                 // Arrange
-                var sut = new AccessibilityScope(previous, new[] { AccessModifier.Internal, AccessModifier.ProtectedInternal });
+                var sut = new AccessibilityScope(previous, new[] { Accessibility.Internal, Accessibility.ProtectedInternal });
 
                 Field[] expected = {
                     new Field(FieldInfo(FieldAttributes.Assembly | FieldAttributes.Static)),
@@ -71,6 +65,7 @@ namespace Inspector
                 // Act
                 IEnumerable<Field> actual = ((IFilter<Field>)sut).Get();
 
+                // Assert
                 Assert.Equal(expected, actual);
             }
         }
