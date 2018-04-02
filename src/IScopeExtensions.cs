@@ -24,5 +24,21 @@ namespace Inspector
 
         public static Field<T> Field<T>(this IScope scope, string fieldName) =>
             new Field<T>(scope.Field(typeof(T), fieldName));
+
+        #region Accessibility
+
+        public static IScope Internal(this IScope scope) =>
+            new AccessibilityScope(scope, Accessibility.Internal);
+
+        public static IScope Private(this IScope scope) =>
+            new AccessibilityScope(scope, Accessibility.Private);
+
+        public static IScope Protected(this IScope scope) =>
+            new AccessibilityScope(scope, Accessibility.Protected);
+
+        public static IScope Public(this IScope scope) =>
+            new AccessibilityScope(scope, Accessibility.Public);
+
+        #endregion
     }
 }
