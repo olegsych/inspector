@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace Inspector
 {
-    public static partial class TypeExtensions
+    public static class TypeExtensions
     {
         public static ConstructorInfo Constructor<T>(this Type type) =>
             Constructor(type, typeof(T));
@@ -59,6 +59,22 @@ namespace Inspector
 
         public static Field<T> Field<T>(this Type type, string fieldName) =>
             new StaticScope(type).Field<T>(fieldName);
+
+        #endregion
+
+        #region Accessibility
+
+        public static IScope Internal(this Type type) =>
+            new StaticScope(type).Internal();
+
+        public static IScope Private(this Type type) =>
+            new StaticScope(type).Private();
+
+        public static IScope Protected(this Type type) =>
+            new StaticScope(type).Protected();
+
+        public static IScope Public(this Type type) =>
+            new StaticScope(type).Public();
 
         #endregion
 
