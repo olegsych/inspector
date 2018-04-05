@@ -8,8 +8,17 @@ namespace Inspector
     class AccessibilityScope : IScope, IDecorator<IScope>
     {
         public AccessibilityScope(IScope previous, Accessibility accessibility) {
-            Previous = previous ?? throw new ArgumentNullException(nameof(previous));
-            Accessibility = accessibility;
+            if (previous == null)
+                throw new ArgumentNullException(nameof(previous));
+
+            if(previous is AccessibilityScope scope) {
+                Accessibility = Combine(scope.Accessibility, accessibility);
+                Previous = scope.Previous;
+            }
+            else {
+                Previous = previous;
+                Accessibility = accessibility;
+            }
         }
 
         public Accessibility Accessibility { get; }
@@ -29,5 +38,15 @@ namespace Inspector
 
         bool AccessibilityMatches(Field field) =>
             Accessibility == (Accessibility)(field.Info.Attributes & FieldAttributes.FieldAccessMask);
+
+        static Accessibility Combine(Accessibility a1, Accessibility a2) {
+            if(a1 == Accessibility.Private && a2 == Accessibility.Protected)
+                return Accessibility.PrivateProtected;
+            if(a1 == Accessibility.Protected && a2 == Accessibility.Internal)
+                return Accessibility.ProtectedInternal;
+
+            string error = $"'{a1.ToString().ToLower()} {a2.ToString().ToLower()}' is not a valid accessibility.";
+            throw new InvalidOperationException(error);
+        }
     }
 }

@@ -32,6 +32,34 @@ namespace Inspector
                 var sut = new AccessibilityScope(previous, accessibility);
                 Assert.Equal(accessibility, sut.Accessibility);
             }
+
+            [Theory]
+            [InlineData(Accessibility.Private, Accessibility.Protected, Accessibility.PrivateProtected)]
+            [InlineData(Accessibility.Protected, Accessibility.Internal, Accessibility.ProtectedInternal)]
+            internal void CombinesPrivateAndProtectedAccessibility(Accessibility first, Accessibility second, Accessibility combined) {
+                var sut = new AccessibilityScope(new AccessibilityScope(previous, first), second);
+
+                Assert.Equal(combined, sut.Accessibility);
+                Assert.Same(previous, sut.Previous);
+            }
+
+            [Theory, MemberData(nameof(InvalidAccessibilityCombinations))]
+            internal void ThrowsDescriptiveExceptionWhenAccessibilitiesCannotBeCombined(Accessibility first, Accessibility second) {
+                var thrown = Assert.Throws<InvalidOperationException>(() => new AccessibilityScope(new AccessibilityScope(previous, first), second));
+                Assert.StartsWith($"'{first.ToString().ToLower()} {second.ToString().ToLower()}' is not a valid accessibility.", thrown.Message);
+            }
+
+            public static IEnumerable<object[]> InvalidAccessibilityCombinations() {
+                Accessibility[] accessibilities = { Accessibility.Internal, Accessibility.Private, Accessibility.PrivateProtected, Accessibility.Protected, Accessibility.ProtectedInternal, Accessibility.Public };
+                foreach(Accessibility first in accessibilities)
+                    foreach(Accessibility second in accessibilities)
+                        if(!IsValidCombination(first, second))
+                            yield return new object[] { first, second };
+            }
+
+            static bool IsValidCombination(Accessibility first, Accessibility second) =>
+                (first == Accessibility.Private && second == Accessibility.Protected) ||
+                (first == Accessibility.Protected && second == Accessibility.Internal);
         }
 
         public class GetFields : AccessibilityScopeTest
