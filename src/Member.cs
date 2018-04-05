@@ -16,6 +16,12 @@ namespace Inspector
         /// </summary>
         protected Member(TMemberInfo info, object instance) {
             Info = info ?? throw new ArgumentNullException(nameof(info));
+
+            if(instance != null && !info.DeclaringType.GetTypeInfo().IsAssignableFrom(instance.GetType())) {
+                string error = $"Instance type {instance.GetType().Name} doesn't match type {info.DeclaringType.Name} where {info.Name} is declared.";
+                throw new ArgumentException(error, nameof(instance));
+            }
+
             Instance = instance;
         }
 

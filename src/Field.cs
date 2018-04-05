@@ -19,8 +19,6 @@ namespace Inspector
             else {
                 if(instance == null)
                     throw new ArgumentNullException(nameof(instance), $"Instance is required for field {info.Name}.");
-                if(!info.DeclaringType.GetTypeInfo().IsAssignableFrom(instance.GetType()))
-                    throw new ArgumentException($"Instance type {instance.GetType().Name} doesn't match type {info.DeclaringType.Name} where {info.Name} is declared.", nameof(instance));
             }
         }
 

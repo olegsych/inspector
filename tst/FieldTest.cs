@@ -27,16 +27,6 @@ namespace Inspector
             }
 
             [Fact]
-            public void InitializesNewInstanceForDerivedInstanceField() {
-                var derived = new DerivedType();
-
-                Member<FieldInfo> member = new Field(instanceField, derived);
-
-                Assert.Same(instanceField, member.Info);
-                Assert.Same(derived, member.Instance);
-            }
-
-            [Fact]
             public void InitializesNewInstanceForStaticField() {
                 Member<FieldInfo> member = new Field(staticField, null);
 
@@ -56,13 +46,6 @@ namespace Inspector
                 var thrown = Assert.Throws<ArgumentException>(() => new Field(staticField, instance));
                 Assert.Equal("instance", thrown.ParamName);
                 Assert.StartsWith($"Instance shouldn't be specified for static field {staticField.Name}.", thrown.Message);
-            }
-
-            [Fact]
-            public void ThrowsDescriptiveExceptionWhenGivenInstanceOfTypeDifferentFromFieldInfo() {
-                var thrown = Assert.Throws<ArgumentException>(() => new Field(instanceField, new AnotherType()));
-                Assert.Equal("instance", thrown.ParamName);
-                Assert.StartsWith($"Instance type {nameof(AnotherType)} doesn't match type {instanceField.DeclaringType.Name} where {instanceField.Name} is declared.", thrown.Message);
             }
         }
 
@@ -106,13 +89,6 @@ namespace Inspector
             public FieldType Field = new FieldType();
             public static FieldType StaticField = new FieldType();
         }
-
-        class AnotherType
-        {
-            public FieldType Field = new FieldType();
-        }
-
-        class DerivedType : TestType { }
 
         class FieldType { }
     }
