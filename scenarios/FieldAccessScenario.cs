@@ -134,7 +134,7 @@ namespace Inspector
             [Fact]
             public void SelectInternalField() {
                 FieldInfo field = foo.Internal().Field<Bar>();
-                field.Name.ShouldBe("protectedField");
+                field.Name.ShouldBe("internalField");
             }
 
             [Fact]
