@@ -32,6 +32,12 @@ namespace Inspector
             return method;
         }
 
+        public static MethodInfo MethodInfo(MethodAttributes attributes) {
+            var method = Substitute.For<MethodInfo>();
+            method.Attributes.Returns(attributes);
+            return method;
+        }
+
         public static ParameterInfo ParameterInfo(Type parameterType = default) {
             parameterType = parameterType ?? Type();
             var parameter = Substitute.For<ParameterInfo>();

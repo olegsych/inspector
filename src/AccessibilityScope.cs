@@ -33,11 +33,16 @@ namespace Inspector
         IEnumerable<Field> IFilter<Field>.Get() =>
             ((IFilter<Field>)Previous).Get().Where(AccessibilityMatches);
 
-        IEnumerable<Method> IFilter<Method>.Get() => throw new NotImplementedException();
+        IEnumerable<Method> IFilter<Method>.Get() =>
+            ((IFilter<Method>)Previous).Get().Where(AccessibilityMatches);
+
         IEnumerable<Property> IFilter<Property>.Get() => throw new NotImplementedException();
 
         bool AccessibilityMatches(Field field) =>
             Accessibility == (Accessibility)(field.Info.Attributes & FieldAttributes.FieldAccessMask);
+
+        bool AccessibilityMatches(Method method) =>
+            Accessibility == (Accessibility)(method.Info.Attributes & MethodAttributes.MemberAccessMask);
 
         static Accessibility Combine(Accessibility a1, Accessibility a2) {
             if(a1 == Accessibility.Private && a2 == Accessibility.Protected)
