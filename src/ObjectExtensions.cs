@@ -5,10 +5,10 @@ namespace Inspector
 {
     public static class ObjectExtensions
     {
-        public static ObjectInspector Declared(this object instance)
+        public static IScope Declared(this object instance)
             => throw new NotImplementedException();
 
-        public static ObjectInspector Declared<TDeclaringType>(this object instance)
+        public static IScope Declared<TDeclaringType>(this object instance)
             => throw new NotImplementedException();
 
         #region Field
@@ -49,10 +49,10 @@ namespace Inspector
 
         #endregion
 
-        public static ObjectInspector Inherited(this object instance)
+        public static IScope Inherited(this object instance)
             => throw new NotImplementedException();
 
-        public static ObjectInspector Inherited<TBaseType>(this object instance)
+        public static IScope Inherited<TBaseType>(this object instance)
             => throw new NotImplementedException();
 
         public static Property<T> Property<T>(this object instance)
