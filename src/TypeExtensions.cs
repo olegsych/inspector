@@ -40,28 +40,6 @@ namespace Inspector
             return inspector.GetConstructors();
         }
 
-        #region Field
-
-        public static Field Field(this Type type) =>
-            new StaticScope(type).Field();
-
-        public static Field Field(this Type type, Type fieldType) =>
-            new StaticScope(type).Field(fieldType);
-
-        public static Field Field(this Type type, string fieldName) =>
-            new StaticScope(type).Field(fieldName);
-
-        public static Field Field(this Type type, Type fieldType, string fieldName) =>
-            new StaticScope(type).Field(fieldType, fieldName);
-
-        public static Field<T> Field<T>(this Type type) =>
-            new StaticScope(type).Field<T>();
-
-        public static Field<T> Field<T>(this Type type, string fieldName) =>
-            new StaticScope(type).Field<T>(fieldName);
-
-        #endregion
-
         #region Accessibility
 
         public static IScope Internal(this Type type) =>

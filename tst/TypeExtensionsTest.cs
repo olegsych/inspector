@@ -120,68 +120,6 @@ namespace Inspector
             }
         }
 
-        public class FieldMethod : FieldExtensionFixture
-        {
-            // Method parameters
-            readonly Type testType = typeof(TestType);
-
-            [Fact]
-            public void ReturnsSingleFieldInGivenType() {
-                Assert.Same(selected, testType.Field());
-
-                VerifyScope(selection, testType);
-            }
-
-            [Fact]
-            public void ReturnsFieldWithGivenType() {
-                Assert.Same(selected, testType.Field(fieldType));
-
-                FieldTypeFilter typed = VerifyFilter(selection, fieldType);
-                VerifyScope(typed.Previous, testType);
-            }
-
-            [Fact]
-            public void ReturnsFieldWithGivenName() {
-                Assert.Same(selected, testType.Field(fieldName));
-
-                FieldNameFilter named = VerifyFilter(selection, fieldName);
-                VerifyScope(named.Previous, testType);
-            }
-
-            [Fact]
-            public void ReturnsFieldWithGivenTypeAndName() {
-                Assert.Same(selected, testType.Field(fieldType, fieldName));
-
-                FieldNameFilter named = VerifyFilter(selection, fieldName);
-                FieldTypeFilter typed = VerifyFilter(named.Previous, fieldType);
-                VerifyScope(typed.Previous, testType);
-            }
-
-            [Fact]
-            public void ReturnsGenericFieldOfGivenType() {
-                Field<FieldValue> generic = testType.Field<FieldValue>();
-
-                VerifyGenericField(selected, generic);
-                FieldTypeFilter typed = VerifyFilter(selection, typeof(FieldValue));
-                VerifyScope(typed.Previous, testType);
-            }
-
-            [Fact]
-            public void ReturnsGenericFieldWithGivenTypeAndName() {
-                Field<FieldValue> generic = testType.Field<FieldValue>(fieldName);
-
-                VerifyGenericField(selected, generic);
-                FieldNameFilter named = VerifyFilter(selection, fieldName);
-                FieldTypeFilter typed = VerifyFilter(named.Previous, typeof(FieldValue));
-                VerifyScope(typed.Previous, testType);
-            }
-
-            static void VerifyScope(IFilter<Field> selection, Type expected) {
-                var scope = Assert.IsType<StaticScope>(selection);
-                Assert.Same(expected, scope.Type);
-            }
-        }
-
         public class AccessibilityMethod
         {
             readonly Type type = typeof(TestClass);

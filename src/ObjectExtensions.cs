@@ -11,28 +11,6 @@ namespace Inspector
         public static IScope Declared<TDeclaringType>(this object instance)
             => throw new NotImplementedException();
 
-        #region Field
-
-        public static Field Field(this object instance) =>
-            new InstanceScope(instance).Field();
-
-        public static Field Field(this object instance, string fieldName) =>
-            new InstanceScope(instance).Field(fieldName);
-
-        public static Field Field(this object instance, Type fieldType) =>
-            new InstanceScope(instance).Field(fieldType);
-
-        public static Field Field(this object instance, Type fieldType, string fieldName) =>
-            new InstanceScope(instance).Field(fieldType, fieldName);
-
-        public static Field<T> Field<T>(this object instance) =>
-            new InstanceScope(instance).Field<T>();
-
-        public static Field<T> Field<T>(this object instance, string fieldName) =>
-            new InstanceScope(instance).Field<T>(fieldName);
-
-        #endregion
-
         #region Accessibility
 
         public static IScope Internal(this object instance) =>
