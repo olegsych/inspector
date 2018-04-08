@@ -32,9 +32,11 @@ namespace Inspector
             return method;
         }
 
-        public static MethodInfo MethodInfo(MethodAttributes attributes) {
+        public static MethodInfo MethodInfo(MethodAttributes attributes, string name = default) {
+            name = name ?? $"Method{Next}";
             var method = Substitute.For<MethodInfo>();
             method.Attributes.Returns(attributes);
+            method.Name.Returns(name);
             return method;
         }
 
