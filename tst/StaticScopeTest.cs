@@ -72,5 +72,43 @@ namespace Inspector
 
             class FieldType { }
         }
+
+        public class GetMethods: StaticScopeTest
+        {
+            [Fact]
+            public void ReturnsAllStaticMethodsInheritedByGivenType() {
+                IFilter<Method> sut = new StaticScope(typeof(TwiceDerivedType));
+
+                IEnumerable<Method> methods = sut.Get();
+
+                VerifyMethodsOfTestType(methods);
+            }
+
+            void VerifyMethodsOfTestType(IEnumerable<Method> methods) {
+                const BindingFlags allStatic = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+                HashSet<MethodInfo> expected = Enumerable.Concat(
+                    typeof(TestType).GetMethods(allStatic),
+                    typeof(object).GetMethods(allStatic))
+                    .ToHashSet();
+                HashSet<MethodInfo> actual = methods.Select(field => field.Info).ToHashSet();
+                Assert.True(expected.SetEquals(actual));
+                methods.ToList().ForEach(field => Assert.Null(field.Instance));
+            }
+
+            class TestType
+            {
+                static void PrivateMethod() { }
+                protected static void ProtectedMethod() { }
+                private protected static void PrivateProtectedMethod() { }
+                protected internal static void ProtectedInternalMethod() { }
+                internal static void InternalMethod() { }
+                public static void PublicMethod() { }
+                public void InstanceMethod() { }
+            }
+
+            class DerivedType : TestType { }
+
+            class TwiceDerivedType : DerivedType { }
+        }
     }
 }
