@@ -120,43 +120,6 @@ namespace Inspector
             }
         }
 
-        public class AccessibilityMethod
-        {
-            readonly Type type = typeof(TestClass);
-
-            [Fact]
-            public void InternalReturnsInternalAccessibilityScopeOfGivenType() {
-                IScope actual = type.Internal();
-                VerifyScope(actual, type, Accessibility.Internal);
-            }
-
-            [Fact]
-            public void PrivateReturnsPrivateAccessibilityScopeOfGivenType() {
-                IScope actual = type.Private();
-                VerifyScope(actual, type, Accessibility.Private);
-            }
-
-            [Fact]
-            public void ProtectedReturnsProtectedAccessibilityScopeOfGivenType() {
-                IScope actual = type.Protected();
-                VerifyScope(actual, type, Accessibility.Protected);
-            }
-
-            [Fact]
-            public void PublicReturnsPublicAccessibilityScopeOfGivenType() {
-                IScope actual = type.Public();
-                VerifyScope(actual, type, Accessibility.Public);
-            }
-
-            static void VerifyScope(IScope actual, Type type, Accessibility accessibility) {
-                var accessibilityScope = Assert.IsType<AccessibilityScope>(actual);
-                Assert.Equal(accessibility, accessibilityScope.Accessibility);
-
-                var instanceScope = Assert.IsType<StaticScope>(accessibilityScope.Previous);
-                Assert.Same(type, instanceScope.Type);
-            }
-        }
-
         class TestClass { }
     }
 }

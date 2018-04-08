@@ -11,22 +11,6 @@ namespace Inspector
         public static IScope Declared<TDeclaringType>(this object instance)
             => throw new NotImplementedException();
 
-        #region Accessibility
-
-        public static IScope Internal(this object instance) =>
-            new InstanceScope(instance).Internal();
-
-        public static IScope Private(this object instance) =>
-            new InstanceScope(instance).Private();
-
-        public static IScope Protected(this object instance) =>
-            new InstanceScope(instance).Protected();
-
-        public static IScope Public(this object instance) =>
-            new InstanceScope(instance).Public();
-
-        #endregion
-
         public static IScope Inherited(this object instance)
             => throw new NotImplementedException();
 

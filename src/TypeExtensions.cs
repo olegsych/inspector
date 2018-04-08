@@ -40,22 +40,6 @@ namespace Inspector
             return inspector.GetConstructors();
         }
 
-        #region Accessibility
-
-        public static IScope Internal(this Type type) =>
-            new StaticScope(type).Internal();
-
-        public static IScope Private(this Type type) =>
-            new StaticScope(type).Private();
-
-        public static IScope Protected(this Type type) =>
-            new StaticScope(type).Protected();
-
-        public static IScope Public(this Type type) =>
-            new StaticScope(type).Public();
-
-        #endregion
-
         public static object New(this Type type, params object[] parameters) =>
             throw new NotImplementedException();
 

@@ -7,8 +7,8 @@ namespace Inspector
     /// <summary>
     /// Base class for tests of extension methods that return <see cref="Field"/> and <see cref="Field{T}"/>.
     /// </summary>
-    [Collection(nameof(FieldExtensionTest))]
-    public class FieldExtensionTest : SelectorFixture<Field>
+    [Collection(nameof(FieldExtensionsTest))]
+    public class FieldExtensionsTest : SelectorFixture<Field>
     {
         // Method parameters
         protected readonly Type fieldType = typeof(FieldValue);
@@ -19,7 +19,7 @@ namespace Inspector
         protected readonly Field selected;
         protected IFilter<Field> selection;
 
-        public FieldExtensionTest() {
+        public FieldExtensionsTest() {
             selected = new Field(typeof(TestType).GetField(nameof(TestType.Field)), instance);
             select.Invoke(Arg.Do<IFilter<Field>>(f => selection = f)).Returns(selected);
         }
@@ -48,7 +48,7 @@ namespace Inspector
 
         protected class FieldValue { }
 
-        public class IScopeExtension : FieldExtensionTest
+        public class IScopeExtension : FieldExtensionsTest
         {
             // Method parameters
             readonly IScope scope = Substitute.For<IScope>();
@@ -105,7 +105,7 @@ namespace Inspector
             }
         }
 
-        public class ObjectExtension : FieldExtensionTest
+        public class ObjectExtension : FieldExtensionsTest
         {
             [Fact]
             public void ReturnsSingleFieldInGivenType() {
@@ -164,7 +164,7 @@ namespace Inspector
             }
         }
 
-        public class TypeExtension : FieldExtensionTest
+        public class TypeExtension : FieldExtensionsTest
         {
             // Method parameters
             readonly Type testType = typeof(TestType);
