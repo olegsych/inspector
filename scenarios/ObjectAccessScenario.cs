@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using Shouldly;
 using Xunit;
@@ -96,17 +96,17 @@ namespace Inspector
 
                 [Fact]
                 public void SimpleActionWithUniqueParameters() {
-                    Action<Bar> action = foo.Action<Bar>();
+                    Action<Bar> action = foo.Method<Action<Bar>>();
                 }
 
                 [Fact]
                 public void SimpleActionWithUniqueName() {
-                    Action<Baz> action = foo.Action<Baz>("BazAction1");
+                    Action<Baz> action = foo.Method<Action<Baz>>("BazAction1");
                 }
 
                 [Fact]
                 public void SimpleFuncWithUniqueParameters() {
-                    Func<Baz, Bar> fun = foo.Func<Baz, Bar>();
+                    Func<Baz, Bar> fun = foo.Method<Func<Baz, Bar>>();
                 }
 
                 delegate void OutAction(out Bar bar);
