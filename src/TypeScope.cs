@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -34,23 +35,40 @@ namespace Inspector
             throw new NotImplementedException();
 
         IEnumerable<Field> IFilter<Field>.Get() =>
-            Get(typeInfo => typeInfo.GetFields(bindingFlags), fieldInfo => new Field(fieldInfo, Instance));
+            new TypeMembers<FieldInfo, Field>(Type, typeInfo => typeInfo.GetFields(bindingFlags), fieldInfo => new Field(fieldInfo, Instance));
 
         IEnumerable<Method> IFilter<Method>.Get() =>
-            Get(typeInfo => typeInfo.GetMethods(bindingFlags), methodInfo => new Method(methodInfo, Instance));
+            new TypeMembers<MethodInfo, Method>(Type, typeInfo => typeInfo.GetMethods(bindingFlags), methodInfo => new Method(methodInfo, Instance));
 
         IEnumerable<Property> IFilter<Property>.Get() =>
             throw new NotImplementedException();
 
-        IEnumerable<TMember> Get<TMemberInfo, TMember>(Func<TypeInfo, IEnumerable<TMemberInfo>> getMemberInfos, Func<TMemberInfo, TMember> makeMember) {
-            Type type = Type;
-            do {
-                TypeInfo typeInfo = type.GetTypeInfo();
-                foreach(TMemberInfo memberInfo in getMemberInfos(typeInfo))
-                    yield return makeMember(memberInfo);
-                type = typeInfo.BaseType;
+        sealed class TypeMembers<TInfo, TMember> : IEnumerable<TMember>
+            where TInfo : MemberInfo
+            where TMember : Member<TInfo>
+        {
+            public TypeMembers(Type type, Func<TypeInfo, IEnumerable<TInfo>> getInfos, Func<TInfo, TMember> makeMember) {
+                Type = type;
+                GetInfos = getInfos;
+                MakeMember = makeMember;
             }
-            while(type != null);
+
+            public Func<TypeInfo, IEnumerable<TInfo>> GetInfos { get; }
+            public Func<TInfo, TMember> MakeMember { get; }
+            public Type Type { get; }
+
+            public IEnumerator<TMember> GetEnumerator() {
+                Type type = Type;
+                do {
+                    TypeInfo typeInfo = type.GetTypeInfo();
+                    foreach(TInfo memberInfo in GetInfos(typeInfo))
+                        yield return MakeMember(memberInfo);
+                    type = typeInfo.BaseType;
+                }
+                while(type != null);
+            }
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
     }
 }
