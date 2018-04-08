@@ -31,18 +31,6 @@ namespace Inspector
             throw new NotImplementedException();
     }
 
-    public static class ScopeMethodExtensions
-    {
-        public static Method Method(this IScope scope, string methodName) =>
-            throw new NotImplementedException();
-
-        public static Method Method(this IScope scope, Type signatureDelegate, string methodName = null) =>
-            throw new NotImplementedException();
-
-        public static Method<TSignature> Method<TSignature>(this IScope scope, string methodName = null) =>
-            throw new NotImplementedException();
-    }
-
     public static class ScopePropertyExtensions
     {
         public static Property Property(this IScope scope, string propertyName) =>
