@@ -34,10 +34,10 @@ namespace Inspector
             throw new NotImplementedException();
 
         IEnumerable<Field> IFilter<Field>.Get() =>
-            new TypeMembers<FieldInfo, Field>(Type, typeInfo => typeInfo.GetFields(bindingFlags), fieldInfo => new Field(fieldInfo, Instance));
+            new Members<FieldInfo, Field>(Type, typeInfo => typeInfo.GetFields(bindingFlags), fieldInfo => new Field(fieldInfo, Instance));
 
         IEnumerable<Method> IFilter<Method>.Get() =>
-            new TypeMembers<MethodInfo, Method>(Type, typeInfo => typeInfo.GetMethods(bindingFlags), methodInfo => new Method(methodInfo, Instance));
+            new Members<MethodInfo, Method>(Type, typeInfo => typeInfo.GetMethods(bindingFlags), methodInfo => new Method(methodInfo, Instance));
 
         IEnumerable<Property> IFilter<Property>.Get() =>
             throw new NotImplementedException();

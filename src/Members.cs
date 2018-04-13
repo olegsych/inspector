@@ -5,11 +5,11 @@ using System.Reflection;
 
 namespace Inspector
 {
-    sealed class TypeMembers<TInfo, TMember> : IEnumerable<TMember>
+    sealed class Members<TInfo, TMember> : IEnumerable<TMember>
         where TInfo : MemberInfo
         where TMember : Member<TInfo>
     {
-        public TypeMembers(Type type, Func<TypeInfo, IEnumerable<TInfo>> getInfos, Func<TInfo, TMember> makeMember) {
+        public Members(Type type, Func<TypeInfo, IEnumerable<TInfo>> getInfos, Func<TInfo, TMember> makeMember) {
             Type = type;
             GetInfos = getInfos;
             MakeMember = makeMember;
