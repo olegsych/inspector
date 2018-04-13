@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace Inspector
 {
-    class AccessibilityScope : IScope, IDecorator<IScope>
+    sealed class AccessibilityScope : IScope, IDecorator<IScope>
     {
         public AccessibilityScope(IScope previous, Accessibility accessibility) {
             if (previous == null)
