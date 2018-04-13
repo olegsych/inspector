@@ -6,19 +6,17 @@ namespace Inspector
 {
     abstract class TypeScope : IScope
     {
-        const BindingFlags declared = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
-
-        readonly BindingFlags bindingFlags;
+        readonly Lifetime lifetime;
 
         protected TypeScope(Type type) {
             Type = type ?? throw new ArgumentNullException(nameof(type));
-            bindingFlags = declared | BindingFlags.Static;
+            lifetime = Lifetime.Static;
         }
 
         protected TypeScope(object instance) {
             Instance = instance ?? throw new ArgumentNullException(nameof(instance));
             Type = instance.GetType();
-            bindingFlags = declared | BindingFlags.Instance;
+            lifetime = Lifetime.Instance;
         }
 
         public object Instance { get; }
@@ -34,10 +32,10 @@ namespace Inspector
             throw new NotImplementedException();
 
         IEnumerable<Field> IFilter<Field>.Get() =>
-            new Members<FieldInfo, Field>(Type, typeInfo => typeInfo.GetFields(bindingFlags), fieldInfo => new Field(fieldInfo, Instance));
+            new Members<FieldInfo, Field>(Type, lifetime, typeInfo => typeInfo.GetFields, fieldInfo => new Field(fieldInfo, Instance));
 
         IEnumerable<Method> IFilter<Method>.Get() =>
-            new Members<MethodInfo, Method>(Type, typeInfo => typeInfo.GetMethods(bindingFlags), methodInfo => new Method(methodInfo, Instance));
+            new Members<MethodInfo, Method>(Type, lifetime, typeInfo => typeInfo.GetMethods, methodInfo => new Method(methodInfo, Instance));
 
         IEnumerable<Property> IFilter<Property>.Get() =>
             throw new NotImplementedException();
