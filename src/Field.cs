@@ -22,6 +22,9 @@ namespace Inspector
             }
         }
 
+        internal static Field Create(FieldInfo info, object instance) =>
+            new Field(info, instance);
+
         /// <summary>
         /// Gets or sets the field value.
         /// </summary>

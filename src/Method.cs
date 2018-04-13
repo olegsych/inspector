@@ -22,6 +22,9 @@ namespace Inspector
             }
         }
 
+        internal static Method Create(MethodInfo info, object instance) =>
+            new Method(info, instance);
+
         /// <summary>
         /// Invokes the method with specified <paramref name="parameters"/> and returns the value it returns.
         /// </summary>

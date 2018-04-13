@@ -9,16 +9,20 @@ namespace Inspector
         where TInfo : MemberInfo
         where TMember : Member<TInfo>
     {
-        readonly BindingFlags bindingFlags;
-        readonly Func<TypeInfo, Func<BindingFlags, IEnumerable<TInfo>>> getMemberInfos;
-        readonly Func<TInfo, TMember> makeMember;
-        readonly Type type;
+        const BindingFlags declared = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
 
-        public Members(Type type, Lifetime lifetime, Func<TypeInfo, Func<BindingFlags, IEnumerable<TInfo>>> getMemberInfos, Func<TInfo, TMember> makeMember) {
-            bindingFlags = (BindingFlags)lifetime | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
+        readonly Func<TypeInfo, Func<BindingFlags, IEnumerable<TInfo>>> getMemberInfos;
+        readonly Func<TInfo, object, TMember> createMember;
+        readonly Type type;
+        readonly object instance;
+        readonly BindingFlags bindingFlags;
+
+        public Members(Type type, object instance, Func<TypeInfo, Func<BindingFlags, IEnumerable<TInfo>>> getMemberInfos, Func<TInfo, object, TMember> createMember) {
             this.type = type;
+            this.instance = instance;
             this.getMemberInfos = getMemberInfos;
-            this.makeMember = makeMember;
+            this.createMember = createMember;
+            bindingFlags = declared | (instance == null ? BindingFlags.Static : BindingFlags.Instance);
         }
 
         public IEnumerator<TMember> GetEnumerator() {
@@ -26,7 +30,7 @@ namespace Inspector
             do {
                 TypeInfo typeInfo = type.GetTypeInfo();
                 foreach(TInfo memberInfo in getMemberInfos(typeInfo).Invoke(bindingFlags))
-                    yield return makeMember(memberInfo);
+                    yield return createMember(memberInfo, instance);
                 type = typeInfo.BaseType;
             }
             while(type != null);
