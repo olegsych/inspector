@@ -18,8 +18,6 @@ namespace Inspector
 
         public Type Type { get; }
 
-        string IDescriptor.Describe() => throw new NotImplementedException();
-
         IEnumerable<Constructor> IFilter<Constructor>.Get() =>
             throw new NotImplementedException();
 

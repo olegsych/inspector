@@ -25,8 +25,6 @@ namespace Inspector
 
         public IScope Previous { get; }
 
-        string IDescriptor.Describe() => throw new NotImplementedException();
-
         IEnumerable<Constructor> IFilter<Constructor>.Get() => throw new NotImplementedException();
         IEnumerable<Event> IFilter<Event>.Get() => throw new NotImplementedException();
 

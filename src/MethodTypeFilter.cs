@@ -20,9 +20,6 @@ namespace Inspector
 
         public Type MethodType { get; }
 
-        string IDescriptor.Describe() =>
-            throw new NotImplementedException();
-
         IEnumerable<Method> IFilter<Method>.Get() =>
             Previous.Get().Where(method => Delegate.CreateDelegate(MethodType, method.Info, false) != null);
     }

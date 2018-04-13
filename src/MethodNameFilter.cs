@@ -15,9 +15,6 @@ namespace Inspector
 
         public string MethodName { get; }
 
-        string IDescriptor.Describe() =>
-            throw new NotImplementedException();
-
         IEnumerable<Method> IFilter<Method>.Get() =>
             Previous.Get().Where(method => method.Info.Name == MethodName);
     }

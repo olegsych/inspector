@@ -15,9 +15,6 @@ namespace Inspector
 
         public string FieldName { get; }
 
-        string IDescriptor.Describe() =>
-            throw new NotImplementedException();
-
         IEnumerable<Field> IFilter<Field>.Get() =>
             Previous.Get().Where(field => field.Info.Name == FieldName);
     }
