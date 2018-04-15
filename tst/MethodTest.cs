@@ -50,6 +50,17 @@ namespace Inspector
             }
         }
 
+        public class Create : MethodTest
+        {
+            [Fact]
+            public void ReturnsMethodWithGivenMethodInfoAndInstance() {
+                Method actual = Method.Create(instanceMethod, instance);
+
+                Assert.Same(instanceMethod, actual.Info);
+                Assert.Same(instance, actual.Instance);
+            }
+        }
+
         public class Invoke : MethodTest
         {
             [Fact]
