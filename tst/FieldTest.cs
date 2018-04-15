@@ -49,6 +49,17 @@ namespace Inspector
             }
         }
 
+        public class Create : FieldTest
+        {
+            [Fact]
+            public void ReturnsFieldWithGivenFieldInfoAndInstance() {
+                Field actual = Field.Create(instanceField, instance);
+
+                Assert.Same(instanceField, actual.Info);
+                Assert.Same(instance, actual.Instance);
+            }
+        }
+
         public class Value : FieldTest
         {
             [Fact]
