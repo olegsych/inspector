@@ -11,26 +11,29 @@ namespace Inspector
     {
         const BindingFlags declared = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
 
-        readonly Func<TypeInfo, Func<BindingFlags, IEnumerable<TInfo>>> getMemberInfos;
-        readonly Func<TInfo, object, TMember> createMember;
-        readonly Type type;
-        readonly object instance;
+        public delegate TMember Factory(TInfo memberInfo, object instance);
+        public delegate Func<BindingFlags, IEnumerable<TInfo>> InfoProvider(TypeInfo typeInfo);
+
+        public InfoProvider GetMemberInfo { get; }
+        public Factory CreateMember { get; }
+        public Type Type { get; }
+        public object Instance { get; }
         readonly BindingFlags bindingFlags;
 
-        public Members(Type type, object instance, Func<TypeInfo, Func<BindingFlags, IEnumerable<TInfo>>> getMemberInfos, Func<TInfo, object, TMember> createMember) {
-            this.type = type;
-            this.instance = instance;
-            this.getMemberInfos = getMemberInfos;
-            this.createMember = createMember;
+        public Members(Type type, object instance, InfoProvider getMemberInfo, Factory createMember) {
+            Type = type;
+            Instance = instance;
+            GetMemberInfo = getMemberInfo;
+            CreateMember = createMember;
             bindingFlags = declared | (instance == null ? BindingFlags.Static : BindingFlags.Instance);
         }
 
         public IEnumerator<TMember> GetEnumerator() {
-            Type type = this.type;
+            Type type = Type;
             do {
                 TypeInfo typeInfo = type.GetTypeInfo();
-                foreach(TInfo memberInfo in getMemberInfos(typeInfo).Invoke(bindingFlags))
-                    yield return createMember(memberInfo, instance);
+                foreach(TInfo memberInfo in GetMemberInfo(typeInfo).Invoke(bindingFlags))
+                    yield return CreateMember(memberInfo, Instance);
                 type = typeInfo.BaseType;
             }
             while(type != null);
