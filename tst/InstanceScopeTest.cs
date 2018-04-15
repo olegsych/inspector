@@ -17,12 +17,15 @@ namespace Inspector
 
             [Fact]
             public void InitializesInstanceProperty() {
-                var instance = new object();
+                var instance = new TestType();
 
-                var sut = new InstanceScope(instance);
+                TypeScope sut = new InstanceScope(instance);
 
+                Assert.Same(instance.GetType(), sut.Type);
                 Assert.Same(instance, sut.Instance);
             }
+
+            class TestType { }
         }
 
         public class GetFields : InstanceScopeTest

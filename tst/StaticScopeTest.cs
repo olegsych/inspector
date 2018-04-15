@@ -20,9 +20,10 @@ namespace Inspector
             public void InitializesScopeWithGivenType() {
                 Type type = typeof(TestType);
 
-                var sut = new StaticScope(type);
+                TypeScope sut = new StaticScope(type);
 
                 Assert.Same(type, sut.Type);
+                Assert.Null(sut.Instance);
             }
 
             static class TestType { }
