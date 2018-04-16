@@ -9,30 +9,31 @@ namespace Inspector
         where TInfo : MemberInfo
         where TMember : Member<TInfo>
     {
-        const BindingFlags declared = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
+        readonly BindingFlags declaredMembers;
 
         public delegate TMember Factory(TInfo memberInfo, object instance);
         public delegate Func<BindingFlags, IEnumerable<TInfo>> InfoProvider(TypeInfo typeInfo);
+
+        public Members(Type type, object instance, InfoProvider getMemberInfo, Factory createMember) {
+            Type = type ?? throw new ArgumentNullException(nameof(type));
+            GetMemberInfo = getMemberInfo ?? throw new ArgumentNullException(nameof(getMemberInfo));
+            CreateMember = createMember ?? throw new ArgumentNullException(nameof(createMember));
+            Instance = instance;
+
+            declaredMembers = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic
+                | (instance == null ? BindingFlags.Static : BindingFlags.Instance);
+        }
 
         public InfoProvider GetMemberInfo { get; }
         public Factory CreateMember { get; }
         public Type Type { get; }
         public object Instance { get; }
-        readonly BindingFlags bindingFlags;
-
-        public Members(Type type, object instance, InfoProvider getMemberInfo, Factory createMember) {
-            Type = type;
-            Instance = instance;
-            GetMemberInfo = getMemberInfo;
-            CreateMember = createMember;
-            bindingFlags = declared | (instance == null ? BindingFlags.Static : BindingFlags.Instance);
-        }
 
         public IEnumerator<TMember> GetEnumerator() {
             Type type = Type;
             do {
                 TypeInfo typeInfo = type.GetTypeInfo();
-                foreach(TInfo memberInfo in GetMemberInfo(typeInfo).Invoke(bindingFlags))
+                foreach(TInfo memberInfo in GetMemberInfo(typeInfo).Invoke(declaredMembers))
                     yield return CreateMember(memberInfo, Instance);
                 type = typeInfo.BaseType;
             }
