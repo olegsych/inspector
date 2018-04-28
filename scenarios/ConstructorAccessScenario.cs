@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using Xunit;
 
 namespace Inspector
@@ -22,6 +22,7 @@ namespace Inspector
             [Fact]
             public void ConstructorCreatesNewInstance() {
                 ConstructorInfo constructor = typeof(Foo).Constructor<int>();
+                Assert.False(constructor.IsStatic);
 
                 object foo = constructor.Invoke(new object[] { 42 });
 
@@ -32,6 +33,7 @@ namespace Inspector
             [Fact]
             public void ConstructorReinitializesExistingInstance() {
                 ConstructorInfo constructor = typeof(Foo).Constructor<int>();
+                Assert.False(constructor.IsStatic);
                 var foo = new Foo(0);
 
                 object result = constructor.Invoke(foo, new object[] { 42 });
@@ -42,9 +44,11 @@ namespace Inspector
 
             [Fact]
             public void StaticConstructorReinitializesType() {
+                ConstructorInfo constructor = typeof(Foo).TypeInitializer;
+                Assert.True(constructor.IsStatic);
                 Foo.staticBar = 42;
 
-                typeof(Foo).TypeInitializer.Invoke(null, null);
+                constructor.Invoke(null, null);
 
                 Assert.Equal(0, Foo.staticBar);
             }
