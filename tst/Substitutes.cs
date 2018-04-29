@@ -10,6 +10,12 @@ namespace Inspector
 
         static uint Next => seed++;
 
+        public static ConstructorInfo ConstructorInfo(MethodAttributes attributes) {
+            var constructor = Substitute.For<ConstructorInfo>();
+            constructor.Attributes.Returns(attributes);
+            return constructor;
+        }
+
         public static FieldInfo FieldInfo(FieldAttributes attributes, string fieldName) =>
             FieldInfo(attributes, null, fieldName);
 

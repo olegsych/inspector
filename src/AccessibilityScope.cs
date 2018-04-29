@@ -25,7 +25,9 @@ namespace Inspector
 
         public IScope Previous { get; }
 
-        IEnumerable<Constructor> IFilter<Constructor>.Get() => throw new NotImplementedException();
+        IEnumerable<Constructor> IFilter<Constructor>.Get() =>
+            ((IFilter<Constructor>)Previous).Get().Where(AccessibilityMatches);
+
         IEnumerable<Event> IFilter<Event>.Get() => throw new NotImplementedException();
 
         IEnumerable<Field> IFilter<Field>.Get() =>
@@ -35,6 +37,9 @@ namespace Inspector
             ((IFilter<Method>)Previous).Get().Where(AccessibilityMatches);
 
         IEnumerable<Property> IFilter<Property>.Get() => throw new NotImplementedException();
+
+        bool AccessibilityMatches(Constructor constructor) =>
+            Accessibility == (Accessibility)(constructor.Info.Attributes & MethodAttributes.MemberAccessMask);
 
         bool AccessibilityMatches(Field field) =>
             Accessibility == (Accessibility)(field.Info.Attributes & FieldAttributes.FieldAccessMask);

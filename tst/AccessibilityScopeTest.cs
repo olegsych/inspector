@@ -13,7 +13,7 @@ namespace Inspector
         readonly IScope previous = Substitute.For<IScope>();
         readonly Accessibility accessibility = Accessibility.PrivateProtected;
 
-        public class Constructor : AccessibilityScopeTest
+        public class Ctor : AccessibilityScopeTest
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenPreviousScopeIsNull() {
@@ -60,6 +60,36 @@ namespace Inspector
             static bool IsValidCombination(Accessibility first, Accessibility second) =>
                 (first == Accessibility.Private && second == Accessibility.Protected) ||
                 (first == Accessibility.Protected && second == Accessibility.Internal);
+        }
+
+        public class GetConstructors : AccessibilityScopeTest
+        {
+            [Fact]
+            public void ReturnsConstructorsWithWithExpectedAccessibility() {
+                // Arrange
+                var sut = new AccessibilityScope(previous, Accessibility.ProtectedInternal);
+
+                Constructor[] expected = {
+                    new Constructor(ConstructorInfo(MethodAttributes.FamORAssem | MethodAttributes.Static)),
+                    new Constructor(ConstructorInfo(MethodAttributes.FamORAssem | MethodAttributes.Static)),
+                };
+
+                Constructor[] all = {
+                    new Constructor(ConstructorInfo(MethodAttributes.Public | MethodAttributes.Static)),
+                    expected[0],
+                    new Constructor(ConstructorInfo(MethodAttributes.Family | MethodAttributes.Static)),
+                    expected[1],
+                    new Constructor(ConstructorInfo(MethodAttributes.Private | MethodAttributes.Static)),
+                };
+
+                ((IFilter<Constructor>)previous).Get().Returns(all);
+
+                // Act
+                IEnumerable<Constructor> actual = ((IFilter<Constructor>)sut).Get();
+
+                // Assert
+                Assert.Equal(expected, actual);
+            }
         }
 
         public class GetFields : AccessibilityScopeTest
