@@ -19,7 +19,7 @@ namespace Inspector
         public Type Type { get; }
 
         IEnumerable<Constructor> IFilter<Constructor>.Get() =>
-            throw new NotImplementedException();
+            new Members<ConstructorInfo, Constructor>(Type, Instance, typeInfo => typeInfo.GetConstructors, Constructor.Create, Lifetime.Instance);
 
         IEnumerable<Event> IFilter<Event>.Get() =>
             throw new NotImplementedException();
