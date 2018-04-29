@@ -14,6 +14,7 @@ namespace Inspector
         readonly object instance = new TestType();
         readonly Members<MemberInfo, Member<MemberInfo>>.InfoProvider infoProvider = Substitute.For<Members<MemberInfo, Member<MemberInfo>>.InfoProvider>();
         readonly Members<MemberInfo, Member<MemberInfo>>.Factory createMember = Substitute.For<Members<MemberInfo, Member<MemberInfo>>.Factory>();
+        readonly Lifetime lifetime = Lifetime.Instance;
 
         // Test fixture
         readonly Func<BindingFlags, IEnumerable<MemberInfo>> getMemberInfo = Substitute.For<Func<BindingFlags, IEnumerable<MemberInfo>>>();
@@ -22,20 +23,54 @@ namespace Inspector
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenTypeIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new Members<MemberInfo, Member<MemberInfo>>(null, instance, infoProvider, createMember));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new Members<MemberInfo, Member<MemberInfo>>(null, instance, infoProvider, createMember, lifetime));
                 Assert.Equal("type", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenInfoProviderIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new Members<MemberInfo, Member<MemberInfo>>(type, instance, null, createMember));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new Members<MemberInfo, Member<MemberInfo>>(type, instance, null, createMember, lifetime));
                 Assert.Equal("getMemberInfo", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenFactoryIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new Members<MemberInfo, Member<MemberInfo>>(type, instance, infoProvider, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new Members<MemberInfo, Member<MemberInfo>>(type, instance, infoProvider, null, lifetime));
                 Assert.Equal("createMember", thrown.ParamName);
+            }
+
+            [Fact]
+            public void InitializesInstanceWithGivenArguments() {
+                var sut = new Members<MemberInfo, Member<MemberInfo>>(type, instance, infoProvider, createMember, lifetime);
+
+                Assert.Same(type, sut.Type);
+                Assert.Same(instance, sut.Instance);
+                Assert.Same(infoProvider, sut.GetMemberInfo);
+                Assert.Same(createMember, sut.CreateMember);
+            }
+
+            [Fact]
+            public void InitializesDefaultLifetimeToInstanceWhenInstanceIsSpecified() {
+                var sut = new Members<MemberInfo, Member<MemberInfo>>(type, instance, infoProvider, createMember);
+                Assert.Equal(Lifetime.Instance, sut.Lifetime);
+            }
+
+            [Fact]
+            public void InitializesDefaultLifetimeStaticWhenInstanceIsNull() {
+                var sut = new Members<MemberInfo, Member<MemberInfo>>(type, null, infoProvider, createMember);
+                Assert.Equal(Lifetime.Static, sut.Lifetime);
+            }
+
+            [Fact]
+            public void OverridesLifetimeToInstanceWhenInstanceIsNull() {
+                var sut = new Members<MemberInfo, Member<MemberInfo>>(type, null, infoProvider, createMember, Lifetime.Instance);
+                Assert.Equal(Lifetime.Instance, sut.Lifetime);
+            }
+
+            [Fact]
+            public void OverridesLifetimeToStaticWhenInstanceIsSpecified() {
+                var sut = new Members<MemberInfo, Member<MemberInfo>>(type, instance, infoProvider, createMember, Lifetime.Static);
+                Assert.Equal(Lifetime.Static, sut.Lifetime);
             }
         }
 
@@ -99,28 +134,39 @@ namespace Inspector
             }
         }
 
-        public class StaticEnumerator : GetEnumeratorTest
+        public abstract class TypeEnumerator : GetEnumeratorTest
         {
-            public StaticEnumerator() {
-                sut = new Members<MemberInfo, Member<MemberInfo>>(type, null, infoProvider, createMember);
+            private protected TypeEnumerator(Lifetime lifetime) {
+                sut = new Members<MemberInfo, Member<MemberInfo>>(type, null, infoProvider, createMember, lifetime);
                 getEnumerator = sut.GetEnumerator;
-                expectedBinding = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly | BindingFlags.Static;
+                expectedBinding = (BindingFlags)lifetime | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
                 expectedInstance = null;
             }
         }
 
-        public class UntypedInstanceEnumerator : InstanceEnumerator
+        public class TypeEnumeratorWithStaticBinding : TypeEnumerator
         {
-            public UntypedInstanceEnumerator() {
-                getEnumerator = ((IEnumerable)sut).GetEnumerator;
-            }
+            public TypeEnumeratorWithStaticBinding() : base(Lifetime.Static) { }
         }
 
-        public class UntypedStaticEnumerator : InstanceEnumerator
+        public class TypeEnumeratorWithInstanceBinding : TypeEnumerator
         {
-            public UntypedStaticEnumerator() {
-                getEnumerator = ((IEnumerable)sut).GetEnumerator;
-            }
+            public TypeEnumeratorWithInstanceBinding() : base(Lifetime.Instance) { }
+        }
+
+        public class UntypedInstanceEnumerator : InstanceEnumerator
+        {
+            public UntypedInstanceEnumerator() => getEnumerator = ((IEnumerable)sut).GetEnumerator;
+        }
+
+        public class UntypedTypeEnumeratorWithStaticBinding : TypeEnumeratorWithStaticBinding
+        {
+            public UntypedTypeEnumeratorWithStaticBinding() => getEnumerator = ((IEnumerable)sut).GetEnumerator;
+        }
+
+        public class UntypedTypeEnumeratorWithInstanceBinding : TypeEnumeratorWithInstanceBinding
+        {
+            public UntypedTypeEnumeratorWithInstanceBinding() => getEnumerator = ((IEnumerable)sut).GetEnumerator;
         }
 
         class BaseType

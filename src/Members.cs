@@ -14,20 +14,23 @@ namespace Inspector
         public delegate TMember Factory(TInfo memberInfo, object instance);
         public delegate Func<BindingFlags, IEnumerable<TInfo>> InfoProvider(TypeInfo typeInfo);
 
-        public Members(Type type, object instance, InfoProvider getMemberInfo, Factory createMember) {
+        public Members(Type type, object instance, InfoProvider getMemberInfo, Factory createMember, Lifetime lifetime = default) {
             Type = type ?? throw new ArgumentNullException(nameof(type));
+            Instance = instance;
             GetMemberInfo = getMemberInfo ?? throw new ArgumentNullException(nameof(getMemberInfo));
             CreateMember = createMember ?? throw new ArgumentNullException(nameof(createMember));
-            Instance = instance;
+            Lifetime = lifetime == default ?
+                instance == null ? Lifetime.Static : Lifetime.Instance :
+                lifetime;
 
-            declaredMembers = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic
-                | (instance == null ? BindingFlags.Static : BindingFlags.Instance);
+            declaredMembers = (BindingFlags)Lifetime | BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic;
         }
 
         public InfoProvider GetMemberInfo { get; }
         public Factory CreateMember { get; }
         public Type Type { get; }
         public object Instance { get; }
+        public Lifetime Lifetime { get; }
 
         public IEnumerator<TMember> GetEnumerator() {
             Type type = Type;
