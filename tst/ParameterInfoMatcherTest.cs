@@ -70,10 +70,15 @@ namespace Inspector
                 public void Use(out P1 p) { p = default; }
             }
 
+            class P1RefUser
+            {
+                public void Use(ref P1 p) { }
+            }
+
             [Fact]
             public void ReturnsFalseWhenOutAttributeDoesntMatch() {
-                ParameterInfo p1 = typeof(P1User).GetMethod(nameof(P1User.Use)).GetParameters().Single();
-                ParameterInfo p2 = typeof(P1OutUser).GetMethod(nameof(P1OutUser.Use)).GetParameters().Single();
+                ParameterInfo p1 = typeof(P1OutUser).GetMethod(nameof(P1OutUser.Use)).GetParameters().Single();
+                ParameterInfo p2 = typeof(P1RefUser).GetMethod(nameof(P1RefUser.Use)).GetParameters().Single();
                 Assert.False(ParameterInfoMatcher.Match(p1, p2));
             }
 
