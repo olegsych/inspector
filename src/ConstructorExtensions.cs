@@ -2,6 +2,9 @@ using System;
 
 namespace Inspector
 {
+    /// <summary>
+    /// Extension methods for selecting constructors from a given scope.
+    /// </summary>
     public static class ConstructorExtensions
     {
         #region IScope
