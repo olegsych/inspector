@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace Inspector
 {
+    /// <summary>
+    /// Filters fields by name.
+    /// </summary>
     sealed class FieldNameFilter : IFilter<Field>, IDecorator<IFilter<Field>>
     {
         public FieldNameFilter(IFilter<Field> previous, string fieldName) {
