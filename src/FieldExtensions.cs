@@ -2,6 +2,9 @@ using System;
 
 namespace Inspector
 {
+    /// <summary>
+    /// Extension methods for selecting fields from a given scope.
+    /// </summary>
     public static class FieldExtensions
     {
         #region IScope
