@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace Inspector
 {
+    /// <summary>
+    /// Filters methods by name.
+    /// </summary>
     sealed class MethodNameFilter : IFilter<Method>, IDecorator<IFilter<Method>>
     {
         public MethodNameFilter(IFilter<Method> previous, string methodName) {
