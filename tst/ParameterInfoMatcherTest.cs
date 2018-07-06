@@ -81,9 +81,6 @@ namespace Inspector
                 ParameterInfo p2 = typeof(P1RefUser).GetMethod(nameof(P1RefUser.Use)).GetParameters().Single();
                 Assert.False(ParameterInfoMatcher.Match(p1, p2));
             }
-
-            static ParameterInfo Parameter(Delegate d) =>
-                d.Method.GetParameters().Single();
         }
     }
 }
