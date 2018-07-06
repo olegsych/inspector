@@ -2,6 +2,9 @@ using System;
 
 namespace Inspector
 {
+    /// <summary>
+    /// Extension methods for filtering type members based on their <see cref="Accessibility"/>.
+    /// </summary>
     public static class AccessibiltyExtensions
     {
         #region IScope
