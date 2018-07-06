@@ -123,6 +123,53 @@ namespace Inspector
                 bool equal = Assert.IsType<bool>(result);
                 Assert.True(equal);
             }
+
+            [Fact]
+            public void BindToMethodInfo() {
+                MethodInfo internalAlloc = typeof(Delegate).GetMethod("InternalAlloc", BindingFlags.Static | BindingFlags.NonPublic);
+                Assert.NotNull(internalAlloc);
+
+                MethodInfo bindToMethodInfo = typeof(Delegate).GetMethod("BindToMethodInfo", BindingFlags.Instance | BindingFlags.NonPublic);
+                Assert.NotNull(bindToMethodInfo);
+
+                var d = (Delegate)internalAlloc.Invoke(null, new object[] { typeof(Action<Foo, int>) });
+                Assert.NotNull(d);
+
+                object firstArgument = null;
+                object rtMethod = typeof(Foo).GetConstructor(new[] { typeof(int) }); // IRuntimeMethodInfo
+                object flags = 0x84; // DelegateBindingFlags
+                var bound = (bool)bindToMethodInfo.Invoke(d, new object[] { firstArgument, rtMethod, typeof(Foo), flags});
+                Assert.True(bound);
+
+                var foo = (Foo)FormatterServices.GetUninitializedObject(typeof(Foo));
+                var constructor = (Action<Foo, int>)d;
+                constructor.Invoke(foo, 42);
+                Assert.Equal(42, foo.bar);
+            }
+
+            [Fact]
+            public void BindToMethodInfo2() {
+                MethodInfo internalAlloc = typeof(Delegate).GetMethod("InternalAlloc", BindingFlags.Static | BindingFlags.NonPublic);
+                Assert.NotNull(internalAlloc);
+
+                MethodInfo bindToMethodInfo = typeof(Delegate).GetMethod("BindToMethodInfo", BindingFlags.Instance | BindingFlags.NonPublic);
+                Assert.NotNull(bindToMethodInfo);
+
+                var d = (Delegate)internalAlloc.Invoke(null, new object[] { typeof(Action<int>) });
+                Assert.NotNull(d);
+
+                var foo = (Foo)FormatterServices.GetUninitializedObject(typeof(Foo));
+
+                object firstArgument = foo;
+                object rtMethod = typeof(Foo).GetConstructor(new[] { typeof(int) }); // IRuntimeMethodInfo
+                object flags = 0x80; // DelegateBindingFlags
+                var bound = (bool)bindToMethodInfo.Invoke(d, new object[] { firstArgument, rtMethod, typeof(Foo), flags });
+                Assert.True(bound);
+
+                var constructor = (Action<int>)d;
+                constructor.Invoke(42);
+                Assert.Equal(42, foo.bar);
+            }
         }
     }
 }
