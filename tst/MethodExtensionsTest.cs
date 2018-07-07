@@ -37,7 +37,8 @@ namespace Inspector
 
         internal static MethodTypeFilter VerifyFilter(IFilter<Method> selection, Type expectedMethodType) {
             var filter = Assert.IsType<MethodTypeFilter>(selection);
-            Assert.Equal(expectedMethodType, filter.MethodType);
+            Assert.IsType<MethodDelegateFactory>(filter.DelegateFactory);
+            Assert.Equal(expectedMethodType, filter.DelegateType);
             return filter;
         }
 

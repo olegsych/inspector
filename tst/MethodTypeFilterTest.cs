@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NSubstitute;
 using Xunit;
@@ -13,29 +14,36 @@ namespace Inspector
         // Constructor parameters
         readonly IFilter<Method> previous = Substitute.For<IFilter<Method>>();
         readonly Type delegateType = typeof(Action<P, P>);
+        readonly IDelegateFactory<MethodInfo> delegateFactory = Substitute.For<IDelegateFactory<MethodInfo>>();
 
         public MethodTypeFilterTest() =>
-            sut = new MethodTypeFilter(previous, delegateType);
+            sut = new MethodTypeFilter(previous, delegateType, delegateFactory);
 
         public class Constructor : MethodTypeFilterTest
         {
             [Fact]
-            public void ThrowsArgumentNullExceptionIfMethodsArgumentIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new MethodTypeFilter(null, delegateType));
+            public void ThrowsArgumentNullExceptionWhenPreviousIsNull() {
+                var thrown = Assert.Throws<ArgumentNullException>(() => new MethodTypeFilter(null, delegateType, delegateFactory));
                 Assert.Equal("previous", thrown.ParamName);
             }
 
             [Fact]
-            public void ThrowsArgumentNullExceptionIfMethodTypeArgumentIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new MethodTypeFilter(previous, null));
-                Assert.Equal("methodType", thrown.ParamName);
+            public void ThrowsArgumentNullExceptionWhenDelegateTypeIsNull() {
+                var thrown = Assert.Throws<ArgumentNullException>(() => new MethodTypeFilter(previous, null, delegateFactory));
+                Assert.Equal("delegateType", thrown.ParamName);
             }
 
             [Fact]
-            public void ThrowsDescriptiveExceptionWhenMethodTypeIsNotDelegate() {
+            public void ThrowsArgumentNullExceptionWhenDelegateFactoryIsNull() {
+                var thrown = Assert.Throws<ArgumentNullException>(() => new MethodTypeFilter(previous, delegateType, null));
+                Assert.Equal("delegateFactory", thrown.ParamName);
+            }
+
+            [Fact]
+            public void ThrowsDescriptiveExceptionWhenDelegateTypeIsInvalid() {
                 Type invalid = typeof(InvalidMethodType);
-                var thrown = Assert.Throws<ArgumentException>(() => new MethodTypeFilter(previous, invalid));
-                Assert.Equal("methodType", thrown.ParamName);
+                var thrown = Assert.Throws<ArgumentException>(() => new MethodTypeFilter(previous, invalid, delegateFactory));
+                Assert.Equal("delegateType", thrown.ParamName);
                 Assert.StartsWith($"{invalid} is not a delegate.", thrown.Message);
             }
 
@@ -46,7 +54,14 @@ namespace Inspector
         {
             [Fact]
             public void ReturnsValueGivenToConstructor() =>
-                Assert.Same(delegateType, ((MethodTypeFilter)sut).MethodType);
+                Assert.Same(delegateType, ((MethodTypeFilter)sut).DelegateType);
+        }
+
+        public class DelegateFactory : MethodTypeFilterTest
+        {
+            [Fact]
+            public void ReturnsValueGivenToConstructor() =>
+                Assert.Same(delegateFactory, ((MethodTypeFilter)sut).DelegateFactory);
         }
 
         public class Previous : MethodTypeFilterTest
@@ -61,33 +76,33 @@ namespace Inspector
         public class Get : MethodTypeFilterTest
         {
             [Fact]
-            public void ReturnsMethodsWithGivenMethodType() {
+            public void ReturnsMethodsWithGivenDelegateType() {
                 // Arrange
-                MethodInfo methodInfo = typeof(TestType).GetMethod(nameof(TestType.Method2));
+                MethodInfo[] infos = typeof(TestType).GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public);
+                var target = new TestType();
+                Delegate @delegate;
+                delegateFactory.TryCreate(delegateType, target, infos[1], out @delegate).Returns(true);
+                delegateFactory.TryCreate(delegateType, target, infos[3], out @delegate).Returns(true);
 
-                var expected = new[] { new Method(methodInfo), new Method(methodInfo) };
-
-                var mixed = new[] {
-                    new Method(typeof(TestType).GetMethod(nameof(TestType.Method1))),
-                    expected[0],
-                    expected[1],
-                    new Method(typeof(TestType).GetMethod(nameof(TestType.Method3))),
-                };
-
-                previous.Get().Returns(mixed);
+                Method[] methods = infos.Select(_ => new Method(_, target)).ToArray();
+                previous.Get().Returns(methods);
 
                 // Act
                 IEnumerable<Method> actual = sut.Get();
 
+                // Assert
+                Method[] expected = { methods[1], methods[3] };
                 Assert.Equal(expected, actual);
             }
         }
 
-        static class TestType
+        class TestType
         {
-            public static void Method1(P p1) { }
-            public static void Method2(P p1, P p2) { }
-            public static void Method3(P p1, P p2, P p3) { }
+            public void M() { }
+            public void M(P p1) { }
+            public void M(P p1, P p2) { }
+            public void M(P p1, P p2, P p3) { }
+            public void M(P p1, P p2, P p3, P p4) { }
         }
 
         class P { }

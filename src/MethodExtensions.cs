@@ -16,10 +16,10 @@ namespace Inspector
             Selector<Method>.Select(new MethodNameFilter(scope, methodName));
 
         public static Method Method(this IScope scope, Type methodType) =>
-            Selector<Method>.Select(new MethodTypeFilter(scope, methodType));
+            Selector<Method>.Select(new MethodTypeFilter(scope, methodType, new MethodDelegateFactory()));
 
         public static Method Method(this IScope scope, Type methodType, string methodName) {
-            var typed = new MethodTypeFilter(scope, methodType);
+            var typed = new MethodTypeFilter(scope, methodType, new MethodDelegateFactory());
             var named = new MethodNameFilter(typed, methodName);
             return Selector<Method>.Select(named);
         }
