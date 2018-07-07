@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 
 namespace Inspector
 {
-    class DelegateFactory
+    delegate bool DelegateFactory<T>(Type type, object target, T member, out Delegate @delegate) where T : MemberInfo;
+
+    static class DelegateFactory
     {
         static readonly MethodInfo internalAlloc = typeof(Delegate).GetMethod("InternalAlloc", BindingFlags.Static | BindingFlags.NonPublic);
         static readonly MethodInfo bindToMethodInfo = typeof(Delegate).GetMethod("BindToMethodInfo", BindingFlags.Instance | BindingFlags.NonPublic);
-
-        // DelegateBindingFlags
-        const byte RelaxedSignature = 0x80;
+        const byte RelaxedSignature = 0x80; // from internal DelegateBindingFlags
 
         internal static bool TryCreate(Type type, object target, ConstructorInfo constructor, out Delegate @delegate) {
             if(type == null)
