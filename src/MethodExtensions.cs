@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 
 namespace Inspector
 {
@@ -7,6 +8,8 @@ namespace Inspector
     /// </summary>
     public static class MethodExtensions
     {
+        static readonly IDelegateFactory<MethodInfo> delegateFactory = new MethodDelegateFactory();
+
         #region IScope
 
         public static Method Method(this IScope scope) =>
@@ -16,10 +19,10 @@ namespace Inspector
             Selector<Method>.Select(new MethodNameFilter(scope, methodName));
 
         public static Method Method(this IScope scope, Type methodType) =>
-            Selector<Method>.Select(new MethodTypeFilter(scope, methodType, new MethodDelegateFactory()));
+            Selector<Method>.Select(new MethodTypeFilter(scope, methodType, delegateFactory));
 
         public static Method Method(this IScope scope, Type methodType, string methodName) {
-            var typed = new MethodTypeFilter(scope, methodType, new MethodDelegateFactory());
+            var typed = new MethodTypeFilter(scope, methodType, delegateFactory);
             var named = new MethodNameFilter(typed, methodName);
             return Selector<Method>.Select(named);
         }
