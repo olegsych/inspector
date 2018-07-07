@@ -24,7 +24,7 @@ namespace Inspector
             select.Invoke(Arg.Do<IFilter<Method>>(f => selection = f)).Returns(selected);
         }
 
-        protected static void VerifyGenericMethod<T>(Method selected, Method<T> generic) {
+        protected static void VerifyGenericMethod<T>(Method selected, Method<T> generic) where T : Delegate {
             Assert.Same(selected.Info, generic.Info);
             Assert.Same(selected.Instance, generic.Instance);
         }

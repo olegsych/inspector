@@ -24,10 +24,10 @@ namespace Inspector
             return Selector<Method>.Select(named);
         }
 
-        public static Method<T> Method<T>(this IScope scope) =>
+        public static Method<T> Method<T>(this IScope scope) where T : Delegate =>
             new Method<T>(scope.Method(typeof(T)));
 
-        public static Method<T> Method<T>(this IScope scope, string methodName) =>
+        public static Method<T> Method<T>(this IScope scope, string methodName) where T : Delegate =>
             new Method<T>(scope.Method(typeof(T), methodName));
 
         #endregion
@@ -46,10 +46,10 @@ namespace Inspector
         public static Method Method(this object instance, Type methodType, string methodName) =>
             new InstanceScope(instance).Method(methodType, methodName);
 
-        public static Method<T> Method<T>(this object instance) =>
+        public static Method<T> Method<T>(this object instance) where T : Delegate =>
             new InstanceScope(instance).Method<T>();
 
-        public static Method<T> Method<T>(this object instance, string methodName) =>
+        public static Method<T> Method<T>(this object instance, string methodName) where T : Delegate =>
             new InstanceScope(instance).Method<T>(methodName);
 
         #endregion
@@ -68,10 +68,10 @@ namespace Inspector
         public static Method Method(this Type type, Type methodType, string methodName) =>
             new StaticScope(type).Method(methodType, methodName);
 
-        public static Method<T> Method<T>(this Type type) =>
+        public static Method<T> Method<T>(this Type type) where T : Delegate =>
             new StaticScope(type).Method<T>();
 
-        public static Method<T> Method<T>(this Type type, string methodName) =>
+        public static Method<T> Method<T>(this Type type, string methodName) where T : Delegate =>
             new StaticScope(type).Method<T>(methodName);
 
         #endregion
