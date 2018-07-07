@@ -125,7 +125,7 @@ namespace Inspector
             }
 
             [Fact]
-            public void BindToMethodInfo() {
+            public void BindOpenDelegate() {
                 MethodInfo internalAlloc = typeof(Delegate).GetMethod("InternalAlloc", BindingFlags.Static | BindingFlags.NonPublic);
                 Assert.NotNull(internalAlloc);
 
@@ -148,7 +148,7 @@ namespace Inspector
             }
 
             [Fact]
-            public void BindToMethodInfo2() {
+            public void BindClosedDelegate() {
                 MethodInfo internalAlloc = typeof(Delegate).GetMethod("InternalAlloc", BindingFlags.Static | BindingFlags.NonPublic);
                 Assert.NotNull(internalAlloc);
 
@@ -162,7 +162,7 @@ namespace Inspector
 
                 object firstArgument = foo;
                 object rtMethod = typeof(Foo).GetConstructor(new[] { typeof(int) }); // IRuntimeMethodInfo
-                object flags = 0x80; // DelegateBindingFlags
+                object flags = 0x88; // DelegateBindingFlags
                 var bound = (bool)bindToMethodInfo.Invoke(d, new object[] { firstArgument, rtMethod, typeof(Foo), flags });
                 Assert.True(bound);
 
