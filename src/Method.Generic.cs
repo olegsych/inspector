@@ -12,14 +12,17 @@ namespace Inspector
         /// <summary>
         /// Initializes a new instance of the <see cref="Method{TSignature}"/> class.
         /// </summary>
-        public Method(Method method) : base(NotNull(method).Info, method.Instance) {
-            try {
-                Invoke = (TSignature)Delegate.CreateDelegate(typeof(TSignature), method.Instance, method.Info);
-            }
-            catch(ArgumentException e) {
+        internal Method(Method method, IDelegateFactory<MethodInfo> delegateFactory) : base(NotNull(method).Info, method.Instance) {
+            if(delegateFactory == null)
+                throw new ArgumentNullException(nameof(delegateFactory));
+
+            Delegate @delegate;
+            if(!delegateFactory.TryCreate(typeof(TSignature), Instance, Info, out @delegate)) {
                 string error = $"Method {method.Info} doesn't match expected signature.";
-                throw new ArgumentException(error, nameof(method), e);
+                throw new ArgumentException(error, nameof(method));
             }
+
+            Invoke = (TSignature)@delegate;
         }
 
         /// <summary>

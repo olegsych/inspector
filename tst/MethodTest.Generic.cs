@@ -11,15 +11,23 @@ namespace Inspector
 
         // Constructor parameters
         readonly Method method;
+        readonly IDelegateFactory<MethodInfo> delegateFactory = Substitute.For<IDelegateFactory<MethodInfo>>();
 
         // Test fixture
         readonly InstanceType instance = Substitute.ForPartsOf<InstanceType>();
+        readonly Signature @delegate = Substitute.For<Signature>();
 
         public GenericMethodTest() {
             MethodInfo info = typeof(InstanceType).GetMethod(nameof(InstanceType.TestMethod));
             method = new Method(info, instance);
 
-            sut = new Method<Signature>(method);
+            delegateFactory.TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<MethodInfo>(), out Delegate _)
+                .Returns(args => {
+                    args[3] = @delegate;
+                    return true;
+                });
+
+            sut = new Method<Signature>(method, delegateFactory);
         }
 
         public class Constructor : GenericMethodTest
@@ -33,35 +41,33 @@ namespace Inspector
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenMethodIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new Method<Signature>(null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new Method<Signature>(null, delegateFactory));
                 Assert.Equal("method", thrown.ParamName);
             }
 
-            [Theory]
-            [InlineData(nameof(InstanceType.MethodWithFewerParameters))]
-            [InlineData(nameof(InstanceType.MethodWithDifferentParameterTypes))]
-            [InlineData(nameof(InstanceType.MethodWithMoreParameters))]
-            [InlineData(nameof(InstanceType.MethodWithDifferentReturnType))]
-            public void ThrowsDescriptiveExceptionWhenInfoDoesNotHaveExpectedSignature(string methodName) {
-                MethodInfo unexpected = typeof(InstanceType).GetMethod(methodName);
-                var thrown = Assert.Throws<ArgumentException>(() => new Method<Signature>(new Method(unexpected, new InstanceType())));
+            [Fact]
+            public void ThrowsDescriptiveExceptionWhenDelegateFactoryIsNull() {
+                var thrown = Assert.Throws<ArgumentNullException>(() => new Method<Signature>(method, null));
+                Assert.Equal("delegateFactory", thrown.ParamName);
+            }
+
+            [Fact]
+            public void ThrowsDescriptiveExceptionWhenDelegateFactoryCannotCreateDelegateForGivenMethod() {
+                delegateFactory.TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<MethodInfo>(), out Delegate _).Returns(false);
+
+                var thrown = Assert.Throws<ArgumentException>(() => new Method<Signature>(method, delegateFactory));
                 Assert.Equal("method", thrown.ParamName);
-                Assert.StartsWith($"Method {unexpected} doesn't match expected signature.", thrown.Message);
+                Assert.StartsWith($"Method {method.Info} doesn't match expected signature.", thrown.Message);
             }
         }
 
         public class Invoke: GenericMethodTest
         {
             [Fact]
-            public void CallsMethodAndReturnsItsResult() {
-                var r1 = new R1();
-                var p1 = new P1();
-                var p2 = new P2();
-                instance.TestMethod(p1, p2).Returns(r1);
-
-                R1 actual = sut.Invoke(p1, p2);
-
-                Assert.Same(r1, actual);
+            public void ReturnsDelegateCreatedByDelegateFactoryForGivenMethod() {
+                Assert.Same(@delegate, sut.Invoke);
+                delegateFactory.Received().TryCreate(typeof(Signature), sut.Instance, sut.Info, out Delegate _);
+                delegateFactory.Received(1).TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<MethodInfo>(), out Delegate _);
             }
         }
 

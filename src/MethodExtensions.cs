@@ -28,10 +28,10 @@ namespace Inspector
         }
 
         public static Method<T> Method<T>(this IScope scope) where T : Delegate =>
-            new Method<T>(scope.Method(typeof(T)));
+            new Method<T>(scope.Method(typeof(T)), delegateFactory);
 
         public static Method<T> Method<T>(this IScope scope, string methodName) where T : Delegate =>
-            new Method<T>(scope.Method(typeof(T), methodName));
+            new Method<T>(scope.Method(typeof(T), methodName), delegateFactory);
 
         #endregion
 

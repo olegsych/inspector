@@ -27,6 +27,7 @@ namespace Inspector
         protected static void VerifyGenericMethod<T>(Method selected, Method<T> generic) where T : Delegate {
             Assert.Same(selected.Info, generic.Info);
             Assert.Same(selected.Instance, generic.Instance);
+            Assert.NotNull(generic.Invoke);
         }
 
         internal static MethodNameFilter VerifyFilter(IFilter<Method> selection, string methodName) {
