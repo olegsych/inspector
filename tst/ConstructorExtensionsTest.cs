@@ -9,13 +9,22 @@ namespace Inspector
     {
         // Shared test fixture
         class TestType { }
+        delegate void TestDelegate();
         readonly object instance = new TestType();
+        readonly Type delegateType = typeof(TestDelegate);
         readonly Constructor selected;
         IFilter<Constructor> selection;
 
         public ConstructorExtensionsTest() {
             selected = new Constructor(typeof(TestType).GetConstructor(new Type[0]), instance);
             select.Invoke(Arg.Do<IFilter<Constructor>>(_ => selection = _)).Returns(selected);
+        }
+
+        static ConstructorTypeFilter VerifyFilter(IFilter<Constructor> selection, Type expectedDelegateType) {
+            var filter = Assert.IsType<ConstructorTypeFilter>(selection);
+            Assert.IsType<ConstructorDelegateFactory>(filter.DelegateFactory);
+            Assert.Equal(expectedDelegateType, filter.DelegateType);
+            return filter;
         }
 
         public class IScopeExtension : ConstructorExtensionsTest
@@ -28,6 +37,13 @@ namespace Inspector
                 Assert.Same(selected, scope.Constructor());
                 Assert.Same(scope, selection);
             }
+
+            [Fact]
+            public void ReturnsConstructorWithGivenDelegateType() {
+                Assert.Same(selected, scope.Constructor(delegateType));
+                ConstructorTypeFilter filter = VerifyFilter(selection, delegateType);
+                Assert.Same(scope, filter.Previous);
+            }
         }
 
         public class ObjectExtension : ConstructorExtensionsTest
@@ -36,6 +52,13 @@ namespace Inspector
             public void ReturnsSingleConstructorOfGivenInstance() {
                 Assert.Same(selected, instance.Constructor());
                 VerifyScope(selection, instance);
+            }
+
+            [Fact]
+            public void ReturnsConstructorWithGivenDelegateType() {
+                Assert.Same(selected, instance.Constructor(delegateType));
+                ConstructorTypeFilter filter = VerifyFilter(selection, delegateType);
+                VerifyScope(filter.Previous, instance);
             }
 
             static void VerifyScope(IFilter<Constructor> filter, object instance) {
