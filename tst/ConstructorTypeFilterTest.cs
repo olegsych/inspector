@@ -14,7 +14,7 @@ namespace Inspector
         // Constructor parameters
         readonly IFilter<Constructor> previous = Substitute.For<IFilter<Constructor>>();
         readonly Type delegateType = typeof(Action<P, P>);
-        readonly DelegateFactory<ConstructorInfo> delegateFactory = Substitute.For<DelegateFactory<ConstructorInfo>>();
+        readonly IDelegateFactory<ConstructorInfo> delegateFactory = Substitute.For<IDelegateFactory<ConstructorInfo>>();
 
         public ConstructorTypeFilterTest() =>
             sut = new ConstructorTypeFilter(previous, delegateType, delegateFactory);
@@ -82,8 +82,8 @@ namespace Inspector
                 ConstructorInfo[] infos = typeof(TestType).GetConstructors();
                 var target = new TestType();
                 Delegate @delegate;
-                delegateFactory.Invoke(delegateType, target, infos[1], out @delegate).Returns(true);
-                delegateFactory.Invoke(delegateType, target, infos[3], out @delegate).Returns(true);
+                delegateFactory.TryCreate(delegateType, target, infos[1], out @delegate).Returns(true);
+                delegateFactory.TryCreate(delegateType, target, infos[3], out @delegate).Returns(true);
 
                 Constructor[] constructors = infos.Select(_ => new Constructor(_, target)).ToArray();
                 previous.Get().Returns(constructors);

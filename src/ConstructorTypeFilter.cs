@@ -10,7 +10,7 @@ namespace Inspector
     /// </summary>
     sealed class ConstructorTypeFilter : IFilter<Constructor>, IDecorator<IFilter<Constructor>>
     {
-        public ConstructorTypeFilter(IFilter<Constructor> previous, Type delegateType, DelegateFactory<ConstructorInfo> delegateFactory) {
+        public ConstructorTypeFilter(IFilter<Constructor> previous, Type delegateType, IDelegateFactory<ConstructorInfo> delegateFactory) {
             Previous = previous ?? throw new ArgumentNullException(nameof(previous));
 
             if(delegateType == null)
@@ -24,12 +24,9 @@ namespace Inspector
 
         public IFilter<Constructor> Previous { get; }
         public Type DelegateType { get; }
-        public DelegateFactory<ConstructorInfo> DelegateFactory { get; }
+        public IDelegateFactory<ConstructorInfo> DelegateFactory { get; }
 
         IEnumerable<Constructor> IFilter<Constructor>.Get() =>
-            Previous.Get().Where(ConstructorMatchesDelegateType);
-
-        bool ConstructorMatchesDelegateType(Constructor constructor) =>
-            DelegateFactory(DelegateType, constructor.Instance, constructor.Info, out Delegate _);
+            Previous.Get().Where(constructor => DelegateFactory.TryCreate(DelegateType, constructor.Instance, constructor.Info, out Delegate _));
     }
 }
