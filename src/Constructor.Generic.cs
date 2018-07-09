@@ -3,12 +3,39 @@ using System.Reflection;
 
 namespace Inspector
 {
-    public class Constructor<TSignature> : Constructor
+    /// <summary>
+    /// Provides access to a constructor with signature known at compile time.
+    /// </summary>
+    /// <typeparam name="TSignature">A <see cref="Delegate"/> representing the constructor signature.</typeparam>
+    public class Constructor<TSignature> : Constructor where TSignature : Delegate
     {
-        public Constructor(ConstructorInfo info, object instance) : base(null, null) =>
-            throw new NotImplementedException();
+        internal Constructor(Constructor constructor, IDelegateFactory<ConstructorInfo> delegateFactory) :
+            base(NotNull(constructor).Info, constructor.Instance) {
 
-        public new TSignature Invoke =>
-            throw new NotImplementedException();
+            if(delegateFactory == null)
+                throw new ArgumentNullException(nameof(delegateFactory));
+
+            Delegate @delegate;
+            if(!delegateFactory.TryCreate(typeof(TSignature), Instance, Info, out @delegate)) {
+                string error = $"Constructor {constructor.Info} doesn't match expected signature.";
+                throw new ArgumentException(error, nameof(constructor));
+            }
+
+            Invoke = (TSignature)@delegate;
+        }
+
+        /// <summary>
+        /// Invokes the constructor.
+        /// </summary>
+        public new TSignature Invoke { get; }
+
+        /// <summary>
+        /// Implicitly converts the constructor to its <typeparamref name="TSignature"/> delegate.
+        /// </summary>
+        public static implicit operator TSignature(Constructor<TSignature> constructor) =>
+            constructor?.Invoke;
+
+        static Constructor NotNull(Constructor constructor) =>
+            constructor ?? throw new ArgumentNullException(nameof(constructor));
     }
 }

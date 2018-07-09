@@ -12,7 +12,7 @@ namespace Inspector
         public static Constructor Constructor(this IScope scope, Type[] parameterTypes) =>
             throw new NotImplementedException();
 
-        public static Constructor<TSignature> Constructor<TSignature>(this IScope scope) =>
+        public static Constructor<TSignature> Constructor<TSignature>(this IScope scope) where TSignature : Delegate =>
             throw new NotImplementedException();
     }
 
