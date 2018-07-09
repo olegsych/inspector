@@ -28,6 +28,13 @@ namespace Inspector
             }
 
             [Fact]
+            public void ThrowsDescriptiveExceptionWhenGivenNoInstanceForInstanceConstructor() {
+                var thrown = Assert.Throws<ArgumentNullException>(() => new Constructor(info));
+                Assert.Equal("instance", thrown.ParamName);
+                Assert.StartsWith($"Instance is required for constructor {info}", thrown.Message);
+            }
+
+            [Fact]
             public void ThrowsDescriptiveExceptionWhenInstanceIsGivenForStaticConstructorInfo() {
                 var thrown = Assert.Throws<ArgumentException>(() => new Constructor(typeof(InstanceType).TypeInitializer, instance));
                 Assert.Equal("instance", thrown.ParamName);
@@ -49,35 +56,22 @@ namespace Inspector
         public class Invoke : ConstructorTest
         {
             [Fact]
-            public void InvokesConstructorOfGivenTypeAndReturnsNull() {
+            public void InvokesConstructorOfGivenType() {
                 var expectedField = new FieldType();
                 var sut = new Constructor(info, instance);
 
-                object result = sut.Invoke(expectedField);
+                sut.Invoke(expectedField);
 
-                Assert.Null(result);
                 Assert.Same(expectedField, instance.field);
             }
 
             [Fact]
-            public void InvokesConstructorOfGivenTypeAndReturnsNewInstance() {
-                var expectedField = new FieldType();
-                var sut = new Constructor(info);
-
-                object result = sut.Invoke(expectedField);
-
-                var actual = Assert.IsType<InstanceType>(result);
-                Assert.Same(expectedField, actual.field);
-            }
-
-            [Fact]
-            public void InvokesStaticConstructorAndReturnsNull() {
+            public void InvokesStaticConstructor() {
                 StaticType.field = new FieldType();
                 var sut = new Constructor(typeof(StaticType).TypeInitializer);
 
-                object result = sut.Invoke();
+                sut.Invoke();
 
-                Assert.Null(result);
                 Assert.Same(StaticType.expected, StaticType.field);
             }
         }
