@@ -7,15 +7,6 @@ namespace Inspector
     {
     }
 
-    public static class ScopeConstructorExtensions
-    {
-        public static Constructor Constructor(this IScope scope, Type[] parameterTypes) =>
-            throw new NotImplementedException();
-
-        public static Constructor<TSignature> Constructor<TSignature>(this IScope scope) where TSignature : Delegate =>
-            throw new NotImplementedException();
-    }
-
     public static class ScopeEventExtensions
     {
         public static Event Event(this IScope scope, string eventName) =>

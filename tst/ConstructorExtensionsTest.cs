@@ -27,6 +27,12 @@ namespace Inspector
             return filter;
         }
 
+        static void VerifyGenericConstructor<T>(Constructor selected, Constructor<T> generic) where T : Delegate {
+            Assert.Same(selected.Info, generic.Info);
+            Assert.Same(selected.Instance, generic.Instance);
+            Assert.NotNull(generic.Invoke);
+        }
+
         public class IScopeExtension : ConstructorExtensionsTest
         {
             // Method parameters
@@ -44,6 +50,15 @@ namespace Inspector
                 ConstructorTypeFilter filter = VerifyFilter(selection, delegateType);
                 Assert.Same(scope, filter.Previous);
             }
+
+            [Fact]
+            public void ReturnsGenericConstructorWithGivenSignature() {
+                Constructor<TestDelegate> generic = scope.Constructor<TestDelegate>();
+
+                VerifyGenericConstructor(selected, generic);
+                ConstructorTypeFilter typeFilter = VerifyFilter(selection, typeof(TestDelegate));
+                Assert.Same(scope, typeFilter.Previous);
+            }
         }
 
         public class ObjectExtension : ConstructorExtensionsTest
@@ -59,6 +74,15 @@ namespace Inspector
                 Assert.Same(selected, instance.Constructor(delegateType));
                 ConstructorTypeFilter filter = VerifyFilter(selection, delegateType);
                 VerifyScope(filter.Previous, instance);
+            }
+
+            [Fact]
+            public void ReturnsGenericConstructorWithGivenSignature() {
+                Constructor<TestDelegate> generic = instance.Constructor<TestDelegate>();
+
+                VerifyGenericConstructor(selected, generic);
+                ConstructorTypeFilter typed = VerifyFilter(selection, typeof(TestDelegate));
+                VerifyScope(typed.Previous, instance);
             }
 
             static void VerifyScope(IFilter<Constructor> filter, object instance) {
