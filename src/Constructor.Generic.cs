@@ -9,25 +9,21 @@ namespace Inspector
     /// <typeparam name="TSignature">A <see cref="Delegate"/> representing the constructor signature.</typeparam>
     public class Constructor<TSignature> : Constructor where TSignature : Delegate
     {
+        readonly TSignature @delegate;
+
         internal Constructor(Constructor constructor, IDelegateFactory<ConstructorInfo> delegateFactory) :
             base(NotNull(constructor).Info, constructor.Instance) {
 
-            if(delegateFactory == null)
-                throw new ArgumentNullException(nameof(delegateFactory));
-
-            Delegate @delegate;
-            if(!delegateFactory.TryCreate(typeof(TSignature), Instance, Info, out @delegate)) {
+            if(!delegateFactory.TryCreate(Instance, Info, out @delegate)) {
                 string error = $"Constructor {constructor.Info} doesn't match expected signature.";
                 throw new ArgumentException(error, nameof(constructor));
             }
-
-            Invoke = (TSignature)@delegate;
         }
 
         /// <summary>
         /// Invokes the constructor.
         /// </summary>
-        public new TSignature Invoke { get; }
+        public new TSignature Invoke => @delegate;
 
         /// <summary>
         /// Implicitly converts the constructor to its <typeparamref name="TSignature"/> delegate.
