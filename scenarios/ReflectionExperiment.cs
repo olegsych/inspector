@@ -5,22 +5,22 @@ using Xunit;
 
 namespace Inspector
 {
-    public class ConstructorAccessScenario
+    public class ReflectionExperiment
     {
-        public class Invoke : ConstructorAccessScenario
+        class Foo
         {
-            class Foo
-            {
-                public int bar;
-                public Foo(int bar) => this.bar = bar;
+            public int bar;
+            public Foo(int bar) => this.bar = bar;
 
-                public static int staticBar;
+            public static int staticBar;
 
-                static Foo() {
-                    staticBar = 0;
-                }
+            static Foo() {
+                staticBar = 0;
             }
+        }
 
+        public class ConstructorInfoInvoke : ReflectionExperiment
+        {
             [Fact]
             public void ConstructorCreatesNewInstance() {
                 ConstructorInfo constructor = typeof(Foo).Constructor<int>();
@@ -54,9 +54,14 @@ namespace Inspector
 
                 Assert.Equal(0, Foo.staticBar);
             }
+        }
 
+        // A very low-level, unsafe way to create a delegate bound to constructor.
+        // Requires separate logic for verifying that delegate and constructor have matching signatures.
+        public class CreateConstructorDelegateUsingTypedDelegateConstructor : ReflectionExperiment
+        {
             [Fact]
-            public void ConstructorDelegate() {
+            public void CreateOpenDelegate() {
                 ConstructorInfo actionInfo = typeof(Action<Foo, int>).GetConstructor(new Type[] { typeof(object), typeof(IntPtr) });
                 Assert.NotNull(actionInfo);
 
@@ -73,7 +78,7 @@ namespace Inspector
             }
 
             [Fact]
-            public void ConstructorDelegate2() {
+            public void CreateClosedDelegate() {
                 ConstructorInfo actionInfo = typeof(Action<int>).GetConstructor(new Type[] { typeof(object), typeof(IntPtr) });
                 Assert.NotNull(actionInfo);
 
@@ -89,9 +94,12 @@ namespace Inspector
 
                 Assert.Equal(42, foo.bar);
             }
+        }
 
-            [Fact]
-            public void Signature() {
+        public class Signature : ReflectionExperiment
+        {
+            [Fact(Skip = "Broken")]
+            public void CompareSig() {
                 var signatureType = Type.GetType("System.Signature");
                 Assert.NotNull(signatureType);
 
@@ -123,7 +131,12 @@ namespace Inspector
                 bool equal = Assert.IsType<bool>(result);
                 Assert.True(equal);
             }
+        }
 
+        // A high-level way to create a delegate bound to a constructor.
+        // Uses the internal Delegate.BindToMethodInfo method, which ensures that delegate and constructor have matching signatures.
+        public class BindDelegateToConstructor : ReflectionExperiment
+        {
             [Fact]
             public void BindOpenDelegate() {
                 MethodInfo internalAlloc = typeof(Delegate).GetMethod("InternalAlloc", BindingFlags.Static | BindingFlags.NonPublic);
