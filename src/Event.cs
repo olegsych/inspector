@@ -8,8 +8,9 @@ namespace Inspector
     /// </summary>
     public class Event : Member<EventInfo>
     {
-        protected Event(EventInfo info, object instance) : base(null, null) =>
-            throw new NotImplementedException();
+        public Event(EventInfo info, object instance) : base(info, instance) {
+
+        }
 
         public void Add(Delegate handler) =>
             throw new NotImplementedException();
