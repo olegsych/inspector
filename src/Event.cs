@@ -12,6 +12,9 @@ namespace Inspector
 
         }
 
+        public override bool IsStatic =>
+            throw new NotImplementedException();
+
         public void Add(Delegate handler) =>
             throw new NotImplementedException();
 

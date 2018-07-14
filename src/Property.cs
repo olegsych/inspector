@@ -11,6 +11,9 @@ namespace Inspector
         public Property(PropertyInfo info, object instance) : base(null, null) =>
             throw new NotImplementedException();
 
+        public override bool IsStatic =>
+            throw new NotImplementedException();
+
         public object Value {
             get => throw new NotImplementedException();
             set => throw new NotImplementedException();

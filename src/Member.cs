@@ -36,6 +36,11 @@ namespace Inspector
         public object Instance { get; }
 
         /// <summary>
+        /// Returns <c>true</c> when <see cref="Info"/> represents a static member.
+        /// </summary>
+        public abstract bool IsStatic { get; }
+
+        /// <summary>
         /// Implicitly converts a given member to its <see cref="MemberInfo"/> for convenient access to Reflection APIs.
         /// </summary>
         public static implicit operator TMemberInfo(Member<TMemberInfo> member) =>

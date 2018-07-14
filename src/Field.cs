@@ -26,6 +26,12 @@ namespace Inspector
             new Field(info, instance);
 
         /// <summary>
+        /// Returns <c>true</c> when the <see cref="Field"/> is static.
+        /// </summary>
+        public override bool IsStatic =>
+            throw new NotImplementedException();
+
+        /// <summary>
         /// Gets or sets the field value.
         /// </summary>
         public object Value {

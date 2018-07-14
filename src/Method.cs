@@ -22,6 +22,9 @@ namespace Inspector
             }
         }
 
+        public override bool IsStatic =>
+            throw new NotImplementedException();
+
         internal static Method Create(MethodInfo info, object instance) =>
             new Method(info, instance);
 

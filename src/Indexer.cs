@@ -11,6 +11,9 @@ namespace Inspector
         public Indexer(PropertyInfo info, object instance) : base(null, null) =>
             throw new NotImplementedException();
 
+        public override bool IsStatic =>
+            throw new NotImplementedException();
+
         public IndexerValue Value =>
             throw new NotImplementedException();
 

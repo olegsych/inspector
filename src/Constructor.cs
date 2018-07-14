@@ -23,6 +23,12 @@ namespace Inspector
         }
 
         /// <summary>
+        /// Returns <c>true</c> when the <see cref="Constructor"/> is static.
+        /// </summary>
+        public override bool IsStatic =>
+            throw new NotImplementedException();
+
+        /// <summary>
         /// Invokes the constructor with given <paramref name="parameters"/>.
         /// </summary>
         /// <remarks>
