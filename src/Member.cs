@@ -19,11 +19,11 @@ namespace Inspector
 
             if(IsStatic) {
                 if(instance != null)
-                    throw new ArgumentException($"Instance shouldn't be specified for static member {info.Name}.", nameof(instance));
+                    throw new ArgumentException($"Instance shouldn't be specified for static member {info}.", nameof(instance));
             }
             else {
                 if(instance == null)
-                    throw new ArgumentNullException(nameof(instance), $"Instance is required for {info.Name}");
+                    throw new ArgumentNullException(nameof(instance), $"Instance is required for {info}");
 
                 if(!info.DeclaringType.GetTypeInfo().IsAssignableFrom(instance.GetType())) {
                     string error = $"Instance type {instance.GetType().Name} doesn't match type {info.DeclaringType.Name} where {info.Name} is declared.";

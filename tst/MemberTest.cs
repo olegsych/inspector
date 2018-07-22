@@ -40,7 +40,7 @@ namespace Inspector
             public void ThrowsDescriptiveExceptionGivenInstanceMemberInfoWithoutInstance() {
                 var thrown = Assert.Throws<ArgumentNullException>(() => new InstanceMember(info, null));
                 Assert.Equal("instance", thrown.ParamName);
-                Assert.StartsWith($"Instance is required for {info.Name}", thrown.Message);
+                Assert.StartsWith($"Instance is required for {info}", thrown.Message);
             }
 
             [Fact]
@@ -48,7 +48,7 @@ namespace Inspector
                 MemberInfo staticMember = typeof(InstanceType).GetField(nameof(InstanceType.StaticField));
                 var thrown = Assert.Throws<ArgumentException>(() => new StaticMember(staticMember, instance));
                 Assert.Equal("instance", thrown.ParamName);
-                Assert.StartsWith($"Instance shouldn't be specified for static member {staticMember.Name}.", thrown.Message);
+                Assert.StartsWith($"Instance shouldn't be specified for static member {staticMember}.", thrown.Message);
             }
 
             [Fact]
