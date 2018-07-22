@@ -25,28 +25,6 @@ namespace Inspector
                 Assert.Same(instanceField, member.Info);
                 Assert.Same(instance, member.Instance);
             }
-
-            [Fact]
-            public void InitializesNewInstanceForStaticField() {
-                Member<FieldInfo> member = new Field(staticField, null);
-
-                Assert.Same(staticField, member.Info);
-                Assert.Null(member.Instance);
-            }
-
-            [Fact]
-            public void ThrowsDescriptiveExceptionWhenGivenNoInstanceForInstanceField() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new Field(instanceField, null));
-                Assert.Equal("instance", thrown.ParamName);
-                Assert.StartsWith($"Instance is required for field {instanceField.Name}", thrown.Message);
-            }
-
-            [Fact]
-            public void ThrowsDescriptiveExceptionWhenGivenInstanceForStaticField() {
-                var thrown = Assert.Throws<ArgumentException>(() => new Field(staticField, instance));
-                Assert.Equal("instance", thrown.ParamName);
-                Assert.StartsWith($"Instance shouldn't be specified for static field {staticField.Name}.", thrown.Message);
-            }
         }
 
         public class Create : FieldTest
