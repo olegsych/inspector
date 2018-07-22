@@ -15,12 +15,12 @@ namespace Inspector
             Info.AddMethod.IsStatic;
 
         public void Add(Delegate handler) =>
-            throw new NotImplementedException();
+            Info.AddEventHandler(Instance, handler);
 
         public void Raise(params object[] args) =>
             throw new NotImplementedException();
 
         public void Remove(Delegate handler) =>
-            throw new NotImplementedException();
+            Info.RemoveEventHandler(Instance, handler);
     }
 }

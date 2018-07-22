@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using NSubstitute;
 using Xunit;
 
 namespace Inspector
@@ -28,6 +29,34 @@ namespace Inspector
             }
         }
 
+        public class Add : EventTest
+        {
+            [Fact]
+            public void AddsEventHandler() {
+                var handler = Substitute.For<TestEvent>();
+
+                sut.Add(handler);
+
+                var args = new TestArgs();
+                ((TestType)instance).RaiseEvent(args);
+                handler.Received().Invoke(instance, args);
+            }
+        }
+
+        public class Remove : EventTest
+        {
+            [Fact]
+            public void RemovesEventHandler() {
+                var handler = Substitute.For<TestEvent>();
+                sut.Add(handler);
+
+                sut.Remove(handler);
+
+                ((TestType)instance).RaiseEvent(new TestArgs());
+                handler.DidNotReceive().Invoke(Arg.Any<object>(), Arg.Any<TestArgs>());
+            }
+        }
+
         public class IsStatic : EventTest
         {
             [Fact]
@@ -45,8 +74,11 @@ namespace Inspector
 
         class TestType
         {
-            public event TestEvent Event;
+            public event TestEvent Event = (s, a) => { };
             public static event TestEvent StaticEvent;
+
+            public void RaiseEvent(TestArgs args) =>
+                Event(this, args);
         }
     }
 }
