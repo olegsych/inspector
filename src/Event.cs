@@ -8,9 +8,8 @@ namespace Inspector
     /// </summary>
     public class Event : Member<EventInfo>
     {
-        public Event(EventInfo info, object instance) : base(info, instance) {
-
-        }
+        public Event(EventInfo info, object instance) :
+            base(info, instance) { }
 
         public override bool IsStatic =>
             Info.AddMethod.IsStatic;
