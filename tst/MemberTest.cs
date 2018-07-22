@@ -14,30 +14,55 @@ namespace Inspector
         readonly object instance = new InstanceType();
 
         public MemberTest() =>
-            sut = Substitute.ForPartsOf<Member<MemberInfo>>(info, instance);
+            sut = new InstanceMember(info, instance);
+
+        public class InstanceMember : Member<MemberInfo>
+        {
+            public InstanceMember(MemberInfo info, object instance) : base(info, instance) { }
+            public override bool IsStatic => false;
+        }
+
+        public class StaticMember : Member<MemberInfo>
+        {
+            public StaticMember(MemberInfo info, object instance) : base(info, instance) { }
+            public override bool IsStatic => true;
+        }
 
         public class Constructor : MemberTest
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenMemberInfoIsNullToFailFast() {
-                var thrown = Assert.Throws<TargetInvocationException>(() => Substitute.ForPartsOf<Member<MemberInfo>>(null, instance));
-                var actual = Assert.IsType<ArgumentNullException>(thrown.InnerException);
-                Assert.Equal("info", actual.ParamName);
+                var thrown = Assert.Throws<ArgumentNullException>(() => new InstanceMember(null, instance));
+                Assert.Equal("info", thrown.ParamName);
+            }
+
+            [Fact]
+            public void ThrowsDescriptiveExceptionGivenInstanceMemberInfoWithoutInstance() {
+                var thrown = Assert.Throws<ArgumentNullException>(() => new InstanceMember(info, null));
+                Assert.Equal("instance", thrown.ParamName);
+                Assert.StartsWith($"Instance is required for {info.Name}", thrown.Message);
+            }
+
+            [Fact]
+            public void ThrowsDescriptiveExceptionGivenInstanceForStaticMember() {
+                MemberInfo staticMember = typeof(InstanceType).GetField(nameof(InstanceType.StaticField));
+                var thrown = Assert.Throws<ArgumentException>(() => new StaticMember(staticMember, instance));
+                Assert.Equal("instance", thrown.ParamName);
+                Assert.StartsWith($"Instance shouldn't be specified for static member {staticMember.Name}.", thrown.Message);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenGivenInstanceOfTypeDifferentFromMemberInfo() {
-                var thrown = Assert.Throws<TargetInvocationException>(() => Substitute.ForPartsOf<Member<MemberInfo>>(info, new AnotherType()));
-                var actual = Assert.IsType<ArgumentException>(thrown.InnerException);
-                Assert.Equal("instance", actual.ParamName);
-                Assert.StartsWith($"Instance type {nameof(AnotherType)} doesn't match type {info.DeclaringType.Name} where {info.Name} is declared.", actual.Message);
+                var thrown = Assert.Throws<ArgumentException>(() => new InstanceMember(info, new AnotherType()));
+                Assert.Equal("instance", thrown.ParamName);
+                Assert.StartsWith($"Instance type {nameof(AnotherType)} doesn't match type {info.DeclaringType.Name} where {info.Name} is declared.", thrown.Message);
             }
 
             [Fact]
             public void InitializesNewInstanceForDerivedInstanceMember() {
                 var derived = new DerivedType();
 
-                var sut = Substitute.ForPartsOf<Member<MemberInfo>>(info, derived);
+                var sut = new InstanceMember(info, derived);
 
                 Assert.Same(info, sut.Info);
                 Assert.Same(derived, sut.Instance);
@@ -45,7 +70,7 @@ namespace Inspector
 
             [Fact]
             public void AcceptsNullInstanceToSupportStaticMembers() =>
-                Substitute.ForPartsOf<Member<MemberInfo>>(info, null);
+                new StaticMember(info, null);
         }
 
         public class Info : MemberTest
@@ -80,6 +105,7 @@ namespace Inspector
         class InstanceType
         {
             public object Field = new object();
+            public static object StaticField = new object();
         }
 
         class DerivedType : InstanceType { }

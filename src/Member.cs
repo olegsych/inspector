@@ -17,9 +17,18 @@ namespace Inspector
         protected Member(TMemberInfo info, object instance) {
             Info = info ?? throw new ArgumentNullException(nameof(info));
 
-            if(instance != null && !info.DeclaringType.GetTypeInfo().IsAssignableFrom(instance.GetType())) {
-                string error = $"Instance type {instance.GetType().Name} doesn't match type {info.DeclaringType.Name} where {info.Name} is declared.";
-                throw new ArgumentException(error, nameof(instance));
+            if(IsStatic) {
+                if(instance != null)
+                    throw new ArgumentException($"Instance shouldn't be specified for static member {info.Name}.", nameof(instance));
+            }
+            else {
+                if(instance == null)
+                    throw new ArgumentNullException(nameof(instance), $"Instance is required for {info.Name}");
+
+                if(!info.DeclaringType.GetTypeInfo().IsAssignableFrom(instance.GetType())) {
+                    string error = $"Instance type {instance.GetType().Name} doesn't match type {info.DeclaringType.Name} where {info.Name} is declared.";
+                    throw new ArgumentException(error, nameof(instance));
+                }
             }
 
             Instance = instance;
