@@ -9,11 +9,12 @@ namespace Inspector
         readonly Event sut;
 
         // Constructor parameters
-        readonly EventInfo info = typeof(TestType).GetEvent(nameof(TestType.Event));
+        readonly EventInfo instanceInfo = typeof(TestType).GetEvent(nameof(TestType.Event));
+        readonly EventInfo staticInfo = typeof(TestType).GetEvent(nameof(TestType.StaticEvent));
         readonly object instance = new TestType();
 
         public EventTest() {
-            sut = new Event(info, instance);
+            sut = new Event(instanceInfo, instance);
         }
 
         public class Constructor : EventTest
@@ -22,9 +23,20 @@ namespace Inspector
             public void InitializesBaseType() {
                 Member<EventInfo> @base = sut;
 
-                Assert.Same(info, @base.Info);
+                Assert.Same(instanceInfo, @base.Info);
                 Assert.Same(instance, @base.Instance);
             }
+        }
+
+        public class IsStatic : EventTest
+        {
+            [Fact]
+            public void ReturnsFalseForInstanceEventInfo() =>
+                Assert.False(new Event(instanceInfo, instance).IsStatic);
+
+            [Fact]
+            public void ReturnsTrueForStaticEventInfo() =>
+                Assert.True(new Event(staticInfo, null).IsStatic);
         }
 
         class TestArgs : EventArgs { }
@@ -34,6 +46,7 @@ namespace Inspector
         class TestType
         {
             public event TestEvent Event;
+            public static event TestEvent StaticEvent;
         }
     }
 }
