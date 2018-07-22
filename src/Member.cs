@@ -19,7 +19,7 @@ namespace Inspector
 
             if(IsStatic) {
                 if(instance != null)
-                    throw new ArgumentException($"Instance shouldn't be specified for static member {info}.", nameof(instance));
+                    throw new ArgumentException($"Instance shouldn't be specified for static {info}.", nameof(instance));
             }
             else {
                 if(instance == null)

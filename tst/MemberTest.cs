@@ -48,7 +48,7 @@ namespace Inspector
                 MemberInfo staticMember = typeof(InstanceType).GetField(nameof(InstanceType.StaticField));
                 var thrown = Assert.Throws<ArgumentException>(() => new StaticMember(staticMember, instance));
                 Assert.Equal("instance", thrown.ParamName);
-                Assert.StartsWith($"Instance shouldn't be specified for static member {staticMember}.", thrown.Message);
+                Assert.StartsWith($"Instance shouldn't be specified for static {staticMember}.", thrown.Message);
             }
 
             [Fact]
