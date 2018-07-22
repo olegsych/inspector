@@ -95,6 +95,17 @@ namespace Inspector
             }
         }
 
+        public class IsStatic : FieldTest
+        {
+            [Fact]
+            public void ReturnsFalseForInstanceFieldInfo() =>
+                Assert.False(new Field(instanceField, instance).IsStatic);
+
+            [Fact]
+            public void ReturnsTrueForStaticFieldInfo() =>
+                Assert.True(new Field(staticField, null).IsStatic);
+        }
+
         class TestType
         {
             public FieldType Field = new FieldType();

@@ -29,7 +29,7 @@ namespace Inspector
         /// Returns <c>true</c> when the <see cref="Field"/> is static.
         /// </summary>
         public override bool IsStatic =>
-            throw new NotImplementedException();
+            Info.IsStatic;
 
         /// <summary>
         /// Gets or sets the field value.
