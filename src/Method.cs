@@ -22,8 +22,11 @@ namespace Inspector
             }
         }
 
+        /// <summary>
+        /// Returns <c>true</c> when the <see cref="Method"/> is static.
+        /// </summary>
         public override bool IsStatic =>
-            throw new NotImplementedException();
+            Info.IsStatic;
 
         internal static Method Create(MethodInfo info, object instance) =>
             new Method(info, instance);

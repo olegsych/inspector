@@ -75,6 +75,17 @@ namespace Inspector
             }
         }
 
+        public class IsStatic : MethodTest
+        {
+            [Fact]
+            public void ReturnsFalseForInstanceMethodInfo() =>
+                Assert.False(new Method(instanceMethod, instance).IsStatic);
+
+            [Fact]
+            public void ReturnsTrueForStaticMethodInfo() =>
+                Assert.True(new Method(staticMethod, null).IsStatic);
+        }
+
         public class TestType
         {
             public virtual ReturnType Method(ParameterType p) => null;
