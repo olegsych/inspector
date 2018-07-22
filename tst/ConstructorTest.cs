@@ -76,6 +76,17 @@ namespace Inspector
             }
         }
 
+        public class IsStatic : ConstructorTest
+        {
+            [Fact]
+            public void ReturnsFalseForInstanceConstructorInfo() =>
+                Assert.False(new Constructor(info, instance).IsStatic);
+
+            [Fact]
+            public void ReturnsTrueForStaticConstructorInfo() =>
+                Assert.True(new Constructor(typeof(InstanceType).TypeInitializer, null).IsStatic);
+        }
+
         class InstanceType {
             public readonly FieldType field;
 
