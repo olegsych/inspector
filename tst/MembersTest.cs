@@ -93,7 +93,6 @@ namespace Inspector
                 infoProvider.Invoke(typeof(object).GetTypeInfo()).Returns(getMemberInfo);
 
                 getMemberInfo.Invoke(expectedBinding).Returns(testTypeMembers, baseTypeMembers, rootTypeMembers);
-                createMember.Invoke(Arg.Any<MemberInfo>(), Arg.Any<object>()).Returns(_ => Substitute.ForPartsOf<Member<MemberInfo>>(_.Arg<MemberInfo>(), _.Arg<object>()));
 
                 // Act
                 IEnumerator enumerator = getEnumerator();
@@ -131,6 +130,7 @@ namespace Inspector
                 getEnumerator = sut.GetEnumerator;
                 expectedBinding = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly | BindingFlags.Instance;
                 expectedInstance = instance;
+                createMember.Invoke(Arg.Any<MemberInfo>(), Arg.Any<object>()).Returns(_ => new InstanceMember(_.Arg<MemberInfo>(), _.Arg<object>()));
             }
         }
 
@@ -141,6 +141,7 @@ namespace Inspector
                 getEnumerator = sut.GetEnumerator;
                 expectedBinding = (BindingFlags)lifetime | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
                 expectedInstance = null;
+                createMember.Invoke(Arg.Any<MemberInfo>(), Arg.Any<object>()).Returns(_ => new StaticMember(_.Arg<MemberInfo>(), _.Arg<object>()));
             }
         }
 
@@ -179,6 +180,18 @@ namespace Inspector
         {
             public void TestMethod1() { }
             public void TestMethod2() { }
+        }
+
+        class InstanceMember : Member<MemberInfo>
+        {
+            public InstanceMember(MemberInfo info, object instance) : base(info, instance) { }
+            public override bool IsStatic => false;
+        }
+
+        class StaticMember : Member<MemberInfo>
+        {
+            public StaticMember(MemberInfo info, object instance) : base(info, instance) { }
+            public override bool IsStatic => true;
         }
     }
 }
