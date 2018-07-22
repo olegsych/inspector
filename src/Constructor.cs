@@ -11,16 +11,8 @@ namespace Inspector
         /// <summary>
         /// Initializes a new method of the <see cref="Constructor"/> class.
         /// </summary>
-        public Constructor(ConstructorInfo info, object instance = null) : base(info, instance) {
-            if(info.IsStatic) {
-                if(instance != null)
-                    throw new ArgumentException("Static constructor cannot be used with an instance.", nameof(instance));
-            }
-            else {
-                if (instance == null)
-                    throw new ArgumentNullException(nameof(instance), $"Instance is required for constructor {info}.");
-            }
-        }
+        public Constructor(ConstructorInfo info, object instance = null) :
+            base(info, instance) { }
 
         /// <summary>
         /// Returns <c>true</c> when the <see cref="Constructor"/> is static.

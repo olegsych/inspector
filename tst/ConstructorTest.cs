@@ -5,40 +5,20 @@ using Xunit;
 
 namespace Inspector
 {
-    public class ConstructorTest {
+    public class ConstructorTest
+    {
         // Constructor parameters
         readonly ConstructorInfo info = typeof(InstanceType).GetConstructors().Single();
         readonly InstanceType instance = new InstanceType(new FieldType());
 
-        public class Ctor : ConstructorTest {
+        public class Ctor : ConstructorTest
+        {
             [Fact]
             public void InitializesMemberWithGivenConstructorInfoAndInstance() {
                 var sut = new Constructor(info, instance);
 
                 Assert.Same(info, sut.Info);
                 Assert.Same(instance, sut.Instance);
-            }
-
-            [Fact]
-            public void InitializesMemberWIthGivenStaticConstructor() {
-                var sut = new Constructor(typeof(InstanceType).TypeInitializer);
-
-                Assert.Same(typeof(InstanceType).TypeInitializer, sut.Info);
-                Assert.Null(sut.Instance);
-            }
-
-            [Fact]
-            public void ThrowsDescriptiveExceptionWhenGivenNoInstanceForInstanceConstructor() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new Constructor(info));
-                Assert.Equal("instance", thrown.ParamName);
-                Assert.StartsWith($"Instance is required for constructor {info}", thrown.Message);
-            }
-
-            [Fact]
-            public void ThrowsDescriptiveExceptionWhenInstanceIsGivenForStaticConstructorInfo() {
-                var thrown = Assert.Throws<ArgumentException>(() => new Constructor(typeof(InstanceType).TypeInitializer, instance));
-                Assert.Equal("instance", thrown.ParamName);
-                Assert.StartsWith("Static constructor cannot be used with an instance.", thrown.Message);
             }
         }
 
@@ -87,7 +67,8 @@ namespace Inspector
                 Assert.True(new Constructor(typeof(InstanceType).TypeInitializer, null).IsStatic);
         }
 
-        class InstanceType {
+        class InstanceType
+        {
             public readonly FieldType field;
 
             public InstanceType(FieldType parameter) =>
