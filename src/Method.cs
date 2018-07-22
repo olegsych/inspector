@@ -11,16 +11,8 @@ namespace Inspector
         /// <summary>
         /// Initializes a new instance of the <see cref="Method"/> class.
         /// </summary>
-        public Method(MethodInfo info, object instance = null) : base(info, instance) {
-            if (info.IsStatic) {
-                if(instance != null)
-                    throw new ArgumentException($"Instance shouldn't be specified for static method {info.Name}.", nameof(instance));
-            }
-            else {
-                if(instance == null)
-                    throw new ArgumentNullException(nameof(instance), $"Instance is required for method {info.Name}.");
-            }
-        }
+        public Method(MethodInfo info, object instance = null) :
+            base(info, instance) { }
 
         /// <summary>
         /// Returns <c>true</c> when the <see cref="Method"/> is static.

@@ -26,28 +26,6 @@ namespace Inspector
                 Assert.Same(instanceMethod, member.Info);
                 Assert.Same(instance, member.Instance);
             }
-
-            [Fact]
-            public void InitializesNewInstanceForStaticMethod() {
-                Member<MethodInfo> member = new Method(staticMethod);
-
-                Assert.Same(staticMethod, member.Info);
-                Assert.Null(member.Instance);
-            }
-
-            [Fact]
-            public void ThrowsDescriptiveExceptionWhenGivenNoInstanceForInstanceMethod() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new Method(instanceMethod));
-                Assert.Equal("instance", thrown.ParamName);
-                Assert.StartsWith($"Instance is required for method {instanceMethod.Name}", thrown.Message);
-            }
-
-            [Fact]
-            public void ThrowsDescriptiveExceptionWhenGivenInstanceForStaticMEthod() {
-                var thrown = Assert.Throws<ArgumentException>(() => new Method(staticMethod, instance));
-                Assert.Equal("instance", thrown.ParamName);
-                Assert.StartsWith($"Instance shouldn't be specified for static method {staticMethod.Name}.", thrown.Message);
-            }
         }
 
         public class Create : MethodTest
