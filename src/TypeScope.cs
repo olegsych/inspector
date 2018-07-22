@@ -22,7 +22,7 @@ namespace Inspector
             new Members<ConstructorInfo, Constructor>(Type, Instance, typeInfo => typeInfo.GetConstructors, Constructor.Create, Lifetime.Instance);
 
         IEnumerable<Event> IFilter<Event>.Get() =>
-            throw new NotImplementedException();
+            new Members<EventInfo, Event>(Type, Instance, typeInfo => typeInfo.GetEvents, Event.Create);
 
         IEnumerable<Field> IFilter<Field>.Get() =>
             new Members<FieldInfo, Field>(Type, Instance, typeInfo => typeInfo.GetFields, Field.Create);

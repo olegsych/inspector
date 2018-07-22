@@ -30,6 +30,20 @@ namespace Inspector
             }
         }
 
+        public class GetEvents : TypeScopeTest
+        {
+            [Theory, MemberData(nameof(MemberData))]
+            internal void ReturnsEventsOfGivenTypeOrInstance(IFilter<Event> sut, Type type, object instance, Lifetime lifetime) {
+                var members = Assert.IsType<Members<EventInfo, Event>>(sut.Get());
+
+                Assert.Same(type, members.Type);
+                Assert.Same(instance, members.Instance);
+                Assert.Equal(type.GetTypeInfo().GetEvents, members.GetMemberInfo(type.GetTypeInfo()));
+                Assert.Equal(Event.Create, members.CreateMember);
+                Assert.Equal(lifetime, members.Lifetime);
+            }
+        }
+
         public class GetFields : TypeScopeTest
         {
             [Theory, MemberData(nameof(MemberData))]
