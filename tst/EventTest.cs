@@ -29,6 +29,17 @@ namespace Inspector
             }
         }
 
+        public class Create : EventTest
+        {
+            [Fact]
+            public void ReturnsNewEventWithGivenInfoAndInstance() {
+                Event sut = Event.Create(instanceInfo, instance);
+
+                Assert.Same(instanceInfo, sut.Info);
+                Assert.Same(instance, sut.Instance);
+            }
+        }
+
         public class Add : EventTest
         {
             [Fact]

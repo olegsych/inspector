@@ -11,6 +11,9 @@ namespace Inspector
         public Event(EventInfo info, object instance) :
             base(info, instance) { }
 
+        internal static Event Create(EventInfo info, object instance) =>
+            new Event(info, instance);
+
         public override bool IsStatic =>
             Info.AddMethod.IsStatic;
 
