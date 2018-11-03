@@ -16,10 +16,12 @@ namespace Inspector
             return constructor;
         }
 
-        public static EventInfo EventInfo(MethodAttributes attributes) {
+        public static EventInfo EventInfo(MethodAttributes attributes, string eventName = default) {
+            eventName = eventName ?? $"Event{Next}";
             var @event = Substitute.For<EventInfo>();
             var addMethod = MethodInfo(attributes);
             @event.AddMethod.Returns(addMethod);
+            @event.Name.Returns(eventName);
             return @event;
         }
 
