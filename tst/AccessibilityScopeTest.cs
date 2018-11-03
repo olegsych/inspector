@@ -92,6 +92,36 @@ namespace Inspector
             }
         }
 
+        public class GetEvents : AccessibilityScopeTest
+        {
+            [Fact]
+            public void ReturnsEventsWithWithExpectedAccessibilityOfAddMethod() {
+                // Arrange
+                var sut = new AccessibilityScope(previous, Accessibility.ProtectedInternal);
+
+                Event[] expected = {
+                    new Event(EventInfo(MethodAttributes.FamORAssem | MethodAttributes.Static)),
+                    new Event(EventInfo(MethodAttributes.FamORAssem | MethodAttributes.Static)),
+                };
+
+                Event[] all = {
+                    new Event(EventInfo(MethodAttributes.Public | MethodAttributes.Static)),
+                    expected[0],
+                    new Event(EventInfo(MethodAttributes.Family | MethodAttributes.Static)),
+                    expected[1],
+                    new Event(EventInfo(MethodAttributes.Private | MethodAttributes.Static)),
+                };
+
+                ((IFilter<Event>)previous).Get().Returns(all);
+
+                // Act
+                IEnumerable<Event> actual = ((IFilter<Event>)sut).Get();
+
+                // Assert
+                Assert.Equal(expected, actual);
+            }
+        }
+
         public class GetFields : AccessibilityScopeTest
         {
             [Fact]

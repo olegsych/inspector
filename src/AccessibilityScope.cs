@@ -28,7 +28,8 @@ namespace Inspector
         IEnumerable<Constructor> IFilter<Constructor>.Get() =>
             ((IFilter<Constructor>)Previous).Get().Where(AccessibilityMatches);
 
-        IEnumerable<Event> IFilter<Event>.Get() => throw new NotImplementedException();
+        IEnumerable<Event> IFilter<Event>.Get() =>
+            ((IFilter<Event>)Previous).Get().Where(AccessibilityMatches);
 
         IEnumerable<Field> IFilter<Field>.Get() =>
             ((IFilter<Field>)Previous).Get().Where(AccessibilityMatches);
@@ -40,6 +41,9 @@ namespace Inspector
 
         bool AccessibilityMatches(Constructor constructor) =>
             Accessibility == (Accessibility)(constructor.Info.Attributes & MethodAttributes.MemberAccessMask);
+
+        bool AccessibilityMatches(Event @event) =>
+            Accessibility == (Accessibility)(@event.Info.AddMethod.Attributes & MethodAttributes.MemberAccessMask);
 
         bool AccessibilityMatches(Field field) =>
             Accessibility == (Accessibility)(field.Info.Attributes & FieldAttributes.FieldAccessMask);

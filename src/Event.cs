@@ -8,7 +8,7 @@ namespace Inspector
     /// </summary>
     public class Event : Member<EventInfo>
     {
-        public Event(EventInfo info, object instance) :
+        public Event(EventInfo info, object instance = null) :
             base(info, instance) { }
 
         internal static Event Create(EventInfo info, object instance) =>
