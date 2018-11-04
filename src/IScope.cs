@@ -9,7 +9,7 @@ namespace Inspector
 
     public static class ScopeEventExtensions
     {
-        public static Event<THandler> Event<THandler>(this IScope scope, string eventName = null) =>
+        public static Event<THandler> Event<THandler>(this IScope scope, string eventName = null) where THandler: Delegate =>
             throw new NotImplementedException();
     }
 

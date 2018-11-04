@@ -7,7 +7,7 @@ namespace Inspector
     /// Provides access to events of type <typeparamref name="TEventHandler"/>.
     /// </summary>
     /// <typeparam name="TEventHandler">Type of event handler</typeparam>
-    public class Event<TEventHandler> : Event
+    public class Event<TEventHandler> : Event where TEventHandler : Delegate
     {
         protected Event(EventInfo info, object instance) : base(null, null) =>
             throw new NotImplementedException();
