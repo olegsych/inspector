@@ -8,21 +8,39 @@ namespace Inspector
     /// </summary>
     public class Property : Member<PropertyInfo>
     {
-        public Property(PropertyInfo info, object instance) : base(null, null) =>
-            throw new NotImplementedException();
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Property"/> class.
+        /// </summary>
+        public Property(PropertyInfo info, object instance) :
+            base(info, instance) { }
 
+        internal static Property Create(PropertyInfo property, object instance) =>
+            new Property(property, instance);
+
+        /// <summary>
+        /// Returns <c>true</c> if the <see cref="Property"/> is static.
+        /// </summary>
         public override bool IsStatic =>
-            throw new NotImplementedException();
+            Info.GetMethod.IsStatic;
 
+        /// <summary>
+        /// Gets or sets the property value.
+        /// </summary>
         public object Value {
-            get => throw new NotImplementedException();
-            set => throw new NotImplementedException();
+            get => Get();
+            set => Set(value);
         }
 
+        /// <summary>
+        /// Gets the property value.
+        /// </summary>
         public object Get() =>
-            throw new NotImplementedException();
+            Info.GetValue(Instance);
 
+        /// <summary>
+        /// Sets the property value.
+        /// </summary>
         public void Set(object value) =>
-            throw new NotImplementedException();
+            Info.SetValue(Instance, value);
     }
 }
