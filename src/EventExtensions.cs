@@ -24,6 +24,12 @@ namespace Inspector
             return Selector<Event>.Select(named);
         }
 
+        public static Event<T> Event<T>(this IScope scope) where T : Delegate =>
+            new Event<T>(scope.Event(typeof(T)));
+
+        public static Event<T> Event<T>(this IScope scope, string eventName) where T : Delegate =>
+            new Event<T>(scope.Event(typeof(T), eventName));
+
         #endregion
 
         #region Object
@@ -40,6 +46,12 @@ namespace Inspector
         public static Event Event(this object instance, Type handlerType, string eventName) =>
             new InstanceScope(instance).Event(handlerType, eventName);
 
+        public static Event<T> Event<T>(this object instance) where T : Delegate =>
+            new InstanceScope(instance).Event<T>();
+
+        public static Event<T> Event<T>(this object instance, string eventName) where T : Delegate =>
+            new InstanceScope(instance).Event<T>(eventName);
+
         #endregion
 
         #region Type
@@ -55,6 +67,12 @@ namespace Inspector
 
         public static Event Event(this Type type, Type handlerType, string eventName) =>
             new StaticScope(type).Event(handlerType, eventName);
+
+        public static Event<T> Event<T>(this Type type) where T : Delegate =>
+            new StaticScope(type).Event<T>();
+
+        public static Event<T> Event<T>(this Type type, string eventName) where T : Delegate =>
+            new StaticScope(type).Event<T>(eventName);
 
         #endregion
     }

@@ -11,7 +11,7 @@ namespace Inspector
     public class EventExtensionsTest : SelectorFixture<Event>
     {
         // Method parameters
-        protected readonly Type handlerType = typeof(EventHandler<TestEventArgs>);
+        protected readonly Type handlerType = typeof(TestHandler);
         protected readonly string eventName = Guid.NewGuid().ToString();
 
         // Shared test fixture
@@ -36,12 +36,19 @@ namespace Inspector
             return filter;
         }
 
+        protected static void VerifyGenericEvent<T>(Event selected, Event<T> generic) where T: Delegate {
+            Assert.Same(selected.Info, generic.Info);
+            Assert.Same(selected.Instance, generic.Instance);
+        }
+
         protected class TestType
         {
-            public event EventHandler<TestEventArgs> Event;
+            public event TestHandler Event;
         }
 
         protected class TestEventArgs : EventArgs { }
+
+        protected delegate void TestHandler(object sender, TestEventArgs args);
 
         public class IScopeExtension : EventExtensionsTest
         {
@@ -79,6 +86,25 @@ namespace Inspector
                 EventTypeFilter typed = VerifyFilter(named.Previous, handlerType);
                 Assert.Same(scope, typed.Previous);
             }
+
+            [Fact]
+            public void ReturnsGenericEventWithGivenHandlerType() {
+                Event<TestHandler> generic = scope.Event<TestHandler>();
+
+                VerifyGenericEvent(selected, generic);
+                EventTypeFilter typed = VerifyFilter(selection, handlerType);
+                Assert.Same(scope, typed.Previous);
+            }
+
+            [Fact]
+            public void ReturnsGenericEventWithGivenHandlerTypeAndName() {
+                Event<TestHandler> generic = scope.Event<TestHandler>(eventName);
+
+                VerifyGenericEvent(selected, generic);
+                EventNameFilter named = VerifyFilter(selection, eventName);
+                EventTypeFilter typed = VerifyFilter(named.Previous, handlerType);
+                Assert.Same(scope, typed.Previous);
+            }
         }
 
         public class ObjectExtension : EventExtensionsTest
@@ -110,6 +136,25 @@ namespace Inspector
             public void ReturnsEventWithGivenHandlerTypeAndName() {
                 Assert.Same(selected, instance.Event(handlerType, eventName));
 
+                EventNameFilter named = VerifyFilter(selection, eventName);
+                EventTypeFilter typed = VerifyFilter(named.Previous, handlerType);
+                VerifyScope(typed.Previous, instance);
+            }
+
+            [Fact]
+            public void ReturnsGenericEventWithGivenHandlerType() {
+                Event<TestHandler> generic = instance.Event<TestHandler>();
+
+                VerifyGenericEvent(selected, generic);
+                EventTypeFilter typed = VerifyFilter(selection, handlerType);
+                VerifyScope(typed.Previous, instance);
+            }
+
+            [Fact]
+            public void ReturnsGenericEventWithGivenHandlerTypeAndName() {
+                Event<TestHandler> generic = instance.Event<TestHandler>(eventName);
+
+                VerifyGenericEvent(selected, generic);
                 EventNameFilter named = VerifyFilter(selection, eventName);
                 EventTypeFilter typed = VerifyFilter(named.Previous, handlerType);
                 VerifyScope(typed.Previous, instance);
@@ -153,6 +198,25 @@ namespace Inspector
             public void ReturnsEventWithGivenHandlerTypeAndName() {
                 Assert.Same(selected, testType.Event(handlerType, eventName));
 
+                EventNameFilter named = VerifyFilter(selection, eventName);
+                EventTypeFilter typed = VerifyFilter(named.Previous, handlerType);
+                VerifyScope(typed.Previous, testType);
+            }
+
+            [Fact]
+            public void ReturnsGenericEventWithGivenHandlerType() {
+                Event<TestHandler> generic = testType.Event<TestHandler>();
+
+                VerifyGenericEvent(selected, generic);
+                EventTypeFilter typed = VerifyFilter(selection, handlerType);
+                VerifyScope(typed.Previous, testType);
+            }
+
+            [Fact]
+            public void ReturnsGenericEventWithGivenHandlerTypeAndName() {
+                Event<TestHandler> generic = testType.Event<TestHandler>(eventName);
+
+                VerifyGenericEvent(selected, generic);
                 EventNameFilter named = VerifyFilter(selection, eventName);
                 EventTypeFilter typed = VerifyFilter(named.Previous, handlerType);
                 VerifyScope(typed.Previous, testType);
