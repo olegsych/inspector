@@ -72,6 +72,20 @@ namespace Inspector
             }
         }
 
+        public class GetProperties : TypeScopeTest
+        {
+            [Theory, MemberData(nameof(MemberData))]
+            internal void ReturnsPropertiesOfGivenTypeOrInstance(IFilter<Property> sut, Type type, object instance, Lifetime lifetime) {
+                var members = Assert.IsType<Members<PropertyInfo, Property>>(sut.Get());
+
+                Assert.Same(type, members.Type);
+                Assert.Same(instance, members.Instance);
+                Assert.Equal(type.GetTypeInfo().GetProperties, members.GetMemberInfo(type.GetTypeInfo()));
+                Assert.Equal(Property.Create, members.CreateMember);
+                Assert.Equal(lifetime, members.Lifetime);
+            }
+        }
+
         public static IEnumerable<object[]> MemberData() {
             var instance = new TestType();
             yield return new object[] { Substitute.ForPartsOf<TypeScope>(instance), instance.GetType(), instance, Lifetime.Instance };

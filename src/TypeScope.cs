@@ -31,6 +31,6 @@ namespace Inspector
             new Members<MethodInfo, Method>(Type, Instance, typeInfo => typeInfo.GetMethods, Method.Create);
 
         IEnumerable<Property> IFilter<Property>.Get() =>
-            throw new NotImplementedException();
+            new Members<PropertyInfo, Property>(Type, Instance, typeInfo => typeInfo.GetProperties, Property.Create);
     }
 }
