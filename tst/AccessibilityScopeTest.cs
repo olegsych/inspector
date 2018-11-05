@@ -181,5 +181,35 @@ namespace Inspector
                 Assert.Equal(expected, actual);
             }
         }
+
+        public class GetProperties : AccessibilityScopeTest
+        {
+            [Fact]
+            public void ReturnsPropertiesWithWithExpectedAccessibility() {
+                // Arrange
+                var sut = new AccessibilityScope(previous, Accessibility.ProtectedInternal);
+
+                Property[] expected = {
+                    new Property(PropertyInfo(MethodAttributes.FamORAssem | MethodAttributes.Static)),
+                    new Property(PropertyInfo(MethodAttributes.FamORAssem | MethodAttributes.Static)),
+                };
+
+                Property[] all = {
+                    new Property(PropertyInfo(MethodAttributes.Public | MethodAttributes.Static)),
+                    expected[0],
+                    new Property(PropertyInfo(MethodAttributes.Family | MethodAttributes.Static)),
+                    expected[1],
+                    new Property(PropertyInfo(MethodAttributes.Private | MethodAttributes.Static)),
+                };
+
+                ((IFilter<Property>)previous).Get().Returns(all);
+
+                // Act
+                IEnumerable<Property> actual = ((IFilter<Property>)sut).Get();
+
+                // Assert
+                Assert.Equal(expected, actual);
+            }
+        }
     }
 }

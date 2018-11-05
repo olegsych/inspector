@@ -11,7 +11,7 @@ namespace Inspector
         /// <summary>
         /// Initializes a new instance of the <see cref="Property"/> class.
         /// </summary>
-        public Property(PropertyInfo info, object instance) :
+        public Property(PropertyInfo info, object instance = default) :
             base(info, instance) { }
 
         internal static Property Create(PropertyInfo property, object instance) =>
