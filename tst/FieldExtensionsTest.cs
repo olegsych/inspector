@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using NSubstitute;
 using Xunit;
 
@@ -29,9 +30,9 @@ namespace Inspector
             Assert.Same(selected.Instance, generic.Instance);
         }
 
-        internal static FieldNameFilter VerifyFilter(IFilter<Field> selection, string fieldName) {
-            var filter = Assert.IsType<FieldNameFilter>(selection);
-            Assert.Equal(fieldName, filter.FieldName);
+        internal static MemberNameFilter<Field, FieldInfo> VerifyFilter(IFilter<Field> selection, string fieldName) {
+            var filter = Assert.IsType<MemberNameFilter<Field, FieldInfo>>(selection);
+            Assert.Equal(fieldName, filter.MemberName);
             return filter;
         }
 
@@ -64,7 +65,7 @@ namespace Inspector
             public void ReturnsFieldWithGivenName() {
                 Assert.Same(selected, scope.Field(fieldName));
 
-                FieldNameFilter filter = VerifyFilter(selection, fieldName);
+                MemberNameFilter<Field, FieldInfo> filter = VerifyFilter(selection, fieldName);
                 Assert.Same(scope, filter.Previous);
             }
 
@@ -80,7 +81,7 @@ namespace Inspector
             public void ReturnsFieldWithGivenTypeAndName() {
                 Assert.Same(selected, scope.Field(fieldType, fieldName));
 
-                FieldNameFilter nameFilter = VerifyFilter(selection, fieldName);
+                MemberNameFilter<Field, FieldInfo> nameFilter = VerifyFilter(selection, fieldName);
                 FieldTypeFilter typeFilter = VerifyFilter(nameFilter.Previous, fieldType);
                 Assert.Same(scope, typeFilter.Previous);
             }
@@ -99,7 +100,7 @@ namespace Inspector
                 Field<FieldValue> generic = scope.Field<FieldValue>(fieldName);
 
                 VerifyGenericField(selected, generic);
-                FieldNameFilter nameFilter = VerifyFilter(selection, fieldName);
+                MemberNameFilter<Field, FieldInfo> nameFilter = VerifyFilter(selection, fieldName);
                 FieldTypeFilter typeFilter = VerifyFilter(nameFilter.Previous, fieldType);
                 Assert.Same(scope, typeFilter.Previous);
             }
@@ -126,7 +127,7 @@ namespace Inspector
             public void ReturnsFieldWithGivenName() {
                 Assert.Same(selected, instance.Field(fieldName));
 
-                FieldNameFilter named = VerifyFilter(selection, fieldName);
+                MemberNameFilter<Field, FieldInfo> named = VerifyFilter(selection, fieldName);
                 VerifyScope(named.Previous, instance);
             }
 
@@ -134,7 +135,7 @@ namespace Inspector
             public void ReturnsFieldWithGivenTypeAndName() {
                 Assert.Same(selected, instance.Field(fieldType, fieldName));
 
-                FieldNameFilter named = VerifyFilter(selection, fieldName);
+                MemberNameFilter<Field, FieldInfo> named = VerifyFilter(selection, fieldName);
                 FieldTypeFilter typed = VerifyFilter(named.Previous, fieldType);
                 VerifyScope(typed.Previous, instance);
             }
@@ -153,7 +154,7 @@ namespace Inspector
                 Field<FieldValue> generic = instance.Field<FieldValue>(fieldName);
 
                 VerifyGenericField(selected, generic);
-                FieldNameFilter named = VerifyFilter(selection, fieldName);
+                MemberNameFilter<Field, FieldInfo> named = VerifyFilter(selection, fieldName);
                 FieldTypeFilter typed = VerifyFilter(named.Previous, typeof(FieldValue));
                 VerifyScope(typed.Previous, instance);
             }
@@ -188,7 +189,7 @@ namespace Inspector
             public void ReturnsFieldWithGivenName() {
                 Assert.Same(selected, testType.Field(fieldName));
 
-                FieldNameFilter named = VerifyFilter(selection, fieldName);
+                MemberNameFilter<Field, FieldInfo> named = VerifyFilter(selection, fieldName);
                 VerifyScope(named.Previous, testType);
             }
 
@@ -196,7 +197,7 @@ namespace Inspector
             public void ReturnsFieldWithGivenTypeAndName() {
                 Assert.Same(selected, testType.Field(fieldType, fieldName));
 
-                FieldNameFilter named = VerifyFilter(selection, fieldName);
+                MemberNameFilter<Field, FieldInfo> named = VerifyFilter(selection, fieldName);
                 FieldTypeFilter typed = VerifyFilter(named.Previous, fieldType);
                 VerifyScope(typed.Previous, testType);
             }
@@ -215,7 +216,7 @@ namespace Inspector
                 Field<FieldValue> generic = testType.Field<FieldValue>(fieldName);
 
                 VerifyGenericField(selected, generic);
-                FieldNameFilter named = VerifyFilter(selection, fieldName);
+                MemberNameFilter<Field, FieldInfo> named = VerifyFilter(selection, fieldName);
                 FieldTypeFilter typed = VerifyFilter(named.Previous, typeof(FieldValue));
                 VerifyScope(typed.Previous, testType);
             }
