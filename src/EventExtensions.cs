@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 
 namespace Inspector
 {
@@ -13,14 +14,14 @@ namespace Inspector
             Selector<Event>.Select(scope);
 
         public static Event Event(this IScope scope, string eventName) =>
-            Selector<Event>.Select(new EventNameFilter(scope, eventName));
+            Selector<Event>.Select(new MemberNameFilter<Event, EventInfo>(scope, eventName));
 
         public static Event Event(this IScope scope, Type handlerType) =>
             Selector<Event>.Select(new EventTypeFilter(scope, handlerType));
 
         public static Event Event(this IScope scope, Type handlerType, string eventName) {
             var typed = new EventTypeFilter(scope, handlerType);
-            var named = new EventNameFilter(typed, eventName);
+            var named = new MemberNameFilter<Event, EventInfo>(typed, eventName);
             return Selector<Event>.Select(named);
         }
 

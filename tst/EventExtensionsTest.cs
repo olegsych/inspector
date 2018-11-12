@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using NSubstitute;
 using Xunit;
 
@@ -24,9 +25,9 @@ namespace Inspector
             select.Invoke(Arg.Do<IFilter<Event>>(e => selection = e)).Returns(selected);
         }
 
-        internal static EventNameFilter VerifyFilter(IFilter<Event> selection, string eventName) {
-            var filter = Assert.IsType<EventNameFilter>(selection);
-            Assert.Equal(eventName, filter.EventName);
+        internal static MemberNameFilter<Event, EventInfo> VerifyFilter(IFilter<Event> selection, string eventName) {
+            var filter = Assert.IsType<MemberNameFilter<Event, EventInfo>>(selection);
+            Assert.Equal(eventName, filter.MemberName);
             return filter;
         }
 
@@ -66,7 +67,7 @@ namespace Inspector
             public void ReturnsEventWithGivenName() {
                 Assert.Same(selected, scope.Event(eventName));
 
-                EventNameFilter filter = VerifyFilter(selection, eventName);
+                MemberNameFilter<Event, EventInfo> filter = VerifyFilter(selection, eventName);
                 Assert.Same(scope, filter.Previous);
             }
 
@@ -82,7 +83,7 @@ namespace Inspector
             public void ReturnsEventWithGivenHandlerTypeAndName() {
                 Assert.Same(selected, scope.Event(handlerType, eventName));
 
-                EventNameFilter named = VerifyFilter(selection, eventName);
+                MemberNameFilter<Event, EventInfo> named = VerifyFilter(selection, eventName);
                 EventTypeFilter typed = VerifyFilter(named.Previous, handlerType);
                 Assert.Same(scope, typed.Previous);
             }
@@ -101,7 +102,7 @@ namespace Inspector
                 Event<TestHandler> generic = scope.Event<TestHandler>(eventName);
 
                 VerifyGenericEvent(selected, generic);
-                EventNameFilter named = VerifyFilter(selection, eventName);
+                MemberNameFilter<Event, EventInfo> named = VerifyFilter(selection, eventName);
                 EventTypeFilter typed = VerifyFilter(named.Previous, handlerType);
                 Assert.Same(scope, typed.Previous);
             }
@@ -120,7 +121,7 @@ namespace Inspector
             public void ReturnsEventWithGivenName() {
                 Assert.Same(selected, instance.Event(eventName));
 
-                EventNameFilter named = VerifyFilter(selection, eventName);
+                MemberNameFilter<Event, EventInfo> named = VerifyFilter(selection, eventName);
                 VerifyScope(named.Previous, instance);
             }
 
@@ -136,7 +137,7 @@ namespace Inspector
             public void ReturnsEventWithGivenHandlerTypeAndName() {
                 Assert.Same(selected, instance.Event(handlerType, eventName));
 
-                EventNameFilter named = VerifyFilter(selection, eventName);
+                MemberNameFilter<Event, EventInfo> named = VerifyFilter(selection, eventName);
                 EventTypeFilter typed = VerifyFilter(named.Previous, handlerType);
                 VerifyScope(typed.Previous, instance);
             }
@@ -155,7 +156,7 @@ namespace Inspector
                 Event<TestHandler> generic = instance.Event<TestHandler>(eventName);
 
                 VerifyGenericEvent(selected, generic);
-                EventNameFilter named = VerifyFilter(selection, eventName);
+                MemberNameFilter<Event, EventInfo> named = VerifyFilter(selection, eventName);
                 EventTypeFilter typed = VerifyFilter(named.Previous, handlerType);
                 VerifyScope(typed.Previous, instance);
             }
@@ -182,7 +183,7 @@ namespace Inspector
             public void ReturnsEventWithGivenName() {
                 Assert.Same(selected, testType.Event(eventName));
 
-                EventNameFilter named = VerifyFilter(selection, eventName);
+                MemberNameFilter<Event, EventInfo> named = VerifyFilter(selection, eventName);
                 VerifyScope(named.Previous, testType);
             }
 
@@ -198,7 +199,7 @@ namespace Inspector
             public void ReturnsEventWithGivenHandlerTypeAndName() {
                 Assert.Same(selected, testType.Event(handlerType, eventName));
 
-                EventNameFilter named = VerifyFilter(selection, eventName);
+                MemberNameFilter<Event, EventInfo> named = VerifyFilter(selection, eventName);
                 EventTypeFilter typed = VerifyFilter(named.Previous, handlerType);
                 VerifyScope(typed.Previous, testType);
             }
@@ -217,7 +218,7 @@ namespace Inspector
                 Event<TestHandler> generic = testType.Event<TestHandler>(eventName);
 
                 VerifyGenericEvent(selected, generic);
-                EventNameFilter named = VerifyFilter(selection, eventName);
+                MemberNameFilter<Event, EventInfo> named = VerifyFilter(selection, eventName);
                 EventTypeFilter typed = VerifyFilter(named.Previous, handlerType);
                 VerifyScope(typed.Previous, testType);
             }
