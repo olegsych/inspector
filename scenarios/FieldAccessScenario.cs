@@ -68,13 +68,13 @@ namespace Inspector
             [Fact]
             public void GetWithProperty() {
                 FieldInfo info = foo.Field<Bar>().Info;
-                info.ShouldBe(typeof(Foo).GetRuntimeField("bar"));
+                info.ShouldBe(typeof(Foo).GetField("bar", BindingFlags.Instance | BindingFlags.NonPublic));
             }
 
             [Fact]
             public void GetWithImplicitConversionToFieldInfo() {
                 FieldInfo info = foo.Field<Bar>();
-                info.ShouldBe(typeof(Foo).GetRuntimeField("bar"));
+                info.ShouldBe(typeof(Foo).GetField("bar", BindingFlags.Instance | BindingFlags.NonPublic));
             }
         }
 
