@@ -52,7 +52,7 @@ namespace Inspector
 
             PropertyInfo info = foo.Property<Bar>().Info;
 
-            info.ShouldBe(typeof(Foo).GetRuntimeProperty("bar"));
+            info.ShouldBe(typeof(Foo).GetProperty("Bar", BindingFlags.Instance | BindingFlags.NonPublic));
         }
 
         [Fact]
@@ -62,7 +62,7 @@ namespace Inspector
 
             PropertyInfo info = foo.Property<Bar>();
 
-            info.ShouldBe(typeof(Foo).GetRuntimeProperty("bar"));
+            info.ShouldBe(typeof(Foo).GetProperty("Bar", BindingFlags.Instance | BindingFlags.NonPublic));
         }
 
         public class ReadOnlyPropertyBackedByField
