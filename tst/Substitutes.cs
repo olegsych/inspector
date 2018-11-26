@@ -67,10 +67,12 @@ namespace Inspector
             return parameter;
         }
 
-        public static PropertyInfo PropertyInfo(MethodAttributes attributes) {
+        public static PropertyInfo PropertyInfo(MethodAttributes attributes, Type propertyType = default) {
+            propertyType = propertyType ?? Type();
             var property = Substitute.For<PropertyInfo>();
             MethodInfo get = MethodInfo(attributes);
             property.GetMethod.Returns(get);
+            property.PropertyType.Returns(propertyType);
             return property;
         }
 
