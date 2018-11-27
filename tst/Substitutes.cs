@@ -84,5 +84,10 @@ namespace Inspector
             type.FullName.Returns(fullName);
             return type;
         }
+
+        public static T WithDeclaringType<T>(this T memberInfo, Type declaringType) where T: MemberInfo {
+            memberInfo.DeclaringType.Returns(declaringType);
+            return memberInfo;
+        }
     }
 }
