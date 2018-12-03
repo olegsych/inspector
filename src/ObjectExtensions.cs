@@ -5,12 +5,6 @@ namespace Inspector
 {
     public static class ObjectExtensions
     {
-        public static IScope Declared(this object instance)
-            => throw new NotImplementedException();
-
-        public static IScope Declared<TDeclaringType>(this object instance)
-            => throw new NotImplementedException();
-
         public static IScope Inherited(this object instance)
             => throw new NotImplementedException();
 

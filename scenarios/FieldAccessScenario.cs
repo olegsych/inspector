@@ -276,7 +276,7 @@ namespace Inspector
 
             [Fact]
             public void SelectFieldWithSpecificNameAndDeclaringType() {
-                FieldInfo field = baz.Declared<Bar>().Field<Qux>(nameof(Bar.field2));
+                FieldInfo field = baz.DeclaredBy<Bar>().Field<Qux>(nameof(Bar.field2));
                 field.DeclaringType.ShouldBe(typeof(Bar));
                 field.Name.ShouldBe(nameof(Bar.field2));
             }
