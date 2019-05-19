@@ -10,8 +10,5 @@ namespace Inspector
 
         public static IScope Inherited<TBaseType>(this object instance)
             => throw new NotImplementedException();
-
-        static bool IsCastleDynamicProxy(TypeInfo instanceType)
-            => instanceType.Assembly.GetName().Name == "DynamicProxyGenAssembly2";
     }
 }
