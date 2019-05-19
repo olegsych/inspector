@@ -10,7 +10,7 @@ namespace Inspector
     {
         class TestType { }
 
-        public class GetConstructors : TypeScopeTest
+        public class GetConstructors: TypeScopeTest
         {
             [Theory, MemberData(nameof(ConstructorData))]
             internal void ReturnsConstructorsOfGivenTypeOrInstance(IFilter<Constructor> sut, Type type, object instance) {
@@ -30,7 +30,7 @@ namespace Inspector
             }
         }
 
-        public class GetEvents : TypeScopeTest
+        public class GetEvents: TypeScopeTest
         {
             [Theory, MemberData(nameof(MemberData))]
             internal void ReturnsEventsOfGivenTypeOrInstance(IFilter<Event> sut, Type type, object instance, Lifetime lifetime) {
@@ -44,7 +44,7 @@ namespace Inspector
             }
         }
 
-        public class GetFields : TypeScopeTest
+        public class GetFields: TypeScopeTest
         {
             [Theory, MemberData(nameof(MemberData))]
             internal void ReturnsFieldsOfGivenTypeOrInstance(IFilter<Field> sut, Type type, object instance, Lifetime lifetime) {
@@ -58,7 +58,7 @@ namespace Inspector
             }
         }
 
-        public class GetMethods : TypeScopeTest
+        public class GetMethods: TypeScopeTest
         {
             [Theory, MemberData(nameof(MemberData))]
             internal void ReturnsMethodsOfGivenTypeOrInstance(IFilter<Method> sut, Type type, object instance, Lifetime lifetime) {
@@ -72,7 +72,7 @@ namespace Inspector
             }
         }
 
-        public class GetProperties : TypeScopeTest
+        public class GetProperties: TypeScopeTest
         {
             [Theory, MemberData(nameof(MemberData))]
             internal void ReturnsPropertiesOfGivenTypeOrInstance(IFilter<Property> sut, Type type, object instance, Lifetime lifetime) {

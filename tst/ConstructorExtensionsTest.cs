@@ -5,7 +5,7 @@ using Xunit;
 namespace Inspector
 {
     [Collection(nameof(ConstructorExtensionsTest))]
-    public class ConstructorExtensionsTest : SelectorFixture<Constructor>
+    public class ConstructorExtensionsTest: SelectorFixture<Constructor>
     {
         // Shared test fixture
         class TestType { }
@@ -33,7 +33,7 @@ namespace Inspector
             Assert.NotNull(generic.Invoke);
         }
 
-        public class IScopeExtension : ConstructorExtensionsTest
+        public class IScopeExtension: ConstructorExtensionsTest
         {
             // Method parameters
             readonly IScope scope = Substitute.For<IScope>();
@@ -61,7 +61,7 @@ namespace Inspector
             }
         }
 
-        public class ObjectExtension : ConstructorExtensionsTest
+        public class ObjectExtension: ConstructorExtensionsTest
         {
             [Fact]
             public void ReturnsSingleConstructorOfGivenInstance() {
@@ -91,7 +91,7 @@ namespace Inspector
             }
         }
 
-        public class TypeExtension : ConstructorExtensionsTest
+        public class TypeExtension: ConstructorExtensionsTest
         {
             // Method parameters
             readonly Type type;

@@ -6,7 +6,7 @@ namespace Inspector
     /// <summary>
     /// Provides access to a property of type not accessible at compile time.
     /// </summary>
-    public class Property : Member<PropertyInfo>
+    public class Property: Member<PropertyInfo>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Property"/> class.

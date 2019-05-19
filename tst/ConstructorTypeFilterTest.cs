@@ -19,7 +19,7 @@ namespace Inspector
         public ConstructorTypeFilterTest() =>
             sut = new ConstructorTypeFilter(previous, delegateType, delegateFactory);
 
-        public class ConstructorTest : ConstructorTypeFilterTest
+        public class ConstructorTest: ConstructorTypeFilterTest
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenPreviousFilterIsNull() {
@@ -50,7 +50,7 @@ namespace Inspector
             class InvalidDelegateType { }
         }
 
-        public class Previous : ConstructorTypeFilterTest
+        public class Previous: ConstructorTypeFilterTest
         {
             [Fact]
             public void ImplementsIDecoratorAndReturnsValueGivenToConstructor() {
@@ -59,30 +59,28 @@ namespace Inspector
             }
         }
 
-        public class DelegateType : ConstructorTypeFilterTest
+        public class DelegateType: ConstructorTypeFilterTest
         {
             [Fact]
             public void ReturnsValueGivenToConstructor() =>
                 Assert.Same(delegateType, ((ConstructorTypeFilter)sut).DelegateType);
         }
 
-        public class DelegateFactory : ConstructorTypeFilterTest
+        public class DelegateFactory: ConstructorTypeFilterTest
         {
             [Fact]
-            public void ReturnsValueGivenToConstructor() {
+            public void ReturnsValueGivenToConstructor() =>
                 Assert.Same(delegateFactory, ((ConstructorTypeFilter)sut).DelegateFactory);
-            }
         }
 
-        public class Get : ConstructorTypeFilterTest
+        public class Get: ConstructorTypeFilterTest
         {
             [Fact]
             public void ReturnsConstructorsWithGivenDelegateType() {
                 // Arrange
                 ConstructorInfo[] infos = typeof(TestType).GetConstructors();
                 var target = new TestType();
-                Delegate @delegate;
-                delegateFactory.TryCreate(delegateType, target, infos[1], out @delegate).Returns(true);
+                delegateFactory.TryCreate(delegateType, target, infos[1], out Delegate @delegate).Returns(true);
                 delegateFactory.TryCreate(delegateType, target, infos[3], out @delegate).Returns(true);
 
                 Constructor[] constructors = infos.Select(_ => new Constructor(_, target)).ToArray();

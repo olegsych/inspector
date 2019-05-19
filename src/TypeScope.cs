@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace Inspector
 {
-    abstract class TypeScope : IScope
+    abstract class TypeScope: IScope
     {
         protected TypeScope(Type type) =>
             Type = type ?? throw new ArgumentNullException(nameof(type));

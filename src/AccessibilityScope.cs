@@ -5,10 +5,10 @@ using System.Reflection;
 
 namespace Inspector
 {
-    sealed class AccessibilityScope : IScope, IDecorator<IScope>
+    sealed class AccessibilityScope: IScope, IDecorator<IScope>
     {
         public AccessibilityScope(IScope previous, Accessibility accessibility) {
-            if (previous == null)
+            if(previous == null)
                 throw new ArgumentNullException(nameof(previous));
 
             if(previous is AccessibilityScope scope) {

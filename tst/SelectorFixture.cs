@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Inspector
 {
-    public class SelectorFixture<T> : IDisposable
+    public class SelectorFixture<T>: IDisposable
     {
         readonly FieldInfo field = typeof(Selector<T>).GetField(nameof(Selector<T>.Select), BindingFlags.NonPublic | BindingFlags.Static);
         readonly Func<IFilter<T>, T> original = Selector<T>.Select;

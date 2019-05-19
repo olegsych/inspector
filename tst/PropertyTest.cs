@@ -15,7 +15,7 @@ namespace Inspector
         public PropertyTest() =>
             sut = new Property(property, instance);
 
-        public class Constructor : PropertyTest
+        public class Constructor: PropertyTest
         {
             [Fact]
             public void InitializesBaseTypeWithGivenPropertyInfoAndInstance() {
@@ -26,7 +26,7 @@ namespace Inspector
             }
         }
 
-        public class Create : PropertyTest
+        public class Create: PropertyTest
         {
             [Fact]
             public void ReturnsFieldWithGivenPropertyInfoAndInstance() {
@@ -37,7 +37,7 @@ namespace Inspector
             }
         }
 
-        public class Get : PropertyTest
+        public class Get: PropertyTest
         {
             [Fact]
             public void GetsPropertyValue() {
@@ -50,20 +50,18 @@ namespace Inspector
             }
         }
 
-        public class IsStatic : PropertyTest
+        public class IsStatic: PropertyTest
         {
             [Fact]
-            public void ReturnsTrueForStaticProperty() {
+            public void ReturnsTrueForStaticProperty() =>
                 Assert.True(new Property(staticProperty, null).IsStatic);
-            }
 
             [Fact]
-            public void ReturnsFalseForInstanceProperty() {
+            public void ReturnsFalseForInstanceProperty() =>
                 Assert.False(new Property(property, instance).IsStatic);
-            }
         }
 
-        public class Set : PropertyTest
+        public class Set: PropertyTest
         {
             [Fact]
             public void SetsPropertyValue() {
@@ -73,7 +71,7 @@ namespace Inspector
             }
         }
 
-        public class Value : PropertyTest
+        public class Value: PropertyTest
         {
             [Fact]
             public void GetsPropertyValue() {

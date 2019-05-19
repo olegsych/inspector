@@ -6,7 +6,7 @@ namespace Inspector
     /// <summary>
     /// Provides access to events of type not accessible at compile time.
     /// </summary>
-    public class Event : Member<EventInfo>
+    public class Event: Member<EventInfo>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Event"/> class.

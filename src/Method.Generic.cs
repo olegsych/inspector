@@ -7,7 +7,7 @@ namespace Inspector
     /// Provides access to a method with signature <typeparamref name="TSignature"/>.
     /// </summary>
     /// <typeparam name="TSignature">A <see cref="Delegate"/> that represents method signature.</typeparam>
-    public class Method<TSignature> : Method where TSignature : Delegate
+    public class Method<TSignature>: Method where TSignature : Delegate
     {
         readonly TSignature @delegate;
 

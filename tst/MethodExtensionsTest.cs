@@ -9,7 +9,7 @@ namespace Inspector
     /// Base class for tests of extension methods that return <see cref="Method"/> and <see cref="Method{T}"/>.
     /// </summary>
     [Collection(nameof(MethodExtensionsTest))]
-    public class MethodExtensionsTest : SelectorFixture<Method>
+    public class MethodExtensionsTest: SelectorFixture<Method>
     {
         // Method parameters
         protected readonly Type methodType = typeof(MethodType);
@@ -53,7 +53,7 @@ namespace Inspector
 
         protected delegate void MethodType(Parameter p1, Parameter p2);
 
-        public class IScopeExtension : MethodExtensionsTest
+        public class IScopeExtension: MethodExtensionsTest
         {
             // Method parameters
             readonly IScope scope = Substitute.For<IScope>();
@@ -110,7 +110,7 @@ namespace Inspector
             }
         }
 
-        public class ObjectExtension : MethodExtensionsTest
+        public class ObjectExtension: MethodExtensionsTest
         {
             [Fact]
             public void ReturnsSingleMethodInGivenType() {
@@ -169,7 +169,7 @@ namespace Inspector
             }
         }
 
-        public class TypeExtension : MethodExtensionsTest
+        public class TypeExtension: MethodExtensionsTest
         {
             // Method parameters
             readonly Type testType = typeof(TestType);

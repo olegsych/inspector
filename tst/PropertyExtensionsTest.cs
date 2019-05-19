@@ -9,7 +9,7 @@ namespace Inspector
     /// Base class for tests of extension methods that return <see cref="Property"/> and <see cref="Property{T}"/>.
     /// </summary>
     [Collection(nameof(PropertyExtensionsTest))]
-    public class PropertyExtensionsTest : SelectorFixture<Property>
+    public class PropertyExtensionsTest: SelectorFixture<Property>
     {
         // Method parameters
         protected readonly Type propertyType = typeof(PropertyValue);
@@ -49,7 +49,7 @@ namespace Inspector
 
         protected class PropertyValue { }
 
-        public class IScopeExtension : PropertyExtensionsTest
+        public class IScopeExtension: PropertyExtensionsTest
         {
             // Method parameters
             readonly IScope scope = Substitute.For<IScope>();
@@ -106,7 +106,7 @@ namespace Inspector
             }
         }
 
-        public class ObjectExtension : PropertyExtensionsTest
+        public class ObjectExtension: PropertyExtensionsTest
         {
             [Fact]
             public void ReturnsSinglePropertyInGivenType() {
@@ -165,7 +165,7 @@ namespace Inspector
             }
         }
 
-        public class TypeExtension : PropertyExtensionsTest
+        public class TypeExtension: PropertyExtensionsTest
         {
             // Method parameters
             readonly Type testType = typeof(TestType);

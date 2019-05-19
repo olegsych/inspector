@@ -32,7 +32,7 @@ namespace Inspector
             sut = new Constructor<TestSignature>(constructor, delegateFactory);
         }
 
-        public class ConstructorTest : GenericConstructorTest
+        public class ConstructorTest: GenericConstructorTest
         {
             [Fact]
             public void InitializesBaseWithGivenArgument() {
@@ -73,7 +73,7 @@ namespace Inspector
             }
         }
 
-        public class ImplicitOperatorT : GenericConstructorTest
+        public class ImplicitOperatorT: GenericConstructorTest
         {
             [Fact]
             public void ImplicitlyConvertsConstructorToItsSignatureDelegate() {
@@ -83,7 +83,7 @@ namespace Inspector
 
             [Fact]
             public void ConvertsNullConstructorToNullSignatureToSupportImplicitConversionRules() {
-                TestSignature actual = ((Constructor<TestSignature>)null);
+                TestSignature actual = (Constructor<TestSignature>)null;
                 Assert.Null(actual);
             }
         }

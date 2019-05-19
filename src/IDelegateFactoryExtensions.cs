@@ -13,8 +13,7 @@ namespace Inspector
             if(delegateFactory == null)
                 throw new ArgumentNullException(nameof(delegateFactory));
 
-            Delegate d;
-            bool created = delegateFactory.TryCreate(typeof(TDelegate), target, method, out d);
+            bool created = delegateFactory.TryCreate(typeof(TDelegate), target, method, out Delegate d);
             @delegate = (TDelegate)d;
             return created;
         }

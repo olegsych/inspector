@@ -18,7 +18,7 @@ namespace Inspector
         public PropertyTypeFilterTest() =>
             sut = new PropertyTypeFilter(previous, propertyType);
 
-        public class Constructor : PropertyTypeFilterTest
+        public class Constructor: PropertyTypeFilterTest
         {
             [Fact]
             public void ThrowsArgumentNullExceptionIfPropertiesArgumentIsNull() {
@@ -33,14 +33,14 @@ namespace Inspector
             }
         }
 
-        public class PropertyType : PropertyTypeFilterTest
+        public class PropertyType: PropertyTypeFilterTest
         {
             [Fact]
             public void ReturnsValueGivenToConstructor() =>
                 Assert.Same(propertyType, ((PropertyTypeFilter)sut).PropertyType);
         }
 
-        public class Previous : PropertyTypeFilterTest
+        public class Previous: PropertyTypeFilterTest
         {
             [Fact]
             public void ImplementsIDecoratorAndReturnsValueGivenToConstructor() {
@@ -49,7 +49,7 @@ namespace Inspector
             }
         }
 
-        public class Get : PropertyTypeFilterTest
+        public class Get: PropertyTypeFilterTest
         {
             [Fact]
             public void ReturnsPropertiesWithGivenPropertyType() {

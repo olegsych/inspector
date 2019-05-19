@@ -6,7 +6,7 @@ namespace Inspector
     class Selector<T>
     {
         internal static readonly Func<IFilter<T>, T> Select = (filter) => {
-            if (filter == null)
+            if(filter == null)
                 throw new ArgumentNullException(nameof(filter));
 
             return filter.Get().Single();

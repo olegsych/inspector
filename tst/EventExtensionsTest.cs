@@ -9,7 +9,7 @@ namespace Inspector
     /// Base class for tests of extension methods that return <see cref="Event"/>.
     /// </summary>
     [Collection(nameof(EventExtensionsTest))]
-    public class EventExtensionsTest : SelectorFixture<Event>
+    public class EventExtensionsTest: SelectorFixture<Event>
     {
         // Method parameters
         protected readonly Type handlerType = typeof(TestHandler);
@@ -37,7 +37,7 @@ namespace Inspector
             return filter;
         }
 
-        protected static void VerifyGenericEvent<T>(Event selected, Event<T> generic) where T: Delegate {
+        protected static void VerifyGenericEvent<T>(Event selected, Event<T> generic) where T : Delegate {
             Assert.Same(selected.Info, generic.Info);
             Assert.Same(selected.Instance, generic.Instance);
         }
@@ -47,11 +47,11 @@ namespace Inspector
             public event TestHandler Event;
         }
 
-        protected class TestEventArgs : EventArgs { }
+        protected class TestEventArgs: EventArgs { }
 
         protected delegate void TestHandler(object sender, TestEventArgs args);
 
-        public class IScopeExtension : EventExtensionsTest
+        public class IScopeExtension: EventExtensionsTest
         {
             // Method parameters
             readonly IScope scope = Substitute.For<IScope>();
@@ -108,7 +108,7 @@ namespace Inspector
             }
         }
 
-        public class ObjectExtension : EventExtensionsTest
+        public class ObjectExtension: EventExtensionsTest
         {
             [Fact]
             public void ReturnsSingleEventOfGivenInstance() {
@@ -167,7 +167,7 @@ namespace Inspector
             }
         }
 
-        public class TypeExtension : EventExtensionsTest
+        public class TypeExtension: EventExtensionsTest
         {
             // Method parameters
             readonly Type testType = typeof(TestType);

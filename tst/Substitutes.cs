@@ -85,7 +85,7 @@ namespace Inspector
             return type;
         }
 
-        public static T WithDeclaringType<T>(this T memberInfo, Type declaringType) where T: MemberInfo {
+        public static T WithDeclaringType<T>(this T memberInfo, Type declaringType) where T : MemberInfo {
             memberInfo.DeclaringType.Returns(declaringType);
             return memberInfo;
         }

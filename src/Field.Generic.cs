@@ -7,7 +7,7 @@ namespace Inspector
     /// Provides access to a field of type <typeparamref name="T"/>.
     /// </summary>
     /// <typeparam name="T">Type of field value.</typeparam>
-    public class Field<T> : Field
+    public class Field<T>: Field
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Field{T}"/> class.

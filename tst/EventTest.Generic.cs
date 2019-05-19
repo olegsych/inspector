@@ -21,7 +21,7 @@ namespace Inspector
             sut = new Event<TestHandler>(@event);
         }
 
-        public class Constructor : GenericEventTest
+        public class Constructor: GenericEventTest
         {
             [Fact]
             public void InitializesBaseWithEventInfoAndInstance() {
@@ -43,7 +43,7 @@ namespace Inspector
             }
         }
 
-        public class Add : GenericEventTest
+        public class Add: GenericEventTest
         {
             [Fact]
             public void AddsEventHandler() {
@@ -57,7 +57,7 @@ namespace Inspector
             }
         }
 
-        public class Remove : GenericEventTest
+        public class Remove: GenericEventTest
         {
             [Fact]
             public void RemovesEventHandler() {
@@ -71,7 +71,7 @@ namespace Inspector
             }
         }
 
-        class TestArgs : EventArgs { }
+        class TestArgs: EventArgs { }
 
         delegate void TestHandler(object sender, TestArgs args);
 

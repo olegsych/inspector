@@ -14,11 +14,10 @@ namespace Inspector
         readonly EventInfo staticInfo = typeof(TestType).GetEvent(nameof(TestType.StaticEvent));
         readonly object instance = new TestType();
 
-        public EventTest() {
+        public EventTest() =>
             sut = new Event(instanceInfo, instance);
-        }
 
-        public class Constructor : EventTest
+        public class Constructor: EventTest
         {
             [Fact]
             public void InitializesBaseType() {
@@ -29,7 +28,7 @@ namespace Inspector
             }
         }
 
-        public class Create : EventTest
+        public class Create: EventTest
         {
             [Fact]
             public void ReturnsNewEventWithGivenInfoAndInstance() {
@@ -40,7 +39,7 @@ namespace Inspector
             }
         }
 
-        public class Add : EventTest
+        public class Add: EventTest
         {
             [Fact]
             public void AddsEventHandler() {
@@ -54,7 +53,7 @@ namespace Inspector
             }
         }
 
-        public class Remove : EventTest
+        public class Remove: EventTest
         {
             [Fact]
             public void RemovesEventHandler() {
@@ -68,7 +67,7 @@ namespace Inspector
             }
         }
 
-        public class IsStatic : EventTest
+        public class IsStatic: EventTest
         {
             [Fact]
             public void ReturnsFalseForInstanceEventInfo() =>
@@ -79,7 +78,7 @@ namespace Inspector
                 Assert.True(new Event(staticInfo, null).IsStatic);
         }
 
-        class TestArgs : EventArgs { }
+        class TestArgs: EventArgs { }
 
         delegate void TestEvent(object sender, TestArgs args);
 

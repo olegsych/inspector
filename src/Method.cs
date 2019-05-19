@@ -6,7 +6,7 @@ namespace Inspector
     /// <summary>
     /// Provides access to a static or instance method with signature not accessible at compile time.
     /// </summary>
-    public class Method : Member<MethodInfo>
+    public class Method: Member<MethodInfo>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Method"/> class.

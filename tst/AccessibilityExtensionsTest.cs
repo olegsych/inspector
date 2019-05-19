@@ -6,7 +6,7 @@ namespace Inspector
 {
     public class AccessibilityExtensionsTest
     {
-        public class IScopeExtension : AccessibilityExtensionsTest
+        public class IScopeExtension: AccessibilityExtensionsTest
         {
             readonly IScope scope = Substitute.For<IScope>();
 
@@ -43,7 +43,7 @@ namespace Inspector
             }
         }
 
-        public class ObjectExtension : AccessibilityExtensionsTest
+        public class ObjectExtension: AccessibilityExtensionsTest
         {
             readonly object instance = new object();
 
@@ -80,7 +80,7 @@ namespace Inspector
             }
         }
 
-        public class TypeExtension : AccessibilityExtensionsTest
+        public class TypeExtension: AccessibilityExtensionsTest
         {
             readonly Type type = typeof(TestClass);
 

@@ -11,7 +11,7 @@ namespace Inspector
         readonly ConstructorInfo info = typeof(InstanceType).GetConstructors().Single();
         readonly InstanceType instance = new InstanceType(new FieldType());
 
-        public class Ctor : ConstructorTest
+        public class Ctor: ConstructorTest
         {
             [Fact]
             public void InitializesMemberWithGivenConstructorInfoAndInstance() {
@@ -22,7 +22,7 @@ namespace Inspector
             }
         }
 
-        public class Create : ConstructorTest
+        public class Create: ConstructorTest
         {
             [Fact]
             public void ReturnsConstructorInstanceWithGivenArguments() {
@@ -33,7 +33,7 @@ namespace Inspector
             }
         }
 
-        public class Invoke : ConstructorTest
+        public class Invoke: ConstructorTest
         {
             [Fact]
             public void InvokesConstructorOfGivenType() {
@@ -56,7 +56,7 @@ namespace Inspector
             }
         }
 
-        public class IsStatic : ConstructorTest
+        public class IsStatic: ConstructorTest
         {
             [Fact]
             public void ReturnsFalseForInstanceConstructorInfo() =>

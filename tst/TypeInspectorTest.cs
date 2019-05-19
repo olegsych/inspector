@@ -10,7 +10,7 @@ namespace Inspector
 {
     public class TypeInspectorTest
     {
-        public class Create : TypeInspectorTest
+        public class Create: TypeInspectorTest
         {
             [Fact]
             public void CreatesInspectorOfGivenInstanceType() {
@@ -34,7 +34,7 @@ namespace Inspector
             class TestClass { }
         }
 
-        public class GetConstructor : TypeInspectorTest
+        public class GetConstructor: TypeInspectorTest
         {
             [Fact]
             public void ReturnsSingleParameterlessConstructorOfGivenType() {
@@ -93,7 +93,7 @@ namespace Inspector
             }
         }
 
-        public class GetConstructors : TypeInspectorTest
+        public class GetConstructors: TypeInspectorTest
         {
             [Fact]
             public void ReturnsAllConstructorsOfGivenType() {

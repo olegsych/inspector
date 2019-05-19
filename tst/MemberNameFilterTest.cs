@@ -17,7 +17,7 @@ namespace Inspector
         public MemberNameFilterTest() =>
             sut = new MemberNameFilter<Member<MemberInfo>, MemberInfo>(previous, memberName);
 
-        public class Constructor : MemberNameFilterTest
+        public class Constructor: MemberNameFilterTest
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenPreviousFilterIsNull() {
@@ -32,14 +32,14 @@ namespace Inspector
             }
         }
 
-        public class MemberName : MemberNameFilterTest
+        public class MemberName: MemberNameFilterTest
         {
             [Fact]
             public void ReturnsValueGivenToConstructor() =>
                 Assert.Same(memberName, ((MemberNameFilter<Member<MemberInfo>, MemberInfo>)sut).MemberName);
         }
 
-        public class Previous : MemberNameFilterTest
+        public class Previous: MemberNameFilterTest
         {
             [Fact]
             public void ImplementsIDecoratorAndReturnsFilterGivenToConstructor() {
@@ -48,7 +48,7 @@ namespace Inspector
             }
         }
 
-        public class Get : MemberNameFilterTest
+        public class Get: MemberNameFilterTest
         {
             [Fact]
             public void ReturnsMembersWithGivenName() {
@@ -61,7 +61,7 @@ namespace Inspector
                 Assert.Equal(expected, actual);
             }
 
-            class TestMember : Member<MemberInfo>
+            class TestMember: Member<MemberInfo>
             {
                 public TestMember(MemberInfo info) : base(info, null) { }
                 public override bool IsStatic => true;

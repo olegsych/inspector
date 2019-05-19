@@ -18,7 +18,7 @@ namespace Inspector
         public FieldTypeFilterTest() =>
             sut = new FieldTypeFilter(previous, fieldType);
 
-        public class Constructor : FieldTypeFilterTest
+        public class Constructor: FieldTypeFilterTest
         {
             [Fact]
             public void ThrowsArgumentNullExceptionIfFieldsArgumentIsNull() {
@@ -33,14 +33,14 @@ namespace Inspector
             }
         }
 
-        public class FieldType : FieldTypeFilterTest
+        public class FieldType: FieldTypeFilterTest
         {
             [Fact]
             public void ReturnsValueGivenToConstructor() =>
                 Assert.Same(fieldType, ((FieldTypeFilter)sut).FieldType);
         }
 
-        public class Previous : FieldTypeFilterTest
+        public class Previous: FieldTypeFilterTest
         {
             [Fact]
             public void ImplementsIDecoratorAndReturnsValueGivenToConstructor() {
@@ -49,7 +49,7 @@ namespace Inspector
             }
         }
 
-        public class Get : FieldTypeFilterTest
+        public class Get: FieldTypeFilterTest
         {
             [Fact]
             public void ReturnsFieldsWithGivenFieldType() {

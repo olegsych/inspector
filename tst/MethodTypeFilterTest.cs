@@ -19,7 +19,7 @@ namespace Inspector
         public MethodTypeFilterTest() =>
             sut = new MethodTypeFilter(previous, delegateType, delegateFactory);
 
-        public class Constructor : MethodTypeFilterTest
+        public class Constructor: MethodTypeFilterTest
         {
             [Fact]
             public void ThrowsArgumentNullExceptionWhenPreviousIsNull() {
@@ -50,21 +50,21 @@ namespace Inspector
             class InvalidMethodType { }
         }
 
-        public class MethodType : MethodTypeFilterTest
+        public class MethodType: MethodTypeFilterTest
         {
             [Fact]
             public void ReturnsValueGivenToConstructor() =>
                 Assert.Same(delegateType, ((MethodTypeFilter)sut).DelegateType);
         }
 
-        public class DelegateFactory : MethodTypeFilterTest
+        public class DelegateFactory: MethodTypeFilterTest
         {
             [Fact]
             public void ReturnsValueGivenToConstructor() =>
                 Assert.Same(delegateFactory, ((MethodTypeFilter)sut).DelegateFactory);
         }
 
-        public class Previous : MethodTypeFilterTest
+        public class Previous: MethodTypeFilterTest
         {
             [Fact]
             public void ImplementsIDecoratorAndReturnsValueGivenToConstructor() {
@@ -73,15 +73,14 @@ namespace Inspector
             }
         }
 
-        public class Get : MethodTypeFilterTest
+        public class Get: MethodTypeFilterTest
         {
             [Fact]
             public void ReturnsMethodsWithGivenDelegateType() {
                 // Arrange
                 MethodInfo[] infos = typeof(TestType).GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public);
                 var target = new TestType();
-                Delegate @delegate;
-                delegateFactory.TryCreate(delegateType, target, infos[1], out @delegate).Returns(true);
+                delegateFactory.TryCreate(delegateType, target, infos[1], out Delegate @delegate).Returns(true);
                 delegateFactory.TryCreate(delegateType, target, infos[3], out @delegate).Returns(true);
 
                 Method[] methods = infos.Select(_ => new Method(_, target)).ToArray();

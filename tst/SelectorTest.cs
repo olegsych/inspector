@@ -6,7 +6,7 @@ namespace Inspector
 {
     public class SelectorTest
     {
-        public class Select : SelectorTest
+        public class Select: SelectorTest
         {
             readonly IFilter<TestType> filter = Substitute.For<IFilter<TestType>>();
 

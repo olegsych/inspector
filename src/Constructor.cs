@@ -6,7 +6,7 @@ namespace Inspector
     /// <summary>
     /// Provides access to a constructor with signature not accessible at compile time.
     /// </summary>
-    public class Constructor : Member<ConstructorInfo>
+    public class Constructor: Member<ConstructorInfo>
     {
         /// <summary>
         /// Initializes a new method of the <see cref="Constructor"/> class.

@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Inspector
 {
-    sealed class MethodDelegateFactory : IDelegateFactory<MethodInfo>
+    sealed class MethodDelegateFactory: IDelegateFactory<MethodInfo>
     {
         bool IDelegateFactory<MethodInfo>.TryCreate(Type delegateType, object target, MethodInfo method, out Delegate @delegate) {
             if(delegateType == null)

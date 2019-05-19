@@ -12,7 +12,7 @@ namespace Inspector
         protected TypeInspector(TypeInfo type) =>
             this.type = type;
 
-        protected TypeInspector() {}
+        protected TypeInspector() { }
 
         public delegate TypeInspector Factory(Type declaredType, object instance = null);
 

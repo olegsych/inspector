@@ -18,7 +18,7 @@ namespace Inspector
         public EventTypeFilterTest() =>
             sut = new EventTypeFilter(previous, handlerType);
 
-        public class Constructor : EventTypeFilterTest
+        public class Constructor: EventTypeFilterTest
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenPreviousFilterIsNull() {
@@ -33,14 +33,14 @@ namespace Inspector
             }
         }
 
-        public class HandlerType : EventTypeFilterTest
+        public class HandlerType: EventTypeFilterTest
         {
             [Fact]
             public void ReturnsValueGivenToConstructor() =>
                 Assert.Same(handlerType, ((EventTypeFilter)sut).HandlerType);
         }
 
-        public class Previous : EventTypeFilterTest
+        public class Previous: EventTypeFilterTest
         {
             [Fact]
             public void ImplementsDecoratorAndReturnsInstanceGivenToConstructor() {
@@ -49,7 +49,7 @@ namespace Inspector
             }
         }
 
-        public class Get : EventTypeFilterTest
+        public class Get: EventTypeFilterTest
         {
             [Fact]
             public void ReturnsEventsWithGivenHandlerType() {

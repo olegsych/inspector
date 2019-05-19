@@ -8,7 +8,7 @@ namespace Inspector
 {
     public class StaticScopeTest
     {
-        public class Constructor : StaticScopeTest
+        public class Constructor: StaticScopeTest
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenTypeIsNullToFailFast() {
@@ -29,7 +29,7 @@ namespace Inspector
             static class TestType { }
         }
 
-        public class GetFields : StaticScopeTest
+        public class GetFields: StaticScopeTest
         {
             [Fact]
             public void ReturnsAllStaticFieldsDeclaredByGivenType() {
@@ -67,9 +67,9 @@ namespace Inspector
                 public FieldType instanceField = new FieldType();
             }
 
-            class DerivedType : TestType { }
+            class DerivedType: TestType { }
 
-            class TwiceDerivedType : DerivedType { }
+            class TwiceDerivedType: DerivedType { }
 
             class FieldType { }
         }
@@ -107,9 +107,9 @@ namespace Inspector
                 public void InstanceMethod() { }
             }
 
-            class DerivedType : TestType { }
+            class DerivedType: TestType { }
 
-            class TwiceDerivedType : DerivedType { }
+            class TwiceDerivedType: DerivedType { }
         }
     }
 }

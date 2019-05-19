@@ -7,9 +7,9 @@ using Xunit;
 
 namespace Inspector
 {
-    public class TypeExtensionsTest : TypeInspectorFixture
+    public class TypeExtensionsTest: TypeInspectorFixture
     {
-        public class GenericConstructor : TypeExtensionsTest
+        public class GenericConstructor: TypeExtensionsTest
         {
             class P1 { }
             class P2 { }
@@ -68,7 +68,7 @@ namespace Inspector
             }
         }
 
-        public class Constructors : TypeExtensionsTest
+        public class Constructors: TypeExtensionsTest
         {
             [Fact]
             public void CreatesTypeInspectorForGivenType() {

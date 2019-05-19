@@ -8,7 +8,7 @@ namespace Inspector
     /// <summary>
     /// Filters constructors by type.
     /// </summary>
-    sealed class ConstructorTypeFilter : IFilter<Constructor>, IDecorator<IFilter<Constructor>>
+    sealed class ConstructorTypeFilter: IFilter<Constructor>, IDecorator<IFilter<Constructor>>
     {
         public ConstructorTypeFilter(IFilter<Constructor> previous, Type delegateType, IDelegateFactory<ConstructorInfo> delegateFactory) {
             Previous = previous ?? throw new ArgumentNullException(nameof(previous));

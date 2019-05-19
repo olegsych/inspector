@@ -22,7 +22,7 @@ namespace Inspector
             sut = new Field<FieldType>(field);
         }
 
-        public class Constructor : GenericFieldTest
+        public class Constructor: GenericFieldTest
         {
             [Fact]
             public void InitializesBaseWithGivenArgument() {
@@ -46,7 +46,7 @@ namespace Inspector
             }
         }
 
-        public class Get : GenericFieldTest
+        public class Get: GenericFieldTest
         {
             [Fact]
             public void GetsFieldValue() {
@@ -55,7 +55,7 @@ namespace Inspector
             }
         }
 
-        public class Set : GenericFieldTest
+        public class Set: GenericFieldTest
         {
             [Fact]
             public void SetsFieldValue() {
@@ -65,7 +65,7 @@ namespace Inspector
             }
         }
 
-        public class Value : GenericFieldTest
+        public class Value: GenericFieldTest
         {
             [Fact]
             public void GetsFieldValue() {
@@ -81,7 +81,7 @@ namespace Inspector
             }
         }
 
-        public class ImplicitOperatorT : GenericFieldTest
+        public class ImplicitOperatorT: GenericFieldTest
         {
             [Fact]
             public void ImplicitlyConvertsFieldToValueType() {

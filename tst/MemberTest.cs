@@ -16,19 +16,19 @@ namespace Inspector
         public MemberTest() =>
             sut = new InstanceMember(info, instance);
 
-        public class InstanceMember : Member<MemberInfo>
+        public class InstanceMember: Member<MemberInfo>
         {
             public InstanceMember(MemberInfo info, object instance) : base(info, instance) { }
             public override bool IsStatic => false;
         }
 
-        public class StaticMember : Member<MemberInfo>
+        public class StaticMember: Member<MemberInfo>
         {
             public StaticMember(MemberInfo info, object instance) : base(info, instance) { }
             public override bool IsStatic => true;
         }
 
-        public class Constructor : MemberTest
+        public class Constructor: MemberTest
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenMemberInfoIsNullToFailFast() {
@@ -73,21 +73,21 @@ namespace Inspector
                 new StaticMember(info, null);
         }
 
-        public class Info : MemberTest
+        public class Info: MemberTest
         {
             [Fact]
             public void ReturnsValueGivenToConstructor() =>
                 Assert.Same(info, sut.Info);
         }
 
-        public class Instance : MemberTest
+        public class Instance: MemberTest
         {
             [Fact]
             public void ReturnsValueGivenToConstructor() =>
                 Assert.Same(instance, sut.Instance);
         }
 
-        public class TMemberInfo : MemberTest
+        public class TMemberInfo: MemberTest
         {
             [Fact]
             public void ImplicitlyConvertsMemberToMemberInfo() {
@@ -97,7 +97,7 @@ namespace Inspector
 
             [Fact]
             public void ConvertsNullToNullWithoutThrowingExceptionToSupportImplicitConversionRules() {
-                MemberInfo converted = ((Member<MemberInfo>)null);
+                MemberInfo converted = (Member<MemberInfo>)null;
                 Assert.Null(converted);
             }
         }
@@ -108,7 +108,7 @@ namespace Inspector
             public static object StaticField = new object();
         }
 
-        class DerivedType : InstanceType { }
+        class DerivedType: InstanceType { }
 
         class AnotherType { }
     }

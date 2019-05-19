@@ -7,7 +7,7 @@ namespace Inspector
     /// Provides access to a constructor with signature known at compile time.
     /// </summary>
     /// <typeparam name="TSignature">A <see cref="Delegate"/> representing the constructor signature.</typeparam>
-    public class Constructor<TSignature> : Constructor where TSignature : Delegate
+    public class Constructor<TSignature>: Constructor where TSignature : Delegate
     {
         readonly TSignature @delegate;
 

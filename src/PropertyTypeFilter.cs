@@ -7,7 +7,7 @@ namespace Inspector
     /// <summary>
     /// Filters properties by type.
     /// </summary>
-    sealed class PropertyTypeFilter : IFilter<Property>, IDecorator<IFilter<Property>>
+    sealed class PropertyTypeFilter: IFilter<Property>, IDecorator<IFilter<Property>>
     {
         public PropertyTypeFilter(IFilter<Property> previous, Type propertyType) {
             Previous = previous ?? throw new ArgumentNullException(nameof(previous));

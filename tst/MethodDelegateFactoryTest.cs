@@ -8,7 +8,7 @@ namespace Inspector
     {
         readonly IDelegateFactory<MethodInfo> sut = new MethodDelegateFactory();
 
-        public class TryCreate : MethodDelegateFactoryTest
+        public class TryCreate: MethodDelegateFactoryTest
         {
             // Method parameters
             readonly Type delegateType = typeof(Action<T1, P1>);

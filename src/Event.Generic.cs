@@ -6,8 +6,8 @@ namespace Inspector
     /// Provides access to events of type <typeparamref name="T"/>.
     /// </summary>
     /// <typeparam name="T">Type of event handler</typeparam>
-    public class Event<T> : Event where T : Delegate {
-
+    public class Event<T>: Event where T : Delegate
+    {
         /// <summary>
         /// Initializes a new instance of the <see cref="Event{T}"/> class.
         /// </summary>

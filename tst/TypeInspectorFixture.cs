@@ -6,7 +6,7 @@ using Xunit;
 namespace Inspector
 {
     [Collection(nameof(TypeInspector))]
-    public class TypeInspectorFixture : IDisposable
+    public class TypeInspectorFixture: IDisposable
     {
         readonly TypeInspector.Factory originalTypeInspectorCreate;
         internal readonly TypeInspector.Factory typeInspectorCreate = Substitute.For<TypeInspector.Factory>();

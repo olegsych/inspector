@@ -6,7 +6,7 @@ namespace Inspector
     /// Provides access to a property of type <typeparamref name="T"/>.
     /// </summary>
     /// <typeparam name="T">Type of property value</typeparam>
-    public class Property<T> : Property
+    public class Property<T>: Property
     {
         internal Property(Property property) : base(NotNull(property).Info, property.Instance) {
             if(typeof(T) != Info.PropertyType)

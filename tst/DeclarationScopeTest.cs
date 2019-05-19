@@ -18,7 +18,7 @@ namespace Inspector
         public DeclarationScopeTest() =>
             sut = new DeclarationScope(previous, declaringType);
 
-        public class Ctor : DeclarationScopeTest
+        public class Ctor: DeclarationScopeTest
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenPreviousScopeIsNull() {
@@ -33,21 +33,21 @@ namespace Inspector
             }
         }
 
-        public class Previous : DeclarationScopeTest
+        public class Previous: DeclarationScopeTest
         {
             [Fact]
             public void ImplementsIDecoratorAndReturnsValueGivenToConstructor() =>
                 Assert.Same(previous, ((IDecorator<IScope>)sut).Previous);
         }
 
-        public class DeclaringType : DeclarationScopeTest
+        public class DeclaringType: DeclarationScopeTest
         {
             [Fact]
             public void IsAssignedByConstructor() =>
                 Assert.Same(declaringType, ((DeclarationScope)sut).DeclaringType);
         }
 
-        public class GetConstructors : DeclarationScopeTest
+        public class GetConstructors: DeclarationScopeTest
         {
             new readonly IFilter<Constructor> sut;
             new readonly IFilter<Constructor> previous;
@@ -81,7 +81,7 @@ namespace Inspector
             }
         }
 
-        public class GetEvents : DeclarationScopeTest
+        public class GetEvents: DeclarationScopeTest
         {
             new readonly IFilter<Event> sut;
             new readonly IFilter<Event> previous;
@@ -115,7 +115,7 @@ namespace Inspector
             }
         }
 
-        public class GetFields : DeclarationScopeTest
+        public class GetFields: DeclarationScopeTest
         {
             new readonly IFilter<Field> sut;
             new readonly IFilter<Field> previous;
@@ -149,7 +149,7 @@ namespace Inspector
             }
         }
 
-        public class GetMethods : DeclarationScopeTest
+        public class GetMethods: DeclarationScopeTest
         {
             new readonly IFilter<Method> sut;
             new readonly IFilter<Method> previous;
@@ -183,7 +183,7 @@ namespace Inspector
             }
         }
 
-        public class GetProperties : DeclarationScopeTest
+        public class GetProperties: DeclarationScopeTest
         {
             new readonly IFilter<Property> sut;
             new readonly IFilter<Property> previous;

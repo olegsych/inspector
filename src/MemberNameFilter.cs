@@ -8,7 +8,7 @@ namespace Inspector
     /// <summary>
     /// Filters members by name.
     /// </summary>
-    sealed class MemberNameFilter<TMember, TInfo> : IFilter<TMember>, IDecorator<IFilter<TMember>>
+    sealed class MemberNameFilter<TMember, TInfo>: IFilter<TMember>, IDecorator<IFilter<TMember>>
         where TMember : Member<TInfo>
         where TInfo : MemberInfo
     {

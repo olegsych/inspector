@@ -13,7 +13,7 @@ namespace Inspector
         readonly IScope previous = Substitute.For<IScope>();
         readonly Accessibility accessibility = Accessibility.PrivateProtected;
 
-        public class Ctor : AccessibilityScopeTest
+        public class Ctor: AccessibilityScopeTest
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenPreviousScopeIsNull() {
@@ -58,11 +58,11 @@ namespace Inspector
             }
 
             static bool IsValidCombination(Accessibility first, Accessibility second) =>
-                (first == Accessibility.Private && second == Accessibility.Protected) ||
-                (first == Accessibility.Protected && second == Accessibility.Internal);
+                first == Accessibility.Private && second == Accessibility.Protected ||
+                first == Accessibility.Protected && second == Accessibility.Internal;
         }
 
-        public class GetConstructors : AccessibilityScopeTest
+        public class GetConstructors: AccessibilityScopeTest
         {
             [Fact]
             public void ReturnsConstructorsWithWithExpectedAccessibility() {
@@ -92,7 +92,7 @@ namespace Inspector
             }
         }
 
-        public class GetEvents : AccessibilityScopeTest
+        public class GetEvents: AccessibilityScopeTest
         {
             [Fact]
             public void ReturnsEventsWithWithExpectedAccessibilityOfAddMethod() {
@@ -122,7 +122,7 @@ namespace Inspector
             }
         }
 
-        public class GetFields : AccessibilityScopeTest
+        public class GetFields: AccessibilityScopeTest
         {
             [Fact]
             public void ReturnsFieldsWithWithExpectedAccessibility() {
@@ -182,7 +182,7 @@ namespace Inspector
             }
         }
 
-        public class GetProperties : AccessibilityScopeTest
+        public class GetProperties: AccessibilityScopeTest
         {
             [Fact]
             public void ReturnsPropertiesWithWithExpectedAccessibility() {

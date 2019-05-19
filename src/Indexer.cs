@@ -6,7 +6,7 @@ namespace Inspector
     /// <summary>
     /// Provides access to an indexer of type not accessible at compile time.
     /// </summary>
-    public class Indexer : Member<PropertyInfo>
+    public class Indexer: Member<PropertyInfo>
     {
         public Indexer(PropertyInfo info, object instance) : base(null, null) =>
             throw new NotImplementedException();

@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace Inspector
 {
-    sealed class DeclarationScope : IScope, IDecorator<IScope>
+    sealed class DeclarationScope: IScope, IDecorator<IScope>
     {
         public DeclarationScope(IScope previous, Type declaringType) {
             Previous = previous ?? throw new ArgumentNullException(nameof(previous));

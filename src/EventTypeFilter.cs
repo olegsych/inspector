@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Inspector
 {
-    sealed class EventTypeFilter : IFilter<Event>, IDecorator<IFilter<Event>>
+    sealed class EventTypeFilter: IFilter<Event>, IDecorator<IFilter<Event>>
     {
         public EventTypeFilter(IFilter<Event> previous, Type handlerType) {
             Previous = previous ?? throw new ArgumentNullException(nameof(previous));

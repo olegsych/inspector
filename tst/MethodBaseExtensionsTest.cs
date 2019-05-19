@@ -10,7 +10,7 @@ namespace Inspector
     {
         readonly MethodBase method = MethodBase();
 
-        public class Parameter : MethodBaseExtensionsTest
+        public class Parameter: MethodBaseExtensionsTest
         {
             readonly Type parameterType = Type();
 
@@ -50,7 +50,7 @@ namespace Inspector
             }
         }
 
-        public class ParameterOfT : MethodBaseExtensionsTest
+        public class ParameterOfT: MethodBaseExtensionsTest
         {
             class P { };
 

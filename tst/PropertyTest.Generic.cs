@@ -22,7 +22,7 @@ namespace Inspector
             sut = new Property<PropertyType>(property);
         }
 
-        public class Constructor : GenericPropertyTest
+        public class Constructor: GenericPropertyTest
         {
             [Fact]
             public void InitializesBaseWithGivenArgument() {
@@ -46,7 +46,7 @@ namespace Inspector
             }
         }
 
-        public class Get : GenericPropertyTest
+        public class Get: GenericPropertyTest
         {
             [Fact]
             public void GetsPropertyValue() {
@@ -55,7 +55,7 @@ namespace Inspector
             }
         }
 
-        public class Set : GenericPropertyTest
+        public class Set: GenericPropertyTest
         {
             [Fact]
             public void SetsPropertyValue() {
@@ -65,7 +65,7 @@ namespace Inspector
             }
         }
 
-        public class Value : GenericPropertyTest
+        public class Value: GenericPropertyTest
         {
             [Fact]
             public void GetsPropertyValue() {
@@ -81,7 +81,7 @@ namespace Inspector
             }
         }
 
-        public class ImplicitOperatorT : GenericPropertyTest
+        public class ImplicitOperatorT: GenericPropertyTest
         {
             [Fact]
             public void ImplicitlyConvertsPropertyToValueType() {

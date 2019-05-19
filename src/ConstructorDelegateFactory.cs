@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Inspector
 {
-    sealed class ConstructorDelegateFactory : IDelegateFactory<ConstructorInfo>
+    sealed class ConstructorDelegateFactory: IDelegateFactory<ConstructorInfo>
     {
         static readonly MethodInfo internalAlloc = typeof(Delegate).GetMethod("InternalAlloc", BindingFlags.Static | BindingFlags.NonPublic);
         static readonly MethodInfo bindToMethodInfo = typeof(Delegate).GetMethod("BindToMethodInfo", BindingFlags.Instance | BindingFlags.NonPublic);

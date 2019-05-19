@@ -16,7 +16,7 @@ namespace Inspector
         public FieldTest() =>
             sut = new Field(instanceField, instance);
 
-        public class Constructor : FieldTest
+        public class Constructor: FieldTest
         {
             [Fact]
             public void InitializesNewInstanceForInstanceField() {
@@ -27,7 +27,7 @@ namespace Inspector
             }
         }
 
-        public class Create : FieldTest
+        public class Create: FieldTest
         {
             [Fact]
             public void ReturnsFieldWithGivenFieldInfoAndInstance() {
@@ -38,7 +38,7 @@ namespace Inspector
             }
         }
 
-        public class Value : FieldTest
+        public class Value: FieldTest
         {
             [Fact]
             public void GetsFieldValue() {
@@ -54,7 +54,7 @@ namespace Inspector
             }
         }
 
-        public class Get : FieldTest
+        public class Get: FieldTest
         {
             [Fact]
             public void GetsFieldValue() {
@@ -63,7 +63,7 @@ namespace Inspector
             }
         }
 
-        public class Set : FieldTest
+        public class Set: FieldTest
         {
             [Fact]
             public void SetsFieldValue() {
@@ -73,7 +73,7 @@ namespace Inspector
             }
         }
 
-        public class IsStatic : FieldTest
+        public class IsStatic: FieldTest
         {
             [Fact]
             public void ReturnsFalseForInstanceFieldInfo() =>

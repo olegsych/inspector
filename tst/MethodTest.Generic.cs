@@ -30,7 +30,7 @@ namespace Inspector
             sut = new Method<Signature>(method, delegateFactory);
         }
 
-        public class Constructor : GenericMethodTest
+        public class Constructor: GenericMethodTest
         {
             [Fact]
             public void InitializesBaseWithGivenArgument() {
@@ -71,7 +71,7 @@ namespace Inspector
             }
         }
 
-        public class ImplicitOperatorT : GenericMethodTest
+        public class ImplicitOperatorT: GenericMethodTest
         {
             [Fact]
             public void ImplicitlyConvertsMethodToItsSignatureDelegate() {
@@ -81,7 +81,7 @@ namespace Inspector
 
             [Fact]
             public void ConvertsNullMethodToNullSignatureToSupportImplicitConversionRules() {
-                Signature actual = ((Method<Signature>)null);
+                Signature actual = (Method<Signature>)null;
                 Assert.Null(actual);
             }
         }

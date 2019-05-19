@@ -19,7 +19,7 @@ namespace Inspector
         // Test fixture
         readonly Func<BindingFlags, IEnumerable<MemberInfo>> getMemberInfo = Substitute.For<Func<BindingFlags, IEnumerable<MemberInfo>>>();
 
-        public class Constructor : MembersTest
+        public class Constructor: MembersTest
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenTypeIsNull() {
@@ -74,7 +74,7 @@ namespace Inspector
             }
         }
 
-        public abstract class GetEnumeratorTest : MembersTest
+        public abstract class GetEnumeratorTest: MembersTest
         {
             protected IEnumerable<Member<MemberInfo>> sut;
             protected Func<IEnumerator> getEnumerator;
@@ -123,7 +123,7 @@ namespace Inspector
             }
         }
 
-        public class InstanceEnumerator : GetEnumeratorTest
+        public class InstanceEnumerator: GetEnumeratorTest
         {
             public InstanceEnumerator() {
                 sut = new Members<MemberInfo, Member<MemberInfo>>(type, instance, infoProvider, createMember);
@@ -134,7 +134,7 @@ namespace Inspector
             }
         }
 
-        public abstract class TypeEnumerator : GetEnumeratorTest
+        public abstract class TypeEnumerator: GetEnumeratorTest
         {
             private protected TypeEnumerator(Lifetime lifetime) {
                 sut = new Members<MemberInfo, Member<MemberInfo>>(type, null, infoProvider, createMember, lifetime);
@@ -145,27 +145,27 @@ namespace Inspector
             }
         }
 
-        public class TypeEnumeratorWithStaticBinding : TypeEnumerator
+        public class TypeEnumeratorWithStaticBinding: TypeEnumerator
         {
             public TypeEnumeratorWithStaticBinding() : base(Lifetime.Static) { }
         }
 
-        public class TypeEnumeratorWithInstanceBinding : TypeEnumerator
+        public class TypeEnumeratorWithInstanceBinding: TypeEnumerator
         {
             public TypeEnumeratorWithInstanceBinding() : base(Lifetime.Instance) { }
         }
 
-        public class UntypedInstanceEnumerator : InstanceEnumerator
+        public class UntypedInstanceEnumerator: InstanceEnumerator
         {
             public UntypedInstanceEnumerator() => getEnumerator = ((IEnumerable)sut).GetEnumerator;
         }
 
-        public class UntypedTypeEnumeratorWithStaticBinding : TypeEnumeratorWithStaticBinding
+        public class UntypedTypeEnumeratorWithStaticBinding: TypeEnumeratorWithStaticBinding
         {
             public UntypedTypeEnumeratorWithStaticBinding() => getEnumerator = ((IEnumerable)sut).GetEnumerator;
         }
 
-        public class UntypedTypeEnumeratorWithInstanceBinding : TypeEnumeratorWithInstanceBinding
+        public class UntypedTypeEnumeratorWithInstanceBinding: TypeEnumeratorWithInstanceBinding
         {
             public UntypedTypeEnumeratorWithInstanceBinding() => getEnumerator = ((IEnumerable)sut).GetEnumerator;
         }
@@ -176,19 +176,19 @@ namespace Inspector
             public void BaseMethod2() { }
         }
 
-        class TestType : BaseType
+        class TestType: BaseType
         {
             public void TestMethod1() { }
             public void TestMethod2() { }
         }
 
-        class InstanceMember : Member<MemberInfo>
+        class InstanceMember: Member<MemberInfo>
         {
             public InstanceMember(MemberInfo info, object instance) : base(info, instance) { }
             public override bool IsStatic => false;
         }
 
-        class StaticMember : Member<MemberInfo>
+        class StaticMember: Member<MemberInfo>
         {
             public StaticMember(MemberInfo info, object instance) : base(info, instance) { }
             public override bool IsStatic => true;

@@ -7,7 +7,7 @@ namespace Inspector
 {
     public class InstanceScopeTest
     {
-        public class Constructor : InstanceScopeTest
+        public class Constructor: InstanceScopeTest
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenInstanceIsNull() {
@@ -28,7 +28,7 @@ namespace Inspector
             class TestType { }
         }
 
-        public class GetFields : InstanceScopeTest
+        public class GetFields: InstanceScopeTest
         {
             [Fact]
             public void ReturnsAllFieldsDeclaredByGivenInstance() {
@@ -68,14 +68,14 @@ namespace Inspector
                 public static FieldType staticField = new FieldType();
             }
 
-            class DerivedType : TestType { }
+            class DerivedType: TestType { }
 
-            class TwiceDerivedType : DerivedType { }
+            class TwiceDerivedType: DerivedType { }
 
             class FieldType { }
         }
 
-        public class GetMethods : InstanceScopeTest
+        public class GetMethods: InstanceScopeTest
         {
             [Fact]
             public void ReturnsAllMethodsDeclaredAndInheritedByGivenInstanceType() {
@@ -103,15 +103,15 @@ namespace Inspector
                 void PrivateMethod() { }
                 protected void ProtectedMethod() { }
                 private protected void PrivateProtectedMethod() { }
-                protected internal void ProtectedInternalMethod() {}
-                internal void InternalMethod() {}
-                public void PublicMethod() {}
-                public static void StaticMethod() {}
+                protected internal void ProtectedInternalMethod() { }
+                internal void InternalMethod() { }
+                public void PublicMethod() { }
+                public static void StaticMethod() { }
             }
 
-            class DerivedType : TestType { }
+            class DerivedType: TestType { }
 
-            class TwiceDerivedType : DerivedType { }
+            class TwiceDerivedType: DerivedType { }
         }
     }
 }

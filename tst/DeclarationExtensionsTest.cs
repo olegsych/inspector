@@ -7,7 +7,7 @@ namespace Inspector
 {
     public class DeclarationExtensionsTest
     {
-        public class IScopeExtensions : DeclarationExtensionsTest
+        public class IScopeExtensions: DeclarationExtensionsTest
         {
             // Method parameters
             readonly IScope scope = Substitute.For<IScope>();
@@ -30,7 +30,7 @@ namespace Inspector
             }
         }
 
-        public class ObjectExtensions : DeclarationExtensionsTest
+        public class ObjectExtensions: DeclarationExtensionsTest
         {
             // Method parameters
             readonly object instance = new object();
@@ -61,7 +61,7 @@ namespace Inspector
             }
         }
 
-        public class TypeExtensions : DeclarationExtensionsTest
+        public class TypeExtensions: DeclarationExtensionsTest
         {
             // Method parameters
             readonly Type type = Type();

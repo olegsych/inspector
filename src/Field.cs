@@ -6,7 +6,7 @@ namespace Inspector
     /// <summary>
     /// Provides access to a field of type not accessible at compile time.
     /// </summary>
-    public class Field : Member<FieldInfo>
+    public class Field: Member<FieldInfo>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Field"/> class.

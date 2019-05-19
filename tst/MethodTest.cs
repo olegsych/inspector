@@ -17,7 +17,7 @@ namespace Inspector
         public MethodTest() =>
             sut = new Method(instanceMethod, instance);
 
-        public class Constructor : MethodTest
+        public class Constructor: MethodTest
         {
             [Fact]
             public void InitializesNewInstanceForInstanceMethod() {
@@ -28,7 +28,7 @@ namespace Inspector
             }
         }
 
-        public class Create : MethodTest
+        public class Create: MethodTest
         {
             [Fact]
             public void ReturnsMethodWithGivenMethodInfoAndInstance() {
@@ -39,7 +39,7 @@ namespace Inspector
             }
         }
 
-        public class Invoke : MethodTest
+        public class Invoke: MethodTest
         {
             [Fact]
             public void CallsMethodAndReturnsItsResult() {
@@ -53,7 +53,7 @@ namespace Inspector
             }
         }
 
-        public class IsStatic : MethodTest
+        public class IsStatic: MethodTest
         {
             [Fact]
             public void ReturnsFalseForInstanceMethodInfo() =>

@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace Inspector
 {
-    sealed class Members<TInfo, TMember> : IEnumerable<TMember>
+    sealed class Members<TInfo, TMember>: IEnumerable<TMember>
         where TInfo : MemberInfo
         where TMember : Member<TInfo>
     {
