@@ -198,6 +198,12 @@ namespace Inspector
             }
 
             [Fact]
+            public void SelectFieldDeclaredBySpecificType() {
+                FieldInfo field = bar.DeclaredBy<Foo>().Field<Baz>();
+                field.DeclaringType.ShouldBe(typeof(Foo));
+            }
+
+            [Fact]
             public void SelectInheritedField() {
                 FieldInfo field = bar.Inherited().Field<Baz>();
                 field.DeclaringType.ShouldBe(typeof(Foo));
@@ -205,14 +211,8 @@ namespace Inspector
 
             [Fact]
             public void SelectFieldInheritedFromSpecificType() {
-                FieldInfo field = bar.Inherited<Bar>().Field<Baz>();
-                field.DeclaringType.ShouldBe(typeof(Bar));
-            }
-
-            [Fact]
-            public void SelectFieldDeclaredInSpecificTypeWithSpecificVisibility() {
-                FieldInfo field = bar.Public().Inherited<Bar>().Field<Baz>();
-                field.DeclaringType.ShouldBe(typeof(Bar));
+                FieldInfo field = bar.InheritedFrom<Foo>().Field<Baz>();
+                field.DeclaringType.ShouldBe(typeof(Foo));
             }
         }
 
@@ -269,7 +269,7 @@ namespace Inspector
 
             [Fact]
             public void SelectInheritedFieldWithSpecificName() {
-                FieldInfo field = bar.Inherited<Foo>().Field<Qux>(nameof(Foo.field2));
+                FieldInfo field = bar.InheritedFrom<Foo>().Field<Qux>(nameof(Foo.field2));
                 field.DeclaringType.ShouldBe(typeof(Foo));
                 field.Name.ShouldBe(nameof(Foo.field2));
             }
