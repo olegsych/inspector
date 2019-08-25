@@ -175,7 +175,7 @@ namespace Inspector
 
             public class AccessFields : InaccessibleTypes
             {
-                readonly object foo = typeOfFoo.New();
+                readonly object foo = Activator.CreateInstance(typeOfFoo, true);
 
                 [Fact]
                 public void ByType() {
