@@ -13,7 +13,7 @@ namespace Inspector
             public static Bar barField;
 #pragma warning restore 414
 
-            public static Bar BarProperty { get; set; }
+            public static Baz BazProperty { get; set; }
 
 #pragma warning disable 67
             public static event EventHandler<Bar> BarEvent;
@@ -49,14 +49,14 @@ namespace Inspector
         {
             [Fact]
             public void GetByType() {
-                Property<Bar> property = typeof(Foo).Property<Bar>();
-                property.Info.ShouldBe(typeof(Foo).GetRuntimeProperty(nameof(Foo.BarProperty)));
+                Property<Baz> property = typeof(Foo).Property<Baz>();
+                property.Info.ShouldBe(typeof(Foo).GetRuntimeProperty(nameof(Foo.BazProperty)));
             }
 
             [Fact]
             public void GetByTypeAndName() {
-                Property<Bar> property = typeof(Foo).Property<Bar>(nameof(Foo.BarProperty));
-                property.Info.ShouldBe(typeof(Foo).GetRuntimeProperty(nameof(Foo.BarProperty)));
+                Property<Baz> property = typeof(Foo).Property<Baz>(nameof(Foo.BazProperty));
+                property.Info.ShouldBe(typeof(Foo).GetRuntimeProperty(nameof(Foo.BazProperty)));
             }
         }
     }
