@@ -1,4 +1,5 @@
 using System;
+using Inspector.Implementation;
 
 namespace Inspector
 {

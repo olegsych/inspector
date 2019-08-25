@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+using Inspector.Implementation;
 using NSubstitute;
 using Xunit;
 

@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using Inspector.Implementation;
 using NSubstitute;
 using Xunit;
 

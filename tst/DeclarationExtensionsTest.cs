@@ -1,4 +1,5 @@
 using System;
+using Inspector.Implementation;
 using NSubstitute;
 using Xunit;
 using static Inspector.Substitutes;
