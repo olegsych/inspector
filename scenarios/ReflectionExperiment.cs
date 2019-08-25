@@ -14,16 +14,14 @@ namespace Inspector
 
             public static int staticBar;
 
-            static Foo() {
-                staticBar = 0;
-            }
+            static Foo() => staticBar = 0;
         }
 
         public class ConstructorInfoInvoke : ReflectionExperiment
         {
             [Fact]
             public void ConstructorCreatesNewInstance() {
-                ConstructorInfo constructor = typeof(Foo).Constructor<int>();
+                ConstructorInfo constructor = typeof(Foo).GetConstructor(new[] { typeof(int) });
                 Assert.False(constructor.IsStatic);
 
                 object foo = constructor.Invoke(new object[] { 42 });
@@ -34,7 +32,7 @@ namespace Inspector
 
             [Fact]
             public void ConstructorReinitializesExistingInstance() {
-                ConstructorInfo constructor = typeof(Foo).Constructor<int>();
+                ConstructorInfo constructor = typeof(Foo).GetConstructor(new[] { typeof(int) });
                 Assert.False(constructor.IsStatic);
                 var foo = new Foo(0);
 
