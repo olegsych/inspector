@@ -45,7 +45,7 @@ namespace Inspector
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenParameterTypeIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => method.Parameter(null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => method.Parameter((Type)null));
                 Assert.Equal("parameterType", thrown.ParamName);
             }
         }

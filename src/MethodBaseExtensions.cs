@@ -24,5 +24,8 @@ namespace Inspector
 
             return parameter;
         }
+
+        public static ParameterInfo Parameter(this MethodBase method, string parameterName) =>
+            throw new NotImplementedException();
     }
 }

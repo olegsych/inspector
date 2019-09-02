@@ -9,7 +9,8 @@ namespace Inspector
     /// <typeparam name="TMemberInfo">
     /// A class derived from <see cref="MemberInfo"/> describing the type member.
     /// </typeparam>
-    public abstract class Member<TMemberInfo> where TMemberInfo : MemberInfo
+    public abstract class Member<TMemberInfo>: IMember<TMemberInfo>
+        where TMemberInfo : MemberInfo
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Member{TMemberInfo}"/> class.
