@@ -43,12 +43,13 @@ namespace Inspector
             return field;
         }
 
-        public static MethodBase MethodBase() {
+        public static MethodBase MethodBase(params ParameterInfo[] parameters) {
+            parameters = parameters ?? new ParameterInfo[0];
             var method = Substitute.For<MethodBase>();
             Type declaringType = Type();
             method.DeclaringType.Returns(declaringType);
             method.Name.Returns($"Method{Next}");
-            method.GetParameters().Returns(new ParameterInfo[0]);
+            method.GetParameters().Returns(parameters);
             return method;
         }
 
