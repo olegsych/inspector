@@ -10,52 +10,46 @@ namespace Inspector.Implementation
 {
     public class ParameterTypeFilterTest
     {
-        readonly IFilter<ParameterInfo> sut;
-
-        readonly IFilter<ParameterInfo> previous = Substitute.For<IFilter<ParameterInfo>>();
+        readonly IFilter<ParameterInfo> parameters = Substitute.For<IFilter<ParameterInfo>>();
         readonly Type parameterType = Type();
 
-        public ParameterTypeFilterTest() =>
-            sut = new ParameterTypeFilter(previous, parameterType);
-
-        public class Constructor: ParameterTypeFilterTest
+        public class WithType: ParameterTypeFilterTest
         {
             [Fact]
-            public void ThrowsDescriptiveExceptionWhenPreviousFilterIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new ParameterTypeFilter(null, parameterType));
-                Assert.Equal("previous", thrown.ParamName);
+            public void ThrowsDescriptiveExceptionWhenParametersIsNull() {
+                var thrown = Assert.Throws<ArgumentNullException>(() => default(IFilter<ParameterInfo>).WithType(parameterType));
+                Assert.Equal("parameters", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenParameterTypeIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new ParameterTypeFilter(previous, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => parameters.WithType(null));
                 Assert.Equal("parameterType", thrown.ParamName);
             }
         }
 
-        public class Previous: ParameterTypeFilterTest
+        public class Implementation: ParameterTypeFilterTest
         {
+            readonly IFilter<ParameterInfo> sut;
+
+            public Implementation() =>
+                sut = parameters.WithType(parameterType);
+
             [Fact]
-            public void ImplementsIDecoratorAndRetursPreviousFilterGivenToConstructor() {
+            public void ParameterTypeReturnsValueGivenToWithType() =>
+                Assert.Same(parameterType, ((ParameterTypeFilter.Implementation)sut).ParameterType);
+
+            [Fact]
+            public void PreviousImplementsIDecoratorAndRetursParametersGivenToWithType() {
                 var decorator = (IDecorator<IFilter<ParameterInfo>>)sut;
-                Assert.Same(previous, decorator.Previous);
+                Assert.Same(parameters, decorator.Previous);
             }
-        }
 
-        public class ParameterType: ParameterTypeFilterTest
-        {
             [Fact]
-            public void ReturnsParameterTypeGivenToConstructor() =>
-                Assert.Same(parameterType, ((ParameterTypeFilter)sut).ParameterType);
-        }
-
-        public class Get: ParameterTypeFilterTest
-        {
-            [Fact]
-            public void ReturnsParametersWithGivenParameterType() {
+            public void GetReturnsParametersWithGivenParameterType() {
                 var expected = new ParameterInfo[] { ParameterInfo(parameterType), ParameterInfo(parameterType) };
                 var mixed = new ParameterInfo[] { ParameterInfo(), expected[0], ParameterInfo(), expected[1], ParameterInfo() };
-                ConfiguredCall arrange = previous.Get().Returns(mixed);
+                ConfiguredCall arrange = parameters.Get().Returns(mixed);
 
                 IEnumerable<ParameterInfo> actual = sut.Get();
 

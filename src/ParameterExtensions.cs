@@ -19,13 +19,13 @@ namespace Inspector
             method.Parameter(typeof(TParameterType), parameterName);
 
         public static ParameterInfo Parameter(this MethodBase method, Type parameterType) =>
-            Selector<ParameterInfo>.Select(new ParameterTypeFilter(new Parameters(method), parameterType));
+            Selector<ParameterInfo>.Select(new Parameters(method).WithType(parameterType));
 
         public static ParameterInfo Parameter(this MethodBase method, string parameterName) =>
             Selector<ParameterInfo>.Select(new Parameters(method).WithName(parameterName));
 
         public static ParameterInfo Parameter(this MethodBase method, Type parameterType, string parameterName) =>
-            Selector<ParameterInfo>.Select(new ParameterTypeFilter(new Parameters(method), parameterType).WithName(parameterName));
+            Selector<ParameterInfo>.Select(new Parameters(method).WithType(parameterType).WithName(parameterName));
 
         #endregion
 
