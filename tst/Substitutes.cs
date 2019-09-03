@@ -61,9 +61,14 @@ namespace Inspector
             return method;
         }
 
-        public static ParameterInfo ParameterInfo(Type parameterType = default) {
+        public static ParameterInfo ParameterInfo(string name) =>
+            ParameterInfo(default, name);
+
+        public static ParameterInfo ParameterInfo(Type parameterType = default, string name = default) {
+            name = name ?? $"Parameter{Next}";
             parameterType = parameterType ?? Type();
             var parameter = Substitute.For<ParameterInfo>();
+            parameter.Name.Returns(name);
             parameter.ParameterType.Returns(parameterType);
             return parameter;
         }

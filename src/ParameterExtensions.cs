@@ -12,20 +12,20 @@ namespace Inspector
         public static ParameterInfo Parameter(this MethodBase method) =>
             Selector<ParameterInfo>.Select(new Parameters(method));
 
-        public static ParameterInfo Parameter<T>(this MethodBase method) =>
-            method.Parameter(typeof(T));
+        public static ParameterInfo Parameter<TParameterType>(this MethodBase method) =>
+            method.Parameter(typeof(TParameterType));
 
-        public static ParameterInfo Parameter<T>(this MethodBase method, string parameterName) =>
-            throw new NotImplementedException();
+        public static ParameterInfo Parameter<TParameterType>(this MethodBase method, string parameterName) =>
+            method.Parameter(typeof(TParameterType), parameterName);
 
         public static ParameterInfo Parameter(this MethodBase method, Type parameterType) =>
             Selector<ParameterInfo>.Select(new ParameterTypeFilter(new Parameters(method), parameterType));
 
         public static ParameterInfo Parameter(this MethodBase method, string parameterName) =>
-            throw new NotImplementedException();
+            Selector<ParameterInfo>.Select(new Parameters(method).WithName(parameterName));
 
         public static ParameterInfo Parameter(this MethodBase method, Type parameterType, string parameterName) =>
-            throw new NotImplementedException();
+            Selector<ParameterInfo>.Select(new ParameterTypeFilter(new Parameters(method), parameterType).WithName(parameterName));
 
         #endregion
 
@@ -37,14 +37,17 @@ namespace Inspector
         public static ParameterInfo Parameter<TParameterType>(this IMember<MethodBase> method) =>
             method.Info.Parameter<TParameterType>();
 
+        public static ParameterInfo Parameter<TParameterType>(this IMember<MethodBase> method, string parameterName) =>
+            method.Info.Parameter<TParameterType>(parameterName);
+
         public static ParameterInfo Parameter(this IMember<MethodBase> method, Type parameterType) =>
             method.Info.Parameter(parameterType);
 
         public static ParameterInfo Parameter(this IMember<MethodBase> method, string parameterName) =>
-            throw new NotImplementedException();
+            method.Info.Parameter(parameterName);
 
         public static ParameterInfo Parameter(this IMember<MethodBase> method, Type parameterType, string parameterName) =>
-            throw new NotImplementedException();
+            method.Info.Parameter(parameterType, parameterName);
 
         #endregion
     }
