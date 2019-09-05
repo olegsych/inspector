@@ -32,6 +32,12 @@ namespace Inspector
             Assert.NotNull(generic.Invoke);
         }
 
+        static DeclarationScope VerifyDeclarationScope(IFilter<Method> filter, Type declaringType) {
+            var scope = Assert.IsType<DeclarationScope>(filter);
+            Assert.Equal(declaringType, scope.DeclaringType);
+            return scope;
+        }
+
         internal static MemberNameFilter<Method, MethodInfo> VerifyFilter(IFilter<Method> selection, string methodName) {
             var filter = Assert.IsType<MemberNameFilter<Method, MethodInfo>>(selection);
             Assert.Equal(methodName, filter.MemberName);
@@ -114,10 +120,10 @@ namespace Inspector
         public class ObjectExtension: MethodExtensionsTest
         {
             [Fact]
-            public void ReturnsSingleMethodInGivenType() {
+            public void ReturnsSingleMethodDeclaredByTypeOfGivenInstance() {
                 Assert.Same(selected, instance.Method());
-
-                VerifyScope(selection, instance);
+                DeclarationScope declaration = VerifyDeclarationScope(selection, instance.GetType());
+                VerifyScope(declaration.Previous, instance);
             }
 
             [Fact]

@@ -21,6 +21,12 @@ namespace Inspector
             select.Invoke(Arg.Do<IFilter<Constructor>>(_ => selection = _)).Returns(selected);
         }
 
+        static DeclarationScope VerifyDeclarationScope(IFilter<Constructor> filter, Type declaringType) {
+            var scope = Assert.IsType<DeclarationScope>(filter);
+            Assert.Equal(declaringType, scope.DeclaringType);
+            return scope;
+        }
+
         static ConstructorTypeFilter VerifyFilter(IFilter<Constructor> selection, Type expectedDelegateType) {
             var filter = Assert.IsType<ConstructorTypeFilter>(selection);
             Assert.IsType<ConstructorDelegateFactory>(filter.DelegateFactory);
@@ -65,9 +71,10 @@ namespace Inspector
         public class ObjectExtension: ConstructorExtensionsTest
         {
             [Fact]
-            public void ReturnsSingleConstructorOfGivenInstance() {
+            public void ReturnsSingleConstructorDeclaredByTypeOfGivenInstance() {
                 Assert.Same(selected, instance.Constructor());
-                VerifyScope(selection, instance);
+                DeclarationScope declaration = VerifyDeclarationScope(selection, instance.GetType());
+                VerifyScope(declaration.Previous, instance);
             }
 
             [Fact]

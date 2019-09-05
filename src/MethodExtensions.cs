@@ -39,7 +39,7 @@ namespace Inspector
         #region Object
 
         public static Method Method(this object instance) =>
-            new InstanceScope(instance).Method();
+            instance.Declared().Method(); // Declared only because multiple methods are always inherited from Object
 
         public static Method Method(this object instance, string methodName) =>
             new InstanceScope(instance).Method(methodName);

@@ -27,7 +27,7 @@ namespace Inspector
         #region Object
 
         public static Constructor Constructor(this object instance) =>
-            new InstanceScope(instance).Constructor();
+            instance.Declared().Constructor(); // Declared only because at least one constructor is always inherited from Object
 
         public static Constructor Constructor(this object instance, Type delegateType) =>
             new InstanceScope(instance).Constructor(delegateType);

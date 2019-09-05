@@ -17,7 +17,7 @@ namespace Inspector
         }
 
         readonly TestType instance = Type<TestType>.Uninitialized();
-        readonly Type runtimeType = typeof(TestType).GetNestedType("Baz");
+        readonly Type runtimeType = typeof(TestType).GetNestedType("Baz", BindingFlags.NonPublic);
 
         public class ConstructorParameter: ParameterScenario
         {
