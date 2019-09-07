@@ -4,21 +4,14 @@ using System.Linq;
 
 namespace Inspector.Implementation
 {
-    /// <summary>
-    /// Filters properties by type.
-    /// </summary>
-    sealed class PropertyTypeFilter: IFilter<Property>, IDecorator<IFilter<Property>>
+    sealed class PropertyTypeFilter: Filter<Property>
     {
-        public PropertyTypeFilter(IFilter<Property> previous, Type propertyType) {
-            Previous = previous ?? throw new ArgumentNullException(nameof(previous));
+        public PropertyTypeFilter(IEnumerable<Property> previous, Type propertyType) : base(previous) =>
             PropertyType = propertyType ?? throw new ArgumentNullException(nameof(propertyType));
-        }
-
-        public IFilter<Property> Previous { get; }
 
         public Type PropertyType { get; }
 
-        IEnumerable<Property> IFilter<Property>.Get() =>
-            Previous.Get().Where(p => p.Info.PropertyType == PropertyType);
+        public override IEnumerator<Property> GetEnumerator() =>
+            Previous.Where(p => p.Info.PropertyType == PropertyType).GetEnumerator();
     }
 }

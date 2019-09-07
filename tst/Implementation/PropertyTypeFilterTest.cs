@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using NSubstitute;
+using NSubstitute.Core;
 using Xunit;
 using static Inspector.Substitutes;
 
@@ -9,10 +10,10 @@ namespace Inspector.Implementation
 {
     public class PropertyTypeFilterTest
     {
-        readonly IFilter<Property> sut;
+        readonly Filter<Property> sut;
 
         // Constructor parameters
-        readonly IFilter<Property> previous = Substitute.For<IFilter<Property>>();
+        readonly IEnumerable<Property> previous = Substitute.For<IEnumerable<Property>>();
         readonly Type propertyType = Type();
 
         public PropertyTypeFilterTest() =>
@@ -31,6 +32,10 @@ namespace Inspector.Implementation
                 var thrown = Assert.Throws<ArgumentNullException>(() => new PropertyTypeFilter(previous, null));
                 Assert.Equal("propertyType", thrown.ParamName);
             }
+
+            [Fact]
+            public void PassesPreviousToBaseConstructor() =>
+                Assert.Same(previous, sut.Previous);
         }
 
         public class PropertyType: PropertyTypeFilterTest
@@ -40,25 +45,15 @@ namespace Inspector.Implementation
                 Assert.Same(propertyType, ((PropertyTypeFilter)sut).PropertyType);
         }
 
-        public class Previous: PropertyTypeFilterTest
-        {
-            [Fact]
-            public void ImplementsIDecoratorAndReturnsValueGivenToConstructor() {
-                var decorator = (IDecorator<IFilter<Property>>)sut;
-                Assert.Same(previous, decorator.Previous);
-            }
-        }
-
-        public class Get: PropertyTypeFilterTest
+        public class GetEnumerator: PropertyTypeFilterTest
         {
             [Fact]
             public void ReturnsPropertiesWithGivenPropertyType() {
-                // Arrange
                 PropertyInfo propertyInfo = PropertyInfo(MethodAttributes.Static, propertyType);
 
                 var expected = new[] { new Property(propertyInfo), new Property(propertyInfo) };
 
-                var mixed = new[] {
+                IEnumerable<Property> mixed = new[] {
                     new Property(PropertyInfo(MethodAttributes.Static)),
                     expected[0],
                     new Property(PropertyInfo(MethodAttributes.Static)),
@@ -66,12 +61,9 @@ namespace Inspector.Implementation
                     new Property(PropertyInfo(MethodAttributes.Static))
                 };
 
-                previous.Get().Returns(mixed);
+                ConfiguredCall arrange = previous.GetEnumerator().Returns(mixed.GetEnumerator());
 
-                // Act
-                IEnumerable<Property> actual = sut.Get();
-
-                Assert.Equal(expected, actual);
+                Assert.Equal(expected, sut);
             }
         }
     }
