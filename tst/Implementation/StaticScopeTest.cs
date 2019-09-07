@@ -29,22 +29,22 @@ namespace Inspector.Implementation
             static class TestType { }
         }
 
-        public class GetFields: StaticScopeTest
+        public class Fields: StaticScopeTest
         {
             [Fact]
             public void ReturnsAllStaticFieldsDeclaredByGivenType() {
-                IFilter<Field> sut = new StaticScope(typeof(TestType));
+                var sut = new StaticScope(typeof(TestType));
 
-                IEnumerable<Field> fields = sut.Get();
+                IEnumerable<Field> fields = sut.Fields();
 
                 VerifyFieldsOfTestType(fields);
             }
 
             [Fact]
             public void ReturnsAllStaticFieldsInheritedByGivenType() {
-                IFilter<Field> sut = new StaticScope(typeof(TwiceDerivedType));
+                var sut = new StaticScope(typeof(TwiceDerivedType));
 
-                IEnumerable<Field> fields = sut.Get();
+                IEnumerable<Field> fields = sut.Fields();
 
                 VerifyFieldsOfTestType(fields);
             }
@@ -74,13 +74,13 @@ namespace Inspector.Implementation
             class FieldType { }
         }
 
-        public class GetMethods: StaticScopeTest
+        public class Methods: StaticScopeTest
         {
             [Fact]
             public void ReturnsAllStaticMethodsInheritedByGivenType() {
-                IFilter<Method> sut = new StaticScope(typeof(TwiceDerivedType));
+                var sut = new StaticScope(typeof(TwiceDerivedType));
 
-                IEnumerable<Method> methods = sut.Get();
+                IEnumerable<Method> methods = sut.Methods();
 
                 VerifyMethodsOfTestType(methods);
             }
