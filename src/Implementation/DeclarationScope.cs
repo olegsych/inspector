@@ -17,22 +17,19 @@ namespace Inspector
 
         public Type DeclaringType { get; }
 
-        IEnumerable<Constructor> IFilter<Constructor>.Get() =>
-            Get<Constructor, ConstructorInfo>();
+        public IEnumerable<Constructor> Constructors() =>
+            new DeclaredMembers<Constructor, ConstructorInfo>(Previous.Constructors(), DeclaringType);
 
-        IEnumerable<Event> IFilter<Event>.Get() =>
-            Get<Event, EventInfo>();
+        public IEnumerable<Event> Events() =>
+            new DeclaredMembers<Event, EventInfo>(Previous.Events(), DeclaringType);
 
-        IEnumerable<Field> IFilter<Field>.Get() =>
-            Get<Field, FieldInfo>();
+        public IEnumerable<Field> Fields() =>
+            new DeclaredMembers<Field, FieldInfo>(Previous.Fields(), DeclaringType);
 
-        IEnumerable<Method> IFilter<Method>.Get() =>
-            Get<Method, MethodInfo>();
+        public IEnumerable<Method> Methods() =>
+            new DeclaredMembers<Method, MethodInfo>(Previous.Methods(), DeclaringType);
 
-        IEnumerable<Property> IFilter<Property>.Get() =>
-            Get<Property, PropertyInfo>();
-
-        IEnumerable<TMember> Get<TMember, TInfo>() where TMember : Member<TInfo> where TInfo : MemberInfo =>
-            ((IFilter<TMember>)Previous).Get().Where(c => c.Info.DeclaringType == DeclaringType);
+        public IEnumerable<Property> Properties() =>
+            new DeclaredMembers<Property, PropertyInfo>(Previous.Properties(), DeclaringType);
     }
 }

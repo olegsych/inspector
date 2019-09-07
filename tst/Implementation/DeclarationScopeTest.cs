@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using NSubstitute;
+using NSubstitute.Core;
 using Xunit;
 using static Inspector.Substitutes;
 
@@ -47,173 +48,78 @@ namespace Inspector.Implementation
                 Assert.Same(declaringType, ((DeclarationScope)sut).DeclaringType);
         }
 
-        public class GetConstructors: DeclarationScopeTest
+        public class Constructors: DeclarationScopeTest
         {
-            new readonly IFilter<Constructor> sut;
-            new readonly IFilter<Constructor> previous;
-
-            public GetConstructors() {
-                sut = base.sut;
-                previous = base.previous;
-            }
-
             [Fact]
             public void ReturnsConstructorsWithMatchingDeclaringType() {
-                // Arrange
-                ConstructorInfo constructorInfo = ConstructorInfo(MethodAttributes.Static).WithDeclaringType(declaringType);
+                var allConstructors = Substitute.For<IEnumerable<Constructor>>();
+                ConfiguredCall arrange = previous.Constructors().Returns(allConstructors);
 
-                var expected = new[] { new Constructor(constructorInfo), new Constructor(constructorInfo) };
+                IEnumerable<Constructor> actual = sut.Constructors();
 
-                var mixed = new[] {
-                    new Constructor(ConstructorInfo(MethodAttributes.Static).WithDeclaringType(Type())),
-                    expected[0],
-                    new Constructor(ConstructorInfo(MethodAttributes.Static).WithDeclaringType(Type())),
-                    expected[1],
-                    new Constructor(ConstructorInfo(MethodAttributes.Static).WithDeclaringType(Type())),
-                };
-
-                previous.Get().Returns(mixed);
-
-                // Act
-                IEnumerable<Constructor> actual = sut.Get();
-
-                Assert.Equal(expected, actual);
+                var declaredConstructors = Assert.IsType<DeclaredMembers<Constructor, ConstructorInfo>>(actual);
+                Assert.Equal(declaringType, declaredConstructors.DeclaringType);
+                Assert.Same(allConstructors, declaredConstructors.Previous);
             }
         }
 
-        public class GetEvents: DeclarationScopeTest
+        public class Events: DeclarationScopeTest
         {
-            new readonly IFilter<Event> sut;
-            new readonly IFilter<Event> previous;
-
-            public GetEvents() {
-                sut = base.sut;
-                previous = base.previous;
-            }
-
             [Fact]
             public void ReturnsEventsWithMatchingDeclaringType() {
-                // Arrange
-                EventInfo eventInfo = EventInfo(MethodAttributes.Static).WithDeclaringType(declaringType);
+                var allEvents = Substitute.For<IEnumerable<Event>>();
+                ConfiguredCall arrange = previous.Events().Returns(allEvents);
 
-                var expected = new[] { new Event(eventInfo), new Event(eventInfo) };
+                IEnumerable<Event> actual = sut.Events();
 
-                var mixed = new[] {
-                    new Event(EventInfo(MethodAttributes.Static).WithDeclaringType(Type())),
-                    expected[0],
-                    new Event(EventInfo(MethodAttributes.Static).WithDeclaringType(Type())),
-                    expected[1],
-                    new Event(EventInfo(MethodAttributes.Static).WithDeclaringType(Type())),
-                };
-
-                previous.Get().Returns(mixed);
-
-                // Act
-                IEnumerable<Event> actual = sut.Get();
-
-                Assert.Equal(expected, actual);
+                var declaredEvents = Assert.IsType<DeclaredMembers<Event, EventInfo>>(actual);
+                Assert.Equal(declaringType, declaredEvents.DeclaringType);
+                Assert.Same(allEvents, declaredEvents.Previous);
             }
         }
 
-        public class GetFields: DeclarationScopeTest
+        public class Fields: DeclarationScopeTest
         {
-            new readonly IFilter<Field> sut;
-            new readonly IFilter<Field> previous;
-
-            public GetFields() {
-                sut = base.sut;
-                previous = base.previous;
-            }
-
             [Fact]
             public void ReturnsFieldsWithMatchingDeclaringType() {
-                // Arrange
-                FieldInfo fieldInfo = FieldInfo(FieldAttributes.Static).WithDeclaringType(declaringType);
+                var allFields = Substitute.For<IEnumerable<Field>>();
+                ConfiguredCall arrange = previous.Fields().Returns(allFields);
 
-                var expected = new[] { new Field(fieldInfo), new Field(fieldInfo) };
+                IEnumerable<Field> actual = sut.Fields();
 
-                var mixed = new[] {
-                    new Field(FieldInfo(FieldAttributes.Static).WithDeclaringType(Type())),
-                    expected[0],
-                    new Field(FieldInfo(FieldAttributes.Static).WithDeclaringType(Type())),
-                    expected[1],
-                    new Field(FieldInfo(FieldAttributes.Static).WithDeclaringType(Type())),
-                };
-
-                previous.Get().Returns(mixed);
-
-                // Act
-                IEnumerable<Field> actual = sut.Get();
-
-                Assert.Equal(expected, actual);
+                var declaredFields = Assert.IsType<DeclaredMembers<Field, FieldInfo>>(actual);
+                Assert.Equal(declaringType, declaredFields.DeclaringType);
+                Assert.Same(allFields, declaredFields.Previous);
             }
         }
 
-        public class GetMethods: DeclarationScopeTest
+        public class Methods: DeclarationScopeTest
         {
-            new readonly IFilter<Method> sut;
-            new readonly IFilter<Method> previous;
-
-            public GetMethods() {
-                sut = base.sut;
-                previous = base.previous;
-            }
-
             [Fact]
             public void ReturnsMethodsWithMatchingDeclaringType() {
-                // Arrange
-                MethodInfo methodInfo = MethodInfo(MethodAttributes.Static).WithDeclaringType(declaringType);
+                var allMethods = Substitute.For<IEnumerable<Method>>();
+                ConfiguredCall arrange = previous.Methods().Returns(allMethods);
 
-                var expected = new[] { new Method(methodInfo), new Method(methodInfo) };
+                IEnumerable<Method> actual = sut.Methods();
 
-                var mixed = new[] {
-                    new Method(MethodInfo(MethodAttributes.Static).WithDeclaringType(Type())),
-                    expected[0],
-                    new Method(MethodInfo(MethodAttributes.Static).WithDeclaringType(Type())),
-                    expected[1],
-                    new Method(MethodInfo(MethodAttributes.Static).WithDeclaringType(Type())),
-                };
-
-                previous.Get().Returns(mixed);
-
-                // Act
-                IEnumerable<Method> actual = sut.Get();
-
-                Assert.Equal(expected, actual);
+                var declaredMethods = Assert.IsType<DeclaredMembers<Method, MethodInfo>>(actual);
+                Assert.Equal(declaringType, declaredMethods.DeclaringType);
+                Assert.Same(allMethods, declaredMethods.Previous);
             }
         }
 
-        public class GetProperties: DeclarationScopeTest
+        public class Properties: DeclarationScopeTest
         {
-            new readonly IFilter<Property> sut;
-            new readonly IFilter<Property> previous;
-
-            public GetProperties() {
-                sut = base.sut;
-                previous = base.previous;
-            }
-
             [Fact]
             public void ReturnsPropertiesWithMatchingDeclaringType() {
-                // Arrange
-                PropertyInfo propertyInfo = PropertyInfo(MethodAttributes.Static).WithDeclaringType(declaringType);
+                var allProperties = Substitute.For<IEnumerable<Property>>();
+                ConfiguredCall arrange = previous.Properties().Returns(allProperties);
 
-                var expected = new[] { new Property(propertyInfo), new Property(propertyInfo) };
+                IEnumerable<Property> actual = sut.Properties();
 
-                var mixed = new[] {
-                    new Property(PropertyInfo(MethodAttributes.Static).WithDeclaringType(Type())),
-                    expected[0],
-                    new Property(PropertyInfo(MethodAttributes.Static).WithDeclaringType(Type())),
-                    expected[1],
-                    new Property(PropertyInfo(MethodAttributes.Static).WithDeclaringType(Type())),
-                };
-
-                previous.Get().Returns(mixed);
-
-                // Act
-                IEnumerable<Property> actual = sut.Get();
-
-                Assert.Equal(expected, actual);
+                var declaredProperties = Assert.IsType<DeclaredMembers<Property, PropertyInfo>>(actual);
+                Assert.Equal(declaringType, declaredProperties.DeclaringType);
+                Assert.Same(allProperties, declaredProperties.Previous);
             }
         }
     }
