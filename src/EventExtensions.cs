@@ -12,16 +12,16 @@ namespace Inspector
         #region IScope
 
         public static Event Event(this IScope scope) =>
-            scope.Single<Event>();
+            scope.Events().Single();
 
         public static Event Event(this IScope scope, string eventName) =>
-            new MemberNameFilter<Event, EventInfo>(scope, eventName).Single();
+            new MemberNameFilter<Event, EventInfo>(scope.Events(), eventName).Single();
 
         public static Event Event(this IScope scope, Type handlerType) =>
-            new EventTypeFilter(scope, handlerType).Single();
+            new EventTypeFilter(scope.Events(), handlerType).Single();
 
         public static Event Event(this IScope scope, Type handlerType, string eventName) {
-            var typed = new EventTypeFilter(scope, handlerType);
+            var typed = new EventTypeFilter(scope.Events(), handlerType);
             var named = new MemberNameFilter<Event, EventInfo>(typed, eventName);
             return named.Single();
         }

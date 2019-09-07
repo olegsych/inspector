@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Inspector.Implementation;
 using NSubstitute;
@@ -19,20 +20,20 @@ namespace Inspector
         // Shared test fixture
         protected readonly object instance = new TestType();
         protected readonly Event selected;
-        protected IFilter<Event> selection;
+        protected IEnumerable<Event> selection;
 
         public EventExtensionsTest() {
             selected = new Event(typeof(TestType).GetEvent(nameof(TestType.Event)), instance);
-            select.Invoke(Arg.Do<IFilter<Event>>(e => selection = e)).Returns(selected);
+            select.Invoke(Arg.Do<IEnumerable<Event>>(e => selection = e)).Returns(selected);
         }
 
-        internal static MemberNameFilter<Event, EventInfo> VerifyFilter(IFilter<Event> selection, string eventName) {
+        internal static MemberNameFilter<Event, EventInfo> VerifyFilter(IEnumerable<Event> selection, string eventName) {
             var filter = Assert.IsType<MemberNameFilter<Event, EventInfo>>(selection);
             Assert.Equal(eventName, filter.MemberName);
             return filter;
         }
 
-        internal static EventTypeFilter VerifyFilter(IFilter<Event> selection, Type expectedHandlerType) {
+        internal static EventTypeFilter VerifyFilter(IEnumerable<Event> selection, Type expectedHandlerType) {
             var filter = Assert.IsType<EventTypeFilter>(selection);
             Assert.Equal(expectedHandlerType, filter.HandlerType);
             return filter;
@@ -57,55 +58,55 @@ namespace Inspector
             // Method parameters
             readonly IScope scope = Substitute.For<IScope>();
 
+            // Test fixture
+            readonly IEnumerable<Event> events = Substitute.For<IEnumerable<Event>>();
+
+            public IScopeExtension() =>
+                scope.Events().Returns(events);
+
             [Fact]
             public void ReturnsSingleEventInGivenScope() {
                 Assert.Same(selected, scope.Event());
-
-                Assert.Same(scope, selection);
+                Assert.Same(events, selection);
             }
 
             [Fact]
             public void ReturnsEventWithGivenName() {
                 Assert.Same(selected, scope.Event(eventName));
-
                 MemberNameFilter<Event, EventInfo> filter = VerifyFilter(selection, eventName);
-                Assert.Same(scope, filter.Previous);
+                Assert.Same(events, filter.Previous);
             }
 
             [Fact]
             public void ReturnsEventWithGivenHandlerType() {
                 Assert.Same(selected, scope.Event(handlerType));
-
                 EventTypeFilter filter = VerifyFilter(selection, handlerType);
-                Assert.Same(scope, filter.Previous);
+                Assert.Same(events, filter.Previous);
             }
 
             [Fact]
             public void ReturnsEventWithGivenHandlerTypeAndName() {
                 Assert.Same(selected, scope.Event(handlerType, eventName));
-
                 MemberNameFilter<Event, EventInfo> named = VerifyFilter(selection, eventName);
                 EventTypeFilter typed = VerifyFilter(named.Previous, handlerType);
-                Assert.Same(scope, typed.Previous);
+                Assert.Same(events, typed.Previous);
             }
 
             [Fact]
             public void ReturnsGenericEventWithGivenHandlerType() {
                 Event<TestHandler> generic = scope.Event<TestHandler>();
-
                 VerifyGenericEvent(selected, generic);
                 EventTypeFilter typed = VerifyFilter(selection, handlerType);
-                Assert.Same(scope, typed.Previous);
+                Assert.Same(events, typed.Previous);
             }
 
             [Fact]
             public void ReturnsGenericEventWithGivenHandlerTypeAndName() {
                 Event<TestHandler> generic = scope.Event<TestHandler>(eventName);
-
                 VerifyGenericEvent(selected, generic);
                 MemberNameFilter<Event, EventInfo> named = VerifyFilter(selection, eventName);
                 EventTypeFilter typed = VerifyFilter(named.Previous, handlerType);
-                Assert.Same(scope, typed.Previous);
+                Assert.Same(events, typed.Previous);
             }
         }
 
@@ -162,9 +163,9 @@ namespace Inspector
                 VerifyScope(typed.Previous, instance);
             }
 
-            static void VerifyScope(IFilter<Event> filter, object instance) {
-                var scope = Assert.IsType<InstanceScope>(filter);
-                Assert.Same(instance, scope.Instance);
+            static void VerifyScope(IEnumerable<Event> filter, object instance) {
+                var events = Assert.IsType<Members<EventInfo, Event>>(filter);
+                Assert.Same(instance, events.Instance);
             }
         }
 
@@ -224,9 +225,9 @@ namespace Inspector
                 VerifyScope(typed.Previous, testType);
             }
 
-            static void VerifyScope(IFilter<Event> selection, Type type) {
-                var scope = Assert.IsType<StaticScope>(selection);
-                Assert.Same(type, scope.Type);
+            static void VerifyScope(IEnumerable<Event> selection, Type type) {
+                var events = Assert.IsType<Members<EventInfo, Event>>(selection);
+                Assert.Same(type, events.Type);
             }
         }
     }
