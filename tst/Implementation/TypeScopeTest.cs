@@ -10,11 +10,11 @@ namespace Inspector.Implementation
     {
         class TestType { }
 
-        public class GetConstructors: TypeScopeTest
+        public class Constructors: TypeScopeTest
         {
             [Theory, MemberData(nameof(ConstructorData))]
-            internal void ReturnsConstructorsOfGivenTypeOrInstance(IFilter<Constructor> sut, Type type, object instance) {
-                var members = Assert.IsType<Members<ConstructorInfo, Constructor>>(sut.Get());
+            internal void ReturnsConstructorsOfGivenTypeOrInstance(IScope sut, Type type, object instance) {
+                var members = Assert.IsType<Members<ConstructorInfo, Constructor>>(sut.Constructors());
 
                 Assert.Same(type, members.Type);
                 Assert.Same(instance, members.Instance);
@@ -30,11 +30,11 @@ namespace Inspector.Implementation
             }
         }
 
-        public class GetEvents: TypeScopeTest
+        public class Events: TypeScopeTest
         {
             [Theory, MemberData(nameof(MemberData))]
-            internal void ReturnsEventsOfGivenTypeOrInstance(IFilter<Event> sut, Type type, object instance, Lifetime lifetime) {
-                var members = Assert.IsType<Members<EventInfo, Event>>(sut.Get());
+            internal void ReturnsEventsOfGivenTypeOrInstance(IScope sut, Type type, object instance, Lifetime lifetime) {
+                var members = Assert.IsType<Members<EventInfo, Event>>(sut.Events());
 
                 Assert.Same(type, members.Type);
                 Assert.Same(instance, members.Instance);
@@ -44,11 +44,11 @@ namespace Inspector.Implementation
             }
         }
 
-        public class GetFields: TypeScopeTest
+        public class Fields: TypeScopeTest
         {
             [Theory, MemberData(nameof(MemberData))]
-            internal void ReturnsFieldsOfGivenTypeOrInstance(IFilter<Field> sut, Type type, object instance, Lifetime lifetime) {
-                var members = Assert.IsType<Members<FieldInfo, Field>>(sut.Get());
+            internal void ReturnsFieldsOfGivenTypeOrInstance(IScope sut, Type type, object instance, Lifetime lifetime) {
+                var members = Assert.IsType<Members<FieldInfo, Field>>(sut.Fields());
 
                 Assert.Same(type, members.Type);
                 Assert.Same(instance, members.Instance);
@@ -58,11 +58,11 @@ namespace Inspector.Implementation
             }
         }
 
-        public class GetMethods: TypeScopeTest
+        public class Methods: TypeScopeTest
         {
             [Theory, MemberData(nameof(MemberData))]
-            internal void ReturnsMethodsOfGivenTypeOrInstance(IFilter<Method> sut, Type type, object instance, Lifetime lifetime) {
-                var members = Assert.IsType<Members<MethodInfo, Method>>(sut.Get());
+            internal void ReturnsMethodsOfGivenTypeOrInstance(IScope sut, Type type, object instance, Lifetime lifetime) {
+                var members = Assert.IsType<Members<MethodInfo, Method>>(sut.Methods());
 
                 Assert.Same(type, members.Type);
                 Assert.Same(instance, members.Instance);
@@ -72,11 +72,11 @@ namespace Inspector.Implementation
             }
         }
 
-        public class GetProperties: TypeScopeTest
+        public class Properties: TypeScopeTest
         {
             [Theory, MemberData(nameof(MemberData))]
-            internal void ReturnsPropertiesOfGivenTypeOrInstance(IFilter<Property> sut, Type type, object instance, Lifetime lifetime) {
-                var members = Assert.IsType<Members<PropertyInfo, Property>>(sut.Get());
+            internal void ReturnsPropertiesOfGivenTypeOrInstance(IScope sut, Type type, object instance, Lifetime lifetime) {
+                var members = Assert.IsType<Members<PropertyInfo, Property>>(sut.Properties());
 
                 Assert.Same(type, members.Type);
                 Assert.Same(instance, members.Instance);

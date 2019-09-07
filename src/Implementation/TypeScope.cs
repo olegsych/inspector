@@ -18,19 +18,19 @@ namespace Inspector.Implementation
 
         public Type Type { get; }
 
-        IEnumerable<Constructor> IFilter<Constructor>.Get() =>
+        public IEnumerable<Constructor> Constructors() =>
             new Members<ConstructorInfo, Constructor>(Type, Instance, typeInfo => typeInfo.GetConstructors, Constructor.Create, Lifetime.Instance);
 
-        IEnumerable<Event> IFilter<Event>.Get() =>
+        public IEnumerable<Event> Events() =>
             new Members<EventInfo, Event>(Type, Instance, typeInfo => typeInfo.GetEvents, Event.Create);
 
-        IEnumerable<Field> IFilter<Field>.Get() =>
+        public IEnumerable<Field> Fields() =>
             new Members<FieldInfo, Field>(Type, Instance, typeInfo => typeInfo.GetFields, Field.Create);
 
-        IEnumerable<Method> IFilter<Method>.Get() =>
+        public IEnumerable<Method> Methods() =>
             new Members<MethodInfo, Method>(Type, Instance, typeInfo => typeInfo.GetMethods, Method.Create);
 
-        IEnumerable<Property> IFilter<Property>.Get() =>
+        public IEnumerable<Property> Properties() =>
             new Members<PropertyInfo, Property>(Type, Instance, typeInfo => typeInfo.GetProperties, Property.Create);
     }
 }
