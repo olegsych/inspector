@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using NSubstitute;
+using NSubstitute.Core;
 using Xunit;
 using static Inspector.Substitutes;
 
@@ -9,10 +10,10 @@ namespace Inspector.Implementation
 {
     public class EventTypeFilterTest
     {
-        readonly IFilter<Event> sut;
+        readonly Filter<Event> sut;
 
         // Constructor parameters
-        readonly IFilter<Event> previous = Substitute.For<IFilter<Event>>();
+        readonly IEnumerable<Event> previous = Substitute.For<IEnumerable<Event>>();
         readonly Type handlerType = Type();
 
         public EventTypeFilterTest() =>
@@ -31,6 +32,10 @@ namespace Inspector.Implementation
                 var thrown = Assert.Throws<ArgumentNullException>(() => new EventTypeFilter(previous, null));
                 Assert.Equal("handlerType", thrown.ParamName);
             }
+
+            [Fact]
+            public void PassesPreviousToBaseConstructor() =>
+                Assert.Same(previous, sut.Previous);
         }
 
         public class HandlerType: EventTypeFilterTest
@@ -40,16 +45,7 @@ namespace Inspector.Implementation
                 Assert.Same(handlerType, ((EventTypeFilter)sut).HandlerType);
         }
 
-        public class Previous: EventTypeFilterTest
-        {
-            [Fact]
-            public void ImplementsDecoratorAndReturnsInstanceGivenToConstructor() {
-                var decorator = (IDecorator<IFilter<Event>>)sut;
-                Assert.Same(previous, decorator.Previous);
-            }
-        }
-
-        public class Get: EventTypeFilterTest
+        public class GetEnumerator: EventTypeFilterTest
         {
             [Fact]
             public void ReturnsEventsWithGivenHandlerType() {
@@ -58,7 +54,7 @@ namespace Inspector.Implementation
 
                 var expected = new[] { new Event(fieldInfo), new Event(fieldInfo) };
 
-                var mixed = new[] {
+                IEnumerable<Event> mixed = new[] {
                     new Event(EventInfo(MethodAttributes.Static)),
                     expected[0],
                     new Event(EventInfo(MethodAttributes.Static)),
@@ -66,12 +62,9 @@ namespace Inspector.Implementation
                     new Event(EventInfo(MethodAttributes.Static))
                 };
 
-                previous.Get().Returns(mixed);
+                ConfiguredCall arrange = previous.GetEnumerator().Returns(mixed.GetEnumerator());
 
-                // Act
-                IEnumerable<Event> actual = sut.Get();
-
-                Assert.Equal(expected, actual);
+                Assert.Equal(expected, sut);
             }
         }
     }
