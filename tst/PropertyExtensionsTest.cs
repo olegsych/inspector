@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Inspector.Implementation;
 using NSubstitute;
@@ -19,11 +20,11 @@ namespace Inspector
         // Shared test fixture
         protected readonly object instance = new TestType();
         protected readonly Property selected;
-        protected IFilter<Property> selection;
+        protected IEnumerable<Property> selection;
 
         public PropertyExtensionsTest() {
             selected = new Property(typeof(TestType).GetProperty(nameof(TestType.Property)), instance);
-            select.Invoke(Arg.Do<IFilter<Property>>(p => selection = p)).Returns(selected);
+            select.Invoke(Arg.Do<IEnumerable<Property>>(p => selection = p)).Returns(selected);
         }
 
         protected static void VerifyGenericProperty<T>(Property selected, Property<T> generic) {
@@ -31,13 +32,13 @@ namespace Inspector
             Assert.Same(selected.Instance, generic.Instance);
         }
 
-        internal static MemberNameFilter<Property, PropertyInfo> VerifyFilter(IFilter<Property> selection, string propertyName) {
+        internal static MemberNameFilter<Property, PropertyInfo> VerifyFilter(IEnumerable<Property> selection, string propertyName) {
             var filter = Assert.IsType<MemberNameFilter<Property, PropertyInfo>>(selection);
             Assert.Equal(propertyName, filter.MemberName);
             return filter;
         }
 
-        internal static PropertyTypeFilter VerifyFilter(IFilter<Property> selection, Type expectedPropertyType) {
+        internal static PropertyTypeFilter VerifyFilter(IEnumerable<Property> selection, Type expectedPropertyType) {
             var filter = Assert.IsType<PropertyTypeFilter>(selection);
             Assert.Equal(expectedPropertyType, filter.PropertyType);
             return filter;
@@ -55,55 +56,55 @@ namespace Inspector
             // Method parameters
             readonly IScope scope = Substitute.For<IScope>();
 
+            // Arrange
+            readonly IEnumerable<Property> properties = Substitute.For<IEnumerable<Property>>();
+
+            public IScopeExtension() =>
+                scope.Properties().Returns(properties);
+
             [Fact]
             public void ReturnsSinglePropertyInGivenScope() {
                 Assert.Same(selected, scope.Property());
-
-                Assert.Same(scope, selection);
+                Assert.Same(properties, selection);
             }
 
             [Fact]
             public void ReturnsPropertyWithGivenName() {
                 Assert.Same(selected, scope.Property(propertyName));
-
                 MemberNameFilter<Property, PropertyInfo> filter = VerifyFilter(selection, propertyName);
-                Assert.Same(scope, filter.Previous);
+                Assert.Same(properties, filter.Previous);
             }
 
             [Fact]
             public void ReturnsPropertyWithGivenType() {
                 Assert.Same(selected, scope.Property(propertyType));
-
                 PropertyTypeFilter filter = VerifyFilter(selection, propertyType);
-                Assert.Same(scope, filter.Previous);
+                Assert.Same(properties, filter.Previous);
             }
 
             [Fact]
             public void ReturnsPropertyWithGivenTypeAndName() {
                 Assert.Same(selected, scope.Property(propertyType, propertyName));
-
                 MemberNameFilter<Property, PropertyInfo> nameFilter = VerifyFilter(selection, propertyName);
                 PropertyTypeFilter typeFilter = VerifyFilter(nameFilter.Previous, propertyType);
-                Assert.Same(scope, typeFilter.Previous);
+                Assert.Same(properties, typeFilter.Previous);
             }
 
             [Fact]
             public void ReturnsGenericPropertyWithGivenType() {
                 Property<PropertyValue> generic = scope.Property<PropertyValue>();
-
                 VerifyGenericProperty(selected, generic);
                 PropertyTypeFilter typeFilter = VerifyFilter(selection, typeof(PropertyValue));
-                Assert.Same(scope, typeFilter.Previous);
+                Assert.Same(properties, typeFilter.Previous);
             }
 
             [Fact]
             public void ReturnsGenericPropertyWithGivenTypeAndName() {
                 Property<PropertyValue> generic = scope.Property<PropertyValue>(propertyName);
-
                 VerifyGenericProperty(selected, generic);
                 MemberNameFilter<Property, PropertyInfo> nameFilter = VerifyFilter(selection, propertyName);
                 PropertyTypeFilter typeFilter = VerifyFilter(nameFilter.Previous, propertyType);
-                Assert.Same(scope, typeFilter.Previous);
+                Assert.Same(properties, typeFilter.Previous);
             }
         }
 
@@ -160,9 +161,9 @@ namespace Inspector
                 VerifyScope(typed.Previous, instance);
             }
 
-            static void VerifyScope(IFilter<Property> filter, object instance) {
-                var scope = Assert.IsType<InstanceScope>(filter);
-                Assert.Same(instance, scope.Instance);
+            static void VerifyScope(IEnumerable<Property> filter, object instance) {
+                var properties = Assert.IsType<Members<PropertyInfo, Property>>(filter);
+                Assert.Same(instance, properties.Instance);
             }
         }
 
@@ -222,9 +223,9 @@ namespace Inspector
                 VerifyScope(typed.Previous, testType);
             }
 
-            static void VerifyScope(IFilter<Property> selection, Type expected) {
-                var scope = Assert.IsType<StaticScope>(selection);
-                Assert.Same(expected, scope.Type);
+            static void VerifyScope(IEnumerable<Property> selection, Type expected) {
+                var properties = Assert.IsType<Members<PropertyInfo, Property>>(selection);
+                Assert.Same(expected, properties.Type);
             }
         }
     }

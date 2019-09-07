@@ -9,16 +9,16 @@ namespace Inspector
         #region IScope
 
         public static Property Property(this IScope scope) =>
-            scope.Single<Property>();
+            scope.Properties().Single();
 
         public static Property Property(this IScope scope, string propertyName) =>
-            new MemberNameFilter<Property, PropertyInfo>(scope, propertyName).Single();
+            new MemberNameFilter<Property, PropertyInfo>(scope.Properties(), propertyName).Single();
 
         public static Property Property(this IScope scope, Type propertyType) =>
-            new PropertyTypeFilter(scope, propertyType).Single();
+            new PropertyTypeFilter(scope.Properties(), propertyType).Single();
 
         public static Property Property(this IScope scope, Type propertyType, string propertyName) {
-            var typed = new PropertyTypeFilter(scope, propertyType);
+            var typed = new PropertyTypeFilter(scope.Properties(), propertyType);
             var named = new MemberNameFilter<Property, PropertyInfo>(typed, propertyName);
             return named.Single();
         }
