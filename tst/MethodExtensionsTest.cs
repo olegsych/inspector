@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Inspector.Implementation;
 using NSubstitute;
@@ -19,11 +20,11 @@ namespace Inspector
         // Shared test fixture
         protected readonly object instance = new TestType();
         protected readonly Method selected;
-        protected IFilter<Method> selection;
+        protected IEnumerable<Method> selection;
 
         public MethodExtensionsTest() {
             selected = new Method(typeof(TestType).GetMethod(nameof(TestType.Method)), instance);
-            select.Invoke(Arg.Do<IFilter<Method>>(f => selection = f)).Returns(selected);
+            select.Invoke(Arg.Do<IEnumerable<Method>>(f => selection = f)).Returns(selected);
         }
 
         protected static void VerifyGenericMethod<T>(Method selected, Method<T> generic) where T : Delegate {
@@ -32,19 +33,13 @@ namespace Inspector
             Assert.NotNull(generic.Invoke);
         }
 
-        static DeclarationScope VerifyDeclarationScope(IFilter<Method> filter, Type declaringType) {
-            var scope = Assert.IsType<DeclarationScope>(filter);
-            Assert.Equal(declaringType, scope.DeclaringType);
-            return scope;
-        }
-
-        internal static MemberNameFilter<Method, MethodInfo> VerifyFilter(IFilter<Method> selection, string methodName) {
+        internal static MemberNameFilter<Method, MethodInfo> VerifyFilter(IEnumerable<Method> selection, string methodName) {
             var filter = Assert.IsType<MemberNameFilter<Method, MethodInfo>>(selection);
             Assert.Equal(methodName, filter.MemberName);
             return filter;
         }
 
-        internal static MethodTypeFilter VerifyFilter(IFilter<Method> selection, Type expectedMethodType) {
+        internal static MethodTypeFilter VerifyFilter(IEnumerable<Method> selection, Type expectedMethodType) {
             var filter = Assert.IsType<MethodTypeFilter>(selection);
             Assert.IsType<MethodDelegateFactory>(filter.DelegateFactory);
             Assert.Equal(expectedMethodType, filter.DelegateType);
@@ -65,55 +60,55 @@ namespace Inspector
             // Method parameters
             readonly IScope scope = Substitute.For<IScope>();
 
+            // Arrange
+            readonly IEnumerable<Method> methods = Substitute.For<IEnumerable<Method>>();
+
+            public IScopeExtension() =>
+                scope.Methods().Returns(methods);
+
             [Fact]
             public void ReturnsSingleMethodInGivenScope() {
                 Assert.Same(selected, scope.Method());
-
-                Assert.Same(scope, selection);
+                Assert.Same(methods, selection);
             }
 
             [Fact]
             public void ReturnsMethodWithGivenName() {
                 Assert.Same(selected, scope.Method(methodName));
-
                 MemberNameFilter<Method, MethodInfo> filter = VerifyFilter(selection, methodName);
-                Assert.Same(scope, filter.Previous);
+                Assert.Same(methods, filter.Previous);
             }
 
             [Fact]
             public void ReturnsMethodWithGivenType() {
                 Assert.Same(selected, scope.Method(methodType));
-
                 MethodTypeFilter filter = VerifyFilter(selection, methodType);
-                Assert.Same(scope, filter.Previous);
+                Assert.Same(methods, filter.Previous);
             }
 
             [Fact]
             public void ReturnsMethodWithGivenTypeAndName() {
                 Assert.Same(selected, scope.Method(methodType, methodName));
-
                 MemberNameFilter<Method, MethodInfo> nameFilter = VerifyFilter(selection, methodName);
                 MethodTypeFilter typeFilter = VerifyFilter(nameFilter.Previous, methodType);
-                Assert.Same(scope, typeFilter.Previous);
+                Assert.Same(methods, typeFilter.Previous);
             }
 
             [Fact]
             public void ReturnsGenericMethodWithGivenType() {
                 Method<MethodType> generic = scope.Method<MethodType>();
-
                 VerifyGenericMethod(selected, generic);
                 MethodTypeFilter typeFilter = VerifyFilter(selection, typeof(MethodType));
-                Assert.Same(scope, typeFilter.Previous);
+                Assert.Same(methods, typeFilter.Previous);
             }
 
             [Fact]
             public void ReturnsGenericMethodWithGivenTypeAndName() {
                 Method<MethodType> generic = scope.Method<MethodType>(methodName);
-
                 VerifyGenericMethod(selected, generic);
                 MemberNameFilter<Method, MethodInfo> nameFilter = VerifyFilter(selection, methodName);
                 MethodTypeFilter typeFilter = VerifyFilter(nameFilter.Previous, methodType);
-                Assert.Same(scope, typeFilter.Previous);
+                Assert.Same(methods, typeFilter.Previous);
             }
         }
 
@@ -122,8 +117,9 @@ namespace Inspector
             [Fact]
             public void ReturnsSingleMethodDeclaredByTypeOfGivenInstance() {
                 Assert.Same(selected, instance.Method());
-                DeclarationScope declaration = VerifyDeclarationScope(selection, instance.GetType());
-                VerifyScope(declaration.Previous, instance);
+                var declared = Assert.IsType<DeclaredMembers<Method, MethodInfo>>(selection);
+                Assert.Equal(instance.GetType(), declared.DeclaringType);
+                VerifyScope(declared.Previous, instance);
             }
 
             [Fact]
@@ -170,8 +166,8 @@ namespace Inspector
                 VerifyScope(typed.Previous, instance);
             }
 
-            static void VerifyScope(IFilter<Method> filter, object instance) {
-                var scope = Assert.IsType<InstanceScope>(filter);
+            static void VerifyScope(IEnumerable<Method> filter, object instance) {
+                var scope = Assert.IsType<Members<MethodInfo, Method>>(filter);
                 Assert.Same(instance, scope.Instance);
             }
         }
@@ -232,9 +228,9 @@ namespace Inspector
                 VerifyScope(typed.Previous, testType);
             }
 
-            static void VerifyScope(IFilter<Method> selection, Type expected) {
-                var scope = Assert.IsType<StaticScope>(selection);
-                Assert.Same(expected, scope.Type);
+            static void VerifyScope(IEnumerable<Method> selection, Type expected) {
+                var methods = Assert.IsType<Members<MethodInfo, Method>>(selection);
+                Assert.Same(expected, methods.Type);
             }
         }
     }
