@@ -5,23 +5,16 @@ using System.Reflection;
 
 namespace Inspector.Implementation
 {
-    /// <summary>
-    /// Filters members by name.
-    /// </summary>
-    sealed class MemberNameFilter<TMember, TInfo>: IFilter<TMember>, IDecorator<IFilter<TMember>>
+    sealed class MemberNameFilter<TMember, TInfo>: Filter<TMember>
         where TMember : Member<TInfo>
         where TInfo : MemberInfo
     {
-        public MemberNameFilter(IFilter<TMember> previous, string memberName) {
-            Previous = previous ?? throw new ArgumentNullException(nameof(previous));
+        public MemberNameFilter(IEnumerable<TMember> previous, string memberName) : base(previous) =>
             MemberName = memberName ?? throw new ArgumentNullException(nameof(memberName));
-        }
-
-        public IFilter<TMember> Previous { get; }
 
         public string MemberName { get; }
 
-        IEnumerable<TMember> IFilter<TMember>.Get() =>
-            Previous.Get().Where(member => member.Info.Name == MemberName);
+        public override IEnumerator<TMember> GetEnumerator() =>
+            Previous.Where(member => member.Info.Name == MemberName).GetEnumerator();
     }
 }

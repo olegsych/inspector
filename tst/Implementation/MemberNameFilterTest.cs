@@ -2,16 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using NSubstitute;
+using NSubstitute.Core;
 using Xunit;
 
 namespace Inspector.Implementation
 {
     public class MemberNameFilterTest
     {
-        readonly IFilter<Member<MemberInfo>> sut;
+        readonly Filter<Member<MemberInfo>> sut;
 
         // Constructor parameters
-        readonly IFilter<Member<MemberInfo>> previous = Substitute.For<IFilter<Member<MemberInfo>>>();
+        readonly IEnumerable<Member<MemberInfo>> previous = Substitute.For<IEnumerable<Member<MemberInfo>>>();
         readonly string memberName = Guid.NewGuid().ToString();
 
         public MemberNameFilterTest() =>
@@ -30,6 +31,10 @@ namespace Inspector.Implementation
                 var thrown = Assert.Throws<ArgumentNullException>(() => new MemberNameFilter<Member<MemberInfo>, MemberInfo>(previous, null));
                 Assert.Equal("memberName", thrown.ParamName);
             }
+
+            [Fact]
+            public void PassesPreviousToBaseConstructor() =>
+                Assert.Same(previous, sut.Previous);
         }
 
         public class MemberName: MemberNameFilterTest
@@ -39,26 +44,15 @@ namespace Inspector.Implementation
                 Assert.Same(memberName, ((MemberNameFilter<Member<MemberInfo>, MemberInfo>)sut).MemberName);
         }
 
-        public class Previous: MemberNameFilterTest
-        {
-            [Fact]
-            public void ImplementsIDecoratorAndReturnsFilterGivenToConstructor() {
-                var decorator = (IDecorator<IFilter<Member<MemberInfo>>>)sut;
-                Assert.Same(previous, decorator.Previous);
-            }
-        }
-
-        public class Get: MemberNameFilterTest
+        public class GetEnumerator: MemberNameFilterTest
         {
             [Fact]
             public void ReturnsMembersWithGivenName() {
                 Member<MemberInfo>[] expected = new[] { Member(memberName), Member(memberName) };
-                Member<MemberInfo>[] mixed = new[] { Member(), expected[0], Member(), expected[1], Member() };
-                previous.Get().Returns(mixed);
+                IEnumerable<Member<MemberInfo>> mixed = new[] { Member(), expected[0], Member(), expected[1], Member() };
+                ConfiguredCall arrange = previous.GetEnumerator().Returns(mixed.GetEnumerator());
 
-                IEnumerable<Member<MemberInfo>> actual = sut.Get();
-
-                Assert.Equal(expected, actual);
+                Assert.Equal(expected, sut);
             }
 
             class TestMember: Member<MemberInfo>
@@ -69,7 +63,7 @@ namespace Inspector.Implementation
 
             static Member<MemberInfo> Member(string name = default) {
                 MemberInfo info = Substitute.For<MemberInfo>();
-                info.Name.Returns(name ?? Guid.NewGuid().ToString());
+                ConfiguredCall arrange = info.Name.Returns(name ?? Guid.NewGuid().ToString());
                 return new TestMember(info);
             }
         }
