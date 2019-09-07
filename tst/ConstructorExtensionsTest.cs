@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using Inspector.Implementation;
 using NSubstitute;
 using Xunit;
@@ -14,20 +16,14 @@ namespace Inspector
         readonly object instance = new TestType();
         readonly Type delegateType = typeof(TestDelegate);
         readonly Constructor selected;
-        IFilter<Constructor> selection;
+        IEnumerable<Constructor> selection;
 
         public ConstructorExtensionsTest() {
             selected = new Constructor(typeof(TestType).GetConstructor(new Type[0]), instance);
-            select.Invoke(Arg.Do<IFilter<Constructor>>(_ => selection = _)).Returns(selected);
+            select.Invoke(Arg.Do<IEnumerable<Constructor>>(_ => selection = _)).Returns(selected);
         }
 
-        static DeclarationScope VerifyDeclarationScope(IFilter<Constructor> filter, Type declaringType) {
-            var scope = Assert.IsType<DeclarationScope>(filter);
-            Assert.Equal(declaringType, scope.DeclaringType);
-            return scope;
-        }
-
-        static ConstructorTypeFilter VerifyFilter(IFilter<Constructor> selection, Type expectedDelegateType) {
+        static ConstructorTypeFilter VerifyFilter(IEnumerable<Constructor> selection, Type expectedDelegateType) {
             var filter = Assert.IsType<ConstructorTypeFilter>(selection);
             Assert.IsType<ConstructorDelegateFactory>(filter.DelegateFactory);
             Assert.Equal(expectedDelegateType, filter.DelegateType);
@@ -45,17 +41,23 @@ namespace Inspector
             // Method parameters
             readonly IScope scope = Substitute.For<IScope>();
 
+            // Test fixture
+            readonly IEnumerable<Constructor> constructors = Substitute.For<IEnumerable<Constructor>>();
+
+            public IScopeExtension() =>
+                scope.Constructors().Returns(constructors);
+
             [Fact]
             public void ReturnsSingleConstructorInGivenScope() {
                 Assert.Same(selected, scope.Constructor());
-                Assert.Same(scope, selection);
+                Assert.Same(constructors, selection);
             }
 
             [Fact]
             public void ReturnsConstructorWithGivenDelegateType() {
                 Assert.Same(selected, scope.Constructor(delegateType));
                 ConstructorTypeFilter filter = VerifyFilter(selection, delegateType);
-                Assert.Same(scope, filter.Previous);
+                Assert.Same(constructors, filter.Previous);
             }
 
             [Fact]
@@ -64,7 +66,7 @@ namespace Inspector
 
                 VerifyGenericConstructor(selected, generic);
                 ConstructorTypeFilter typeFilter = VerifyFilter(selection, typeof(TestDelegate));
-                Assert.Same(scope, typeFilter.Previous);
+                Assert.Same(constructors, typeFilter.Previous);
             }
         }
 
@@ -73,8 +75,9 @@ namespace Inspector
             [Fact]
             public void ReturnsSingleConstructorDeclaredByTypeOfGivenInstance() {
                 Assert.Same(selected, instance.Constructor());
-                DeclarationScope declaration = VerifyDeclarationScope(selection, instance.GetType());
-                VerifyScope(declaration.Previous, instance);
+                var declared = Assert.IsType<DeclaredMembers<Constructor, ConstructorInfo>>(selection);
+                Assert.Equal(instance.GetType(), declared.DeclaringType);
+                VerifyScope(declared.Previous, instance);
             }
 
             [Fact]
@@ -93,8 +96,8 @@ namespace Inspector
                 VerifyScope(typed.Previous, instance);
             }
 
-            static void VerifyScope(IFilter<Constructor> filter, object instance) {
-                var scope = Assert.IsType<InstanceScope>(filter);
+            static void VerifyScope(IEnumerable<Constructor> filter, object instance) {
+                var scope = Assert.IsType<Members<ConstructorInfo, Constructor>>(filter);
                 Assert.Same(instance, scope.Instance);
             }
         }
@@ -113,9 +116,9 @@ namespace Inspector
                 VerifyScope(selection, type);
             }
 
-            static void VerifyScope(IFilter<Constructor> filter, Type type) {
-                var scope = Assert.IsType<StaticScope>(filter);
-                Assert.Same(type, scope.Type);
+            static void VerifyScope(IEnumerable<Constructor> filter, Type type) {
+                var members = Assert.IsType<Members<ConstructorInfo, Constructor>>(filter);
+                Assert.Same(type, members.Type);
             }
         }
     }
