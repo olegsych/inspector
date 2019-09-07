@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using NSubstitute;
+using NSubstitute.Core;
 using Xunit;
 
 namespace Inspector.Implementation
 {
     public class ConstructorTypeFilterTest
     {
-        readonly IFilter<Constructor> sut;
+        readonly Filter<Constructor> sut;
 
         // Constructor parameters
-        readonly IFilter<Constructor> previous = Substitute.For<IFilter<Constructor>>();
+        readonly IEnumerable<Constructor> previous = Substitute.For<IEnumerable<Constructor>>();
         readonly Type delegateType = typeof(Action<P, P>);
         readonly IDelegateFactory<ConstructorInfo> delegateFactory = Substitute.For<IDelegateFactory<ConstructorInfo>>();
 
@@ -47,16 +48,11 @@ namespace Inspector.Implementation
                 Assert.StartsWith($"{invalid} is not a delegate.", thrown.Message);
             }
 
-            class InvalidDelegateType { }
-        }
-
-        public class Previous: ConstructorTypeFilterTest
-        {
             [Fact]
-            public void ImplementsIDecoratorAndReturnsValueGivenToConstructor() {
-                var decorator = (IDecorator<IFilter<Constructor>>)sut;
-                Assert.Same(previous, decorator.Previous);
-            }
+            public void PassesPreviousToBaseConstructor() =>
+                Assert.Same(previous, sut.Previous);
+
+            class InvalidDelegateType { }
         }
 
         public class DelegateType: ConstructorTypeFilterTest
@@ -73,25 +69,20 @@ namespace Inspector.Implementation
                 Assert.Same(delegateFactory, ((ConstructorTypeFilter)sut).DelegateFactory);
         }
 
-        public class Get: ConstructorTypeFilterTest
+        public class GetEnumerator: ConstructorTypeFilterTest
         {
             [Fact]
             public void ReturnsConstructorsWithGivenDelegateType() {
-                // Arrange
-                ConstructorInfo[] infos = typeof(TestType).GetConstructors();
+                ConfiguredCall arrange;
                 var target = new TestType();
-                delegateFactory.TryCreate(delegateType, target, infos[1], out Delegate @delegate).Returns(true);
-                delegateFactory.TryCreate(delegateType, target, infos[3], out @delegate).Returns(true);
+                ConstructorInfo[] infos = typeof(TestType).GetConstructors();
+                arrange = delegateFactory.TryCreate(delegateType, target, infos[1], out Delegate @delegate).Returns(true);
+                arrange = delegateFactory.TryCreate(delegateType, target, infos[3], out @delegate).Returns(true);
+                List<Constructor> constructors = infos.Select(_ => new Constructor(_, target)).ToList();
+                arrange = previous.GetEnumerator().Returns(constructors.GetEnumerator());
 
-                Constructor[] constructors = infos.Select(_ => new Constructor(_, target)).ToArray();
-                previous.Get().Returns(constructors);
-
-                // Act
-                IEnumerable<Constructor> actual = sut.Get();
-
-                // Assert
                 Constructor[] expected = { constructors[1], constructors[3] };
-                Assert.Equal(expected, actual);
+                Assert.Equal(expected, sut);
             }
         }
 

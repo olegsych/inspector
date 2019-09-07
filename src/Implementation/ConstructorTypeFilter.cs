@@ -5,14 +5,9 @@ using System.Reflection;
 
 namespace Inspector.Implementation
 {
-    /// <summary>
-    /// Filters constructors by type.
-    /// </summary>
-    sealed class ConstructorTypeFilter: IFilter<Constructor>, IDecorator<IFilter<Constructor>>
+    sealed class ConstructorTypeFilter: Filter<Constructor>
     {
-        public ConstructorTypeFilter(IFilter<Constructor> previous, Type delegateType, IDelegateFactory<ConstructorInfo> delegateFactory) {
-            Previous = previous ?? throw new ArgumentNullException(nameof(previous));
-
+        public ConstructorTypeFilter(IEnumerable<Constructor> previous, Type delegateType, IDelegateFactory<ConstructorInfo> delegateFactory): base(previous) {
             if(delegateType == null)
                 throw new ArgumentNullException(nameof(delegateType));
             if(!typeof(Delegate).IsAssignableFrom(delegateType))
@@ -22,11 +17,11 @@ namespace Inspector.Implementation
             DelegateFactory = delegateFactory ?? throw new ArgumentNullException(nameof(delegateFactory));
         }
 
-        public IFilter<Constructor> Previous { get; }
         public Type DelegateType { get; }
+
         public IDelegateFactory<ConstructorInfo> DelegateFactory { get; }
 
-        IEnumerable<Constructor> IFilter<Constructor>.Get() =>
-            Previous.Get().Where(constructor => DelegateFactory.TryCreate(DelegateType, constructor.Instance, constructor.Info, out Delegate _));
+        public override IEnumerator<Constructor> GetEnumerator() =>
+            Previous.Where(constructor => DelegateFactory.TryCreate(DelegateType, constructor.Instance, constructor.Info, out Delegate _)).GetEnumerator();
     }
 }
