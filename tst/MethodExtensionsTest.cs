@@ -76,22 +76,22 @@ namespace Inspector
             public void ReturnsMethodWithGivenName() {
                 Assert.Same(selected, scope.Method(methodName));
                 MemberNameFilter<Method, MethodInfo> filter = VerifyFilter(selection, methodName);
-                Assert.Same(methods, filter.Previous);
+                Assert.Same(methods, filter.Source);
             }
 
             [Fact]
             public void ReturnsMethodWithGivenType() {
                 Assert.Same(selected, scope.Method(methodType));
                 MethodTypeFilter filter = VerifyFilter(selection, methodType);
-                Assert.Same(methods, filter.Previous);
+                Assert.Same(methods, filter.Source);
             }
 
             [Fact]
             public void ReturnsMethodWithGivenTypeAndName() {
                 Assert.Same(selected, scope.Method(methodType, methodName));
                 MemberNameFilter<Method, MethodInfo> nameFilter = VerifyFilter(selection, methodName);
-                MethodTypeFilter typeFilter = VerifyFilter(nameFilter.Previous, methodType);
-                Assert.Same(methods, typeFilter.Previous);
+                MethodTypeFilter typeFilter = VerifyFilter(nameFilter.Source, methodType);
+                Assert.Same(methods, typeFilter.Source);
             }
 
             [Fact]
@@ -99,7 +99,7 @@ namespace Inspector
                 Method<MethodType> generic = scope.Method<MethodType>();
                 VerifyGenericMethod(selected, generic);
                 MethodTypeFilter typeFilter = VerifyFilter(selection, typeof(MethodType));
-                Assert.Same(methods, typeFilter.Previous);
+                Assert.Same(methods, typeFilter.Source);
             }
 
             [Fact]
@@ -107,8 +107,8 @@ namespace Inspector
                 Method<MethodType> generic = scope.Method<MethodType>(methodName);
                 VerifyGenericMethod(selected, generic);
                 MemberNameFilter<Method, MethodInfo> nameFilter = VerifyFilter(selection, methodName);
-                MethodTypeFilter typeFilter = VerifyFilter(nameFilter.Previous, methodType);
-                Assert.Same(methods, typeFilter.Previous);
+                MethodTypeFilter typeFilter = VerifyFilter(nameFilter.Source, methodType);
+                Assert.Same(methods, typeFilter.Source);
             }
         }
 
@@ -119,7 +119,7 @@ namespace Inspector
                 Assert.Same(selected, instance.Method());
                 var declared = Assert.IsType<DeclaredMembers<Method, MethodInfo>>(selection);
                 Assert.Equal(instance.GetType(), declared.DeclaringType);
-                VerifyScope(declared.Previous, instance);
+                VerifyScope(declared.Source, instance);
             }
 
             [Fact]
@@ -127,7 +127,7 @@ namespace Inspector
                 Assert.Same(selected, instance.Method(methodType));
 
                 MethodTypeFilter named = VerifyFilter(selection, methodType);
-                VerifyScope(named.Previous, instance);
+                VerifyScope(named.Source, instance);
             }
 
             [Fact]
@@ -135,7 +135,7 @@ namespace Inspector
                 Assert.Same(selected, instance.Method(methodName));
 
                 MemberNameFilter<Method, MethodInfo> named = VerifyFilter(selection, methodName);
-                VerifyScope(named.Previous, instance);
+                VerifyScope(named.Source, instance);
             }
 
             [Fact]
@@ -143,8 +143,8 @@ namespace Inspector
                 Assert.Same(selected, instance.Method(methodType, methodName));
 
                 MemberNameFilter<Method, MethodInfo> named = VerifyFilter(selection, methodName);
-                MethodTypeFilter typed = VerifyFilter(named.Previous, methodType);
-                VerifyScope(typed.Previous, instance);
+                MethodTypeFilter typed = VerifyFilter(named.Source, methodType);
+                VerifyScope(typed.Source, instance);
             }
 
             [Fact]
@@ -153,7 +153,7 @@ namespace Inspector
 
                 VerifyGenericMethod(selected, generic);
                 MethodTypeFilter typed = VerifyFilter(selection, typeof(MethodType));
-                VerifyScope(typed.Previous, instance);
+                VerifyScope(typed.Source, instance);
             }
 
             [Fact]
@@ -162,8 +162,8 @@ namespace Inspector
 
                 VerifyGenericMethod(selected, generic);
                 MemberNameFilter<Method, MethodInfo> named = VerifyFilter(selection, methodName);
-                MethodTypeFilter typed = VerifyFilter(named.Previous, typeof(MethodType));
-                VerifyScope(typed.Previous, instance);
+                MethodTypeFilter typed = VerifyFilter(named.Source, typeof(MethodType));
+                VerifyScope(typed.Source, instance);
             }
 
             static void VerifyScope(IEnumerable<Method> filter, object instance) {
@@ -189,7 +189,7 @@ namespace Inspector
                 Assert.Same(selected, testType.Method(methodType));
 
                 MethodTypeFilter typed = VerifyFilter(selection, methodType);
-                VerifyScope(typed.Previous, testType);
+                VerifyScope(typed.Source, testType);
             }
 
             [Fact]
@@ -197,7 +197,7 @@ namespace Inspector
                 Assert.Same(selected, testType.Method(methodName));
 
                 MemberNameFilter<Method, MethodInfo> named = VerifyFilter(selection, methodName);
-                VerifyScope(named.Previous, testType);
+                VerifyScope(named.Source, testType);
             }
 
             [Fact]
@@ -205,8 +205,8 @@ namespace Inspector
                 Assert.Same(selected, testType.Method(methodType, methodName));
 
                 MemberNameFilter<Method, MethodInfo> named = VerifyFilter(selection, methodName);
-                MethodTypeFilter typed = VerifyFilter(named.Previous, methodType);
-                VerifyScope(typed.Previous, testType);
+                MethodTypeFilter typed = VerifyFilter(named.Source, methodType);
+                VerifyScope(typed.Source, testType);
             }
 
             [Fact]
@@ -215,7 +215,7 @@ namespace Inspector
 
                 VerifyGenericMethod(selected, generic);
                 MethodTypeFilter typed = VerifyFilter(selection, typeof(MethodType));
-                VerifyScope(typed.Previous, testType);
+                VerifyScope(typed.Source, testType);
             }
 
             [Fact]
@@ -224,8 +224,8 @@ namespace Inspector
 
                 VerifyGenericMethod(selected, generic);
                 MemberNameFilter<Method, MethodInfo> named = VerifyFilter(selection, methodName);
-                MethodTypeFilter typed = VerifyFilter(named.Previous, typeof(MethodType));
-                VerifyScope(typed.Previous, testType);
+                MethodTypeFilter typed = VerifyFilter(named.Source, typeof(MethodType));
+                VerifyScope(typed.Source, testType);
             }
 
             static void VerifyScope(IEnumerable<Method> selection, Type expected) {

@@ -13,29 +13,29 @@ namespace Inspector.Implementation
         readonly Filter<Field> sut;
 
         // Constructor parameters
-        readonly IEnumerable<Field> previous = Substitute.For<IEnumerable<Field>>();
+        readonly IEnumerable<Field> source = Substitute.For<IEnumerable<Field>>();
         readonly Type fieldType = Type();
 
         public FieldTypeFilterTest() =>
-            sut = new FieldTypeFilter(previous, fieldType);
+            sut = new FieldTypeFilter(source, fieldType);
 
         public class Constructor: FieldTypeFilterTest
         {
             [Fact]
-            public void ThrowsArgumentNullExceptionIfFieldsArgumentIsNull() {
+            public void ThrowsArgumentNullExceptionWhenSourceIsNull() {
                 var thrown = Assert.Throws<ArgumentNullException>(() => new FieldTypeFilter(null, fieldType));
-                Assert.Equal("previous", thrown.ParamName);
+                Assert.Equal("source", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsArgumentNullExceptionIfFieldTypeArgumentIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new FieldTypeFilter(previous, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new FieldTypeFilter(source, null));
                 Assert.Equal("fieldType", thrown.ParamName);
             }
 
             [Fact]
-            public void PassesPreviousToBaseConstructor() =>
-                Assert.Same(previous, sut.Previous);
+            public void PassesSourceToBaseConstructor() =>
+                Assert.Same(source, sut.Source);
         }
 
         public class FieldType: FieldTypeFilterTest
@@ -61,7 +61,7 @@ namespace Inspector.Implementation
                     new Field(FieldInfo(FieldAttributes.Static))
                 };
 
-                ConfiguredCall arrange = previous.GetEnumerator().Returns(mixed.GetEnumerator());
+                ConfiguredCall arrange = source.GetEnumerator().Returns(mixed.GetEnumerator());
 
                 Assert.Equal(expected, sut);
             }

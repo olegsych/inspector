@@ -16,9 +16,9 @@ namespace Inspector.Implementation
         public class WithName: ParameterNameFilterTest
         {
             [Fact]
-            public void ThrowsDescriptiveExceptionWhenPreviousIsNull() {
+            public void ThrowsDescriptiveExceptionWhenSourceIsNull() {
                 var thrown = Assert.Throws<ArgumentNullException>(() => default(IEnumerable<ParameterInfo>).WithName(parameterName));
-                Assert.Equal("previous", thrown.ParamName);
+                Assert.Equal("source", thrown.ParamName);
             }
 
             [Fact]
@@ -42,9 +42,9 @@ namespace Inspector.Implementation
             }
 
             [Fact]
-            public void PreviousImplementsDecoratorAndReturnsValueGivenToWithName() {
+            public void SourceImplementsDecoratorAndReturnsValueGivenToWithName() {
                 var decorator = Assert.IsAssignableFrom<IDecorator<IEnumerable<ParameterInfo>>>(sut);
-                Assert.Same(parameters, decorator.Previous);
+                Assert.Same(parameters, decorator.Source);
             }
 
             [Fact]

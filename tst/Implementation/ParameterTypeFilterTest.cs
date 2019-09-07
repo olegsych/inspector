@@ -16,9 +16,9 @@ namespace Inspector.Implementation
         public class WithType: ParameterTypeFilterTest
         {
             [Fact]
-            public void ThrowsDescriptiveExceptionWhenPreviousIsNull() {
+            public void ThrowsDescriptiveExceptionWhenSourceIsNull() {
                 var thrown = Assert.Throws<ArgumentNullException>(() => default(IEnumerable<ParameterInfo>).WithType(parameterType));
-                Assert.Equal("previous", thrown.ParamName);
+                Assert.Equal("source", thrown.ParamName);
             }
 
             [Fact]
@@ -40,9 +40,9 @@ namespace Inspector.Implementation
                 Assert.Same(parameterType, ((ParameterTypeFilter.Implementation)sut).ParameterType);
 
             [Fact]
-            public void PreviousImplementsIDecoratorAndRetursParametersGivenToWithType() {
+            public void SourceImplementsIDecoratorAndRetursParametersGivenToWithType() {
                 var decorator = (IDecorator<IEnumerable<ParameterInfo>>)sut;
-                Assert.Same(parameters, decorator.Previous);
+                Assert.Same(parameters, decorator.Source);
             }
 
             [Fact]

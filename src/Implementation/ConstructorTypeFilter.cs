@@ -7,7 +7,7 @@ namespace Inspector.Implementation
 {
     sealed class ConstructorTypeFilter: Filter<Constructor>
     {
-        public ConstructorTypeFilter(IEnumerable<Constructor> previous, Type delegateType, IDelegateFactory<ConstructorInfo> delegateFactory): base(previous) {
+        public ConstructorTypeFilter(IEnumerable<Constructor> source, Type delegateType, IDelegateFactory<ConstructorInfo> delegateFactory): base(source) {
             if(delegateType == null)
                 throw new ArgumentNullException(nameof(delegateType));
             if(!typeof(Delegate).IsAssignableFrom(delegateType))
@@ -22,6 +22,6 @@ namespace Inspector.Implementation
         public IDelegateFactory<ConstructorInfo> DelegateFactory { get; }
 
         public override IEnumerator<Constructor> GetEnumerator() =>
-            Previous.Where(constructor => DelegateFactory.TryCreate(DelegateType, constructor.Instance, constructor.Info, out Delegate _)).GetEnumerator();
+            Source.Where(constructor => DelegateFactory.TryCreate(DelegateType, constructor.Instance, constructor.Info, out Delegate _)).GetEnumerator();
     }
 }

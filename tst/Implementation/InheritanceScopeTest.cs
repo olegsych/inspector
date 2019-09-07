@@ -12,12 +12,12 @@ namespace Inspector.Implementation
         readonly IScope sut;
 
         // Constructor parameters
-        readonly IScope previous = Substitute.For<IScope>();
+        readonly IScope source = Substitute.For<IScope>();
         readonly Type ancestor = typeof(Parent);
 
         // Test fixture
         public InheritanceScopeTest() =>
-            sut = new InheritanceScope(previous, ancestor);
+            sut = new InheritanceScope(source, ancestor);
 
         readonly Type grandParent = typeof(GrandParent);
         readonly Type parent = typeof(Parent);
@@ -26,23 +26,23 @@ namespace Inspector.Implementation
         public class Ctor: InheritanceScopeTest
         {
             [Fact]
-            public void ThrowsDescriptiveExceptionWhenPreviousScopeIsNull() {
+            public void ThrowsDescriptiveExceptionWhenSourceIsNull() {
                 var thrown = Assert.Throws<ArgumentNullException>(() => new InheritanceScope(null, ancestor));
-                Assert.Equal("previous", thrown.ParamName);
+                Assert.Equal("source", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenAncestorTypeIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new InheritanceScope(previous, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new InheritanceScope(source, null));
                 Assert.Equal("ancestorType", thrown.ParamName);
             }
         }
 
-        public class Previous: InheritanceScopeTest
+        public class Source: InheritanceScopeTest
         {
             [Fact]
             public void ImplementsIDecoratorAndReturnsValueGivenToConstructor() =>
-                Assert.Same(previous, ((IDecorator<IScope>)sut).Previous);
+                Assert.Same(source, ((IDecorator<IScope>)sut).Source);
         }
 
         public class AncestorType: InheritanceScopeTest
@@ -70,7 +70,7 @@ namespace Inspector.Implementation
                     new Constructor(ConstructorInfo(MethodAttributes.Static).WithDeclaringType(child))
                 };
 
-                previous.Constructors().Returns(mixed);
+                source.Constructors().Returns(mixed);
 
                 // Act
                 IEnumerable<Constructor> actual = sut.Constructors();
@@ -97,7 +97,7 @@ namespace Inspector.Implementation
                     new Event(EventInfo(MethodAttributes.Static).WithDeclaringType(child)),
                 };
 
-                previous.Events().Returns(mixed);
+                source.Events().Returns(mixed);
 
                 // Act
                 IEnumerable<Event> actual = sut.Events();
@@ -124,7 +124,7 @@ namespace Inspector.Implementation
                     new Field(FieldInfo(FieldAttributes.Static).WithDeclaringType(child)),
                 };
 
-                previous.Fields().Returns(mixed);
+                source.Fields().Returns(mixed);
 
                 // Act
                 IEnumerable<Field> actual = sut.Fields();
@@ -151,7 +151,7 @@ namespace Inspector.Implementation
                     new Method(MethodInfo(MethodAttributes.Static).WithDeclaringType(child)),
                 };
 
-                previous.Methods().Returns(mixed);
+                source.Methods().Returns(mixed);
 
                 // Act
                 IEnumerable<Method> actual = sut.Methods();
@@ -178,7 +178,7 @@ namespace Inspector.Implementation
                     new Property(PropertyInfo(MethodAttributes.Static).WithDeclaringType(child)),
                 };
 
-                previous.Properties().Returns(mixed);
+                source.Properties().Returns(mixed);
 
                 // Act
                 IEnumerable<Property> actual = sut.Properties();

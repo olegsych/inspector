@@ -74,22 +74,22 @@ namespace Inspector
             public void ReturnsEventWithGivenName() {
                 Assert.Same(selected, scope.Event(eventName));
                 MemberNameFilter<Event, EventInfo> filter = VerifyFilter(selection, eventName);
-                Assert.Same(events, filter.Previous);
+                Assert.Same(events, filter.Source);
             }
 
             [Fact]
             public void ReturnsEventWithGivenHandlerType() {
                 Assert.Same(selected, scope.Event(handlerType));
                 EventTypeFilter filter = VerifyFilter(selection, handlerType);
-                Assert.Same(events, filter.Previous);
+                Assert.Same(events, filter.Source);
             }
 
             [Fact]
             public void ReturnsEventWithGivenHandlerTypeAndName() {
                 Assert.Same(selected, scope.Event(handlerType, eventName));
                 MemberNameFilter<Event, EventInfo> named = VerifyFilter(selection, eventName);
-                EventTypeFilter typed = VerifyFilter(named.Previous, handlerType);
-                Assert.Same(events, typed.Previous);
+                EventTypeFilter typed = VerifyFilter(named.Source, handlerType);
+                Assert.Same(events, typed.Source);
             }
 
             [Fact]
@@ -97,7 +97,7 @@ namespace Inspector
                 Event<TestHandler> generic = scope.Event<TestHandler>();
                 VerifyGenericEvent(selected, generic);
                 EventTypeFilter typed = VerifyFilter(selection, handlerType);
-                Assert.Same(events, typed.Previous);
+                Assert.Same(events, typed.Source);
             }
 
             [Fact]
@@ -105,8 +105,8 @@ namespace Inspector
                 Event<TestHandler> generic = scope.Event<TestHandler>(eventName);
                 VerifyGenericEvent(selected, generic);
                 MemberNameFilter<Event, EventInfo> named = VerifyFilter(selection, eventName);
-                EventTypeFilter typed = VerifyFilter(named.Previous, handlerType);
-                Assert.Same(events, typed.Previous);
+                EventTypeFilter typed = VerifyFilter(named.Source, handlerType);
+                Assert.Same(events, typed.Source);
             }
         }
 
@@ -124,7 +124,7 @@ namespace Inspector
                 Assert.Same(selected, instance.Event(eventName));
 
                 MemberNameFilter<Event, EventInfo> named = VerifyFilter(selection, eventName);
-                VerifyScope(named.Previous, instance);
+                VerifyScope(named.Source, instance);
             }
 
             [Fact]
@@ -132,7 +132,7 @@ namespace Inspector
                 Assert.Same(selected, instance.Event(handlerType));
 
                 EventTypeFilter named = VerifyFilter(selection, handlerType);
-                VerifyScope(named.Previous, instance);
+                VerifyScope(named.Source, instance);
             }
 
             [Fact]
@@ -140,8 +140,8 @@ namespace Inspector
                 Assert.Same(selected, instance.Event(handlerType, eventName));
 
                 MemberNameFilter<Event, EventInfo> named = VerifyFilter(selection, eventName);
-                EventTypeFilter typed = VerifyFilter(named.Previous, handlerType);
-                VerifyScope(typed.Previous, instance);
+                EventTypeFilter typed = VerifyFilter(named.Source, handlerType);
+                VerifyScope(typed.Source, instance);
             }
 
             [Fact]
@@ -150,7 +150,7 @@ namespace Inspector
 
                 VerifyGenericEvent(selected, generic);
                 EventTypeFilter typed = VerifyFilter(selection, handlerType);
-                VerifyScope(typed.Previous, instance);
+                VerifyScope(typed.Source, instance);
             }
 
             [Fact]
@@ -159,8 +159,8 @@ namespace Inspector
 
                 VerifyGenericEvent(selected, generic);
                 MemberNameFilter<Event, EventInfo> named = VerifyFilter(selection, eventName);
-                EventTypeFilter typed = VerifyFilter(named.Previous, handlerType);
-                VerifyScope(typed.Previous, instance);
+                EventTypeFilter typed = VerifyFilter(named.Source, handlerType);
+                VerifyScope(typed.Source, instance);
             }
 
             static void VerifyScope(IEnumerable<Event> filter, object instance) {
@@ -186,7 +186,7 @@ namespace Inspector
                 Assert.Same(selected, testType.Event(eventName));
 
                 MemberNameFilter<Event, EventInfo> named = VerifyFilter(selection, eventName);
-                VerifyScope(named.Previous, testType);
+                VerifyScope(named.Source, testType);
             }
 
             [Fact]
@@ -194,7 +194,7 @@ namespace Inspector
                 Assert.Same(selected, testType.Event(handlerType));
 
                 EventTypeFilter typed = VerifyFilter(selection, handlerType);
-                VerifyScope(typed.Previous, testType);
+                VerifyScope(typed.Source, testType);
             }
 
             [Fact]
@@ -202,8 +202,8 @@ namespace Inspector
                 Assert.Same(selected, testType.Event(handlerType, eventName));
 
                 MemberNameFilter<Event, EventInfo> named = VerifyFilter(selection, eventName);
-                EventTypeFilter typed = VerifyFilter(named.Previous, handlerType);
-                VerifyScope(typed.Previous, testType);
+                EventTypeFilter typed = VerifyFilter(named.Source, handlerType);
+                VerifyScope(typed.Source, testType);
             }
 
             [Fact]
@@ -212,7 +212,7 @@ namespace Inspector
 
                 VerifyGenericEvent(selected, generic);
                 EventTypeFilter typed = VerifyFilter(selection, handlerType);
-                VerifyScope(typed.Previous, testType);
+                VerifyScope(typed.Source, testType);
             }
 
             [Fact]
@@ -221,8 +221,8 @@ namespace Inspector
 
                 VerifyGenericEvent(selected, generic);
                 MemberNameFilter<Event, EventInfo> named = VerifyFilter(selection, eventName);
-                EventTypeFilter typed = VerifyFilter(named.Previous, handlerType);
-                VerifyScope(typed.Previous, testType);
+                EventTypeFilter typed = VerifyFilter(named.Source, handlerType);
+                VerifyScope(typed.Source, testType);
             }
 
             static void VerifyScope(IEnumerable<Event> selection, Type type) {

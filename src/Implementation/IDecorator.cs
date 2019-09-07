@@ -2,6 +2,6 @@ namespace Inspector.Implementation
 {
     interface IDecorator<out T>
     {
-        T Previous { get; }
+        T Source { get; }
     }
 }

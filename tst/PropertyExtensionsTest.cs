@@ -72,22 +72,22 @@ namespace Inspector
             public void ReturnsPropertyWithGivenName() {
                 Assert.Same(selected, scope.Property(propertyName));
                 MemberNameFilter<Property, PropertyInfo> filter = VerifyFilter(selection, propertyName);
-                Assert.Same(properties, filter.Previous);
+                Assert.Same(properties, filter.Source);
             }
 
             [Fact]
             public void ReturnsPropertyWithGivenType() {
                 Assert.Same(selected, scope.Property(propertyType));
                 PropertyTypeFilter filter = VerifyFilter(selection, propertyType);
-                Assert.Same(properties, filter.Previous);
+                Assert.Same(properties, filter.Source);
             }
 
             [Fact]
             public void ReturnsPropertyWithGivenTypeAndName() {
                 Assert.Same(selected, scope.Property(propertyType, propertyName));
                 MemberNameFilter<Property, PropertyInfo> nameFilter = VerifyFilter(selection, propertyName);
-                PropertyTypeFilter typeFilter = VerifyFilter(nameFilter.Previous, propertyType);
-                Assert.Same(properties, typeFilter.Previous);
+                PropertyTypeFilter typeFilter = VerifyFilter(nameFilter.Source, propertyType);
+                Assert.Same(properties, typeFilter.Source);
             }
 
             [Fact]
@@ -95,7 +95,7 @@ namespace Inspector
                 Property<PropertyValue> generic = scope.Property<PropertyValue>();
                 VerifyGenericProperty(selected, generic);
                 PropertyTypeFilter typeFilter = VerifyFilter(selection, typeof(PropertyValue));
-                Assert.Same(properties, typeFilter.Previous);
+                Assert.Same(properties, typeFilter.Source);
             }
 
             [Fact]
@@ -103,8 +103,8 @@ namespace Inspector
                 Property<PropertyValue> generic = scope.Property<PropertyValue>(propertyName);
                 VerifyGenericProperty(selected, generic);
                 MemberNameFilter<Property, PropertyInfo> nameFilter = VerifyFilter(selection, propertyName);
-                PropertyTypeFilter typeFilter = VerifyFilter(nameFilter.Previous, propertyType);
-                Assert.Same(properties, typeFilter.Previous);
+                PropertyTypeFilter typeFilter = VerifyFilter(nameFilter.Source, propertyType);
+                Assert.Same(properties, typeFilter.Source);
             }
         }
 
@@ -122,7 +122,7 @@ namespace Inspector
                 Assert.Same(selected, instance.Property(propertyName));
 
                 MemberNameFilter<Property, PropertyInfo> named = VerifyFilter(selection, propertyName);
-                VerifyScope(named.Previous, instance);
+                VerifyScope(named.Source, instance);
             }
 
             [Fact]
@@ -130,7 +130,7 @@ namespace Inspector
                 Assert.Same(selected, instance.Property(propertyType));
 
                 PropertyTypeFilter named = VerifyFilter(selection, propertyType);
-                VerifyScope(named.Previous, instance);
+                VerifyScope(named.Source, instance);
             }
 
             [Fact]
@@ -138,8 +138,8 @@ namespace Inspector
                 Assert.Same(selected, instance.Property(propertyType, propertyName));
 
                 MemberNameFilter<Property, PropertyInfo> named = VerifyFilter(selection, propertyName);
-                PropertyTypeFilter typed = VerifyFilter(named.Previous, propertyType);
-                VerifyScope(typed.Previous, instance);
+                PropertyTypeFilter typed = VerifyFilter(named.Source, propertyType);
+                VerifyScope(typed.Source, instance);
             }
 
             [Fact]
@@ -148,7 +148,7 @@ namespace Inspector
 
                 VerifyGenericProperty(selected, generic);
                 PropertyTypeFilter typed = VerifyFilter(selection, typeof(PropertyValue));
-                VerifyScope(typed.Previous, instance);
+                VerifyScope(typed.Source, instance);
             }
 
             [Fact]
@@ -157,8 +157,8 @@ namespace Inspector
 
                 VerifyGenericProperty(selected, generic);
                 MemberNameFilter<Property, PropertyInfo> named = VerifyFilter(selection, propertyName);
-                PropertyTypeFilter typed = VerifyFilter(named.Previous, typeof(PropertyValue));
-                VerifyScope(typed.Previous, instance);
+                PropertyTypeFilter typed = VerifyFilter(named.Source, typeof(PropertyValue));
+                VerifyScope(typed.Source, instance);
             }
 
             static void VerifyScope(IEnumerable<Property> filter, object instance) {
@@ -184,7 +184,7 @@ namespace Inspector
                 Assert.Same(selected, testType.Property(propertyName));
 
                 MemberNameFilter<Property, PropertyInfo> named = VerifyFilter(selection, propertyName);
-                VerifyScope(named.Previous, testType);
+                VerifyScope(named.Source, testType);
             }
 
             [Fact]
@@ -192,7 +192,7 @@ namespace Inspector
                 Assert.Same(selected, testType.Property(propertyType));
 
                 PropertyTypeFilter typed = VerifyFilter(selection, propertyType);
-                VerifyScope(typed.Previous, testType);
+                VerifyScope(typed.Source, testType);
             }
 
             [Fact]
@@ -200,8 +200,8 @@ namespace Inspector
                 Assert.Same(selected, testType.Property(propertyType, propertyName));
 
                 MemberNameFilter<Property, PropertyInfo> named = VerifyFilter(selection, propertyName);
-                PropertyTypeFilter typed = VerifyFilter(named.Previous, propertyType);
-                VerifyScope(typed.Previous, testType);
+                PropertyTypeFilter typed = VerifyFilter(named.Source, propertyType);
+                VerifyScope(typed.Source, testType);
             }
 
             [Fact]
@@ -210,7 +210,7 @@ namespace Inspector
 
                 VerifyGenericProperty(selected, generic);
                 PropertyTypeFilter typed = VerifyFilter(selection, typeof(PropertyValue));
-                VerifyScope(typed.Previous, testType);
+                VerifyScope(typed.Source, testType);
             }
 
             [Fact]
@@ -219,8 +219,8 @@ namespace Inspector
 
                 VerifyGenericProperty(selected, generic);
                 MemberNameFilter<Property, PropertyInfo> named = VerifyFilter(selection, propertyName);
-                PropertyTypeFilter typed = VerifyFilter(named.Previous, typeof(PropertyValue));
-                VerifyScope(typed.Previous, testType);
+                PropertyTypeFilter typed = VerifyFilter(named.Source, typeof(PropertyValue));
+                VerifyScope(typed.Source, testType);
             }
 
             static void VerifyScope(IEnumerable<Property> selection, Type expected) {

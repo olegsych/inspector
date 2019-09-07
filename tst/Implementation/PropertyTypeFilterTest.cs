@@ -13,29 +13,29 @@ namespace Inspector.Implementation
         readonly Filter<Property> sut;
 
         // Constructor parameters
-        readonly IEnumerable<Property> previous = Substitute.For<IEnumerable<Property>>();
+        readonly IEnumerable<Property> source = Substitute.For<IEnumerable<Property>>();
         readonly Type propertyType = Type();
 
         public PropertyTypeFilterTest() =>
-            sut = new PropertyTypeFilter(previous, propertyType);
+            sut = new PropertyTypeFilter(source, propertyType);
 
         public class Constructor: PropertyTypeFilterTest
         {
             [Fact]
-            public void ThrowsArgumentNullExceptionIfPropertiesArgumentIsNull() {
+            public void ThrowsArgumentNullExceptionIfSourceIsNull() {
                 var thrown = Assert.Throws<ArgumentNullException>(() => new PropertyTypeFilter(null, propertyType));
-                Assert.Equal("previous", thrown.ParamName);
+                Assert.Equal("source", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsArgumentNullExceptionIfPropertyTypeArgumentIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new PropertyTypeFilter(previous, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new PropertyTypeFilter(source, null));
                 Assert.Equal("propertyType", thrown.ParamName);
             }
 
             [Fact]
-            public void PassesPreviousToBaseConstructor() =>
-                Assert.Same(previous, sut.Previous);
+            public void PassesSourceToBaseConstructor() =>
+                Assert.Same(source, sut.Source);
         }
 
         public class PropertyType: PropertyTypeFilterTest
@@ -61,7 +61,7 @@ namespace Inspector.Implementation
                     new Property(PropertyInfo(MethodAttributes.Static))
                 };
 
-                ConfiguredCall arrange = previous.GetEnumerator().Returns(mixed.GetEnumerator());
+                ConfiguredCall arrange = source.GetEnumerator().Returns(mixed.GetEnumerator());
 
                 Assert.Equal(expected, sut);
             }

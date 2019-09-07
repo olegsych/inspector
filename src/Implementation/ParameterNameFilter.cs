@@ -18,7 +18,7 @@ namespace Inspector.Implementation
             public string ParameterName { get; }
 
             public override IEnumerator<ParameterInfo> GetEnumerator() =>
-                Previous.Where(parameter => parameter.Name == ParameterName).GetEnumerator();
+                Source.Where(parameter => parameter.Name == ParameterName).GetEnumerator();
         }
     }
 }

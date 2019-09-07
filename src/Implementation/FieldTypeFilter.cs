@@ -6,12 +6,12 @@ namespace Inspector.Implementation
 {
     sealed class FieldTypeFilter: Filter<Field>
     {
-        public FieldTypeFilter(IEnumerable<Field> previous, Type fieldType) : base(previous) =>
+        public FieldTypeFilter(IEnumerable<Field> source, Type fieldType) : base(source) =>
             FieldType = fieldType ?? throw new ArgumentNullException(nameof(fieldType));
 
         public Type FieldType { get; }
 
         public override IEnumerator<Field> GetEnumerator() =>
-            Previous.Where(field => field.Info.FieldType == FieldType).GetEnumerator();
+            Source.Where(field => field.Info.FieldType == FieldType).GetEnumerator();
     }
 }

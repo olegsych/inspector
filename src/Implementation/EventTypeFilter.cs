@@ -6,12 +6,12 @@ namespace Inspector.Implementation
 {
     sealed class EventTypeFilter: Filter<Event>
     {
-        public EventTypeFilter(IEnumerable<Event> previous, Type handlerType): base(previous) =>
+        public EventTypeFilter(IEnumerable<Event> source, Type handlerType): base(source) =>
             HandlerType = handlerType ?? throw new ArgumentNullException(nameof(handlerType));
 
         public Type HandlerType { get; }
 
         public override IEnumerator<Event> GetEnumerator() =>
-            Previous.Where(@event => @event.Info.EventHandlerType == HandlerType).GetEnumerator();
+            Source.Where(@event => @event.Info.EventHandlerType == HandlerType).GetEnumerator();
     }
 }

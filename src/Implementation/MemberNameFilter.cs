@@ -9,12 +9,12 @@ namespace Inspector.Implementation
         where TMember : Member<TInfo>
         where TInfo : MemberInfo
     {
-        public MemberNameFilter(IEnumerable<TMember> previous, string memberName) : base(previous) =>
+        public MemberNameFilter(IEnumerable<TMember> source, string memberName) : base(source) =>
             MemberName = memberName ?? throw new ArgumentNullException(nameof(memberName));
 
         public string MemberName { get; }
 
         public override IEnumerator<TMember> GetEnumerator() =>
-            Previous.Where(member => member.Info.Name == MemberName).GetEnumerator();
+            Source.Where(member => member.Info.Name == MemberName).GetEnumerator();
     }
 }

@@ -11,26 +11,26 @@ namespace Inspector.Implementation
     public class AccessibilityScopeTest
     {
         // Constructor parameters
-        readonly IScope previous = Substitute.For<IScope>();
+        readonly IScope source = Substitute.For<IScope>();
         readonly Accessibility accessibility = Accessibility.PrivateProtected;
 
         public class Ctor: AccessibilityScopeTest
         {
             [Fact]
-            public void ThrowsDescriptiveExceptionWhenPreviousScopeIsNull() {
+            public void ThrowsDescriptiveExceptionWhenSourceIsNull() {
                 var thrown = Assert.Throws<ArgumentNullException>(() => new AccessibilityScope(null, accessibility));
-                Assert.Equal("previous", thrown.ParamName);
+                Assert.Equal("source", thrown.ParamName);
             }
 
             [Fact]
-            public void InitializesIDecoratorPreviousPropertyForSelectorAccessToEntireFilterChain() {
-                IDecorator<IScope> sut = new AccessibilityScope(previous, accessibility);
-                Assert.Same(previous, sut.Previous);
+            public void InitializesIDecoratorSourcePropertyForSelectorAccessToEntireFilterChain() {
+                IDecorator<IScope> sut = new AccessibilityScope(source, accessibility);
+                Assert.Same(source, sut.Source);
             }
 
             [Fact]
             public void InitializesAccessiblityPropertyForUseInTests() {
-                var sut = new AccessibilityScope(previous, accessibility);
+                var sut = new AccessibilityScope(source, accessibility);
                 Assert.Equal(accessibility, sut.Accessibility);
             }
 
@@ -38,15 +38,15 @@ namespace Inspector.Implementation
             [InlineData(Accessibility.Private, Accessibility.Protected, Accessibility.PrivateProtected)]
             [InlineData(Accessibility.Protected, Accessibility.Internal, Accessibility.ProtectedInternal)]
             internal void CombinesPrivateAndProtectedAccessibility(Accessibility first, Accessibility second, Accessibility combined) {
-                var sut = new AccessibilityScope(new AccessibilityScope(previous, first), second);
+                var sut = new AccessibilityScope(new AccessibilityScope(source, first), second);
 
                 Assert.Equal(combined, sut.Accessibility);
-                Assert.Same(previous, sut.Previous);
+                Assert.Same(source, sut.Source);
             }
 
             [Theory, MemberData(nameof(InvalidAccessibilityCombinations))]
             internal void ThrowsDescriptiveExceptionWhenAccessibilitiesCannotBeCombined(Accessibility first, Accessibility second) {
-                var thrown = Assert.Throws<InvalidOperationException>(() => new AccessibilityScope(new AccessibilityScope(previous, first), second));
+                var thrown = Assert.Throws<InvalidOperationException>(() => new AccessibilityScope(new AccessibilityScope(source, first), second));
                 Assert.StartsWith($"'{first.ToString().ToLower()} {second.ToString().ToLower()}' is not a valid accessibility.", thrown.Message);
             }
 
@@ -68,7 +68,7 @@ namespace Inspector.Implementation
             [Fact]
             public void ReturnsConstructorsWithWithExpectedAccessibility() {
                 // Arrange
-                var sut = new AccessibilityScope(previous, Accessibility.ProtectedInternal);
+                var sut = new AccessibilityScope(source, Accessibility.ProtectedInternal);
 
                 Constructor[] expected = {
                     new Constructor(ConstructorInfo(MethodAttributes.FamORAssem | MethodAttributes.Static)),
@@ -83,7 +83,7 @@ namespace Inspector.Implementation
                     new Constructor(ConstructorInfo(MethodAttributes.Private | MethodAttributes.Static)),
                 };
 
-                ConfiguredCall arrange = previous.Constructors().Returns(all);
+                ConfiguredCall arrange = source.Constructors().Returns(all);
 
                 // Act
                 IEnumerable<Constructor> actual = sut.Constructors();
@@ -98,7 +98,7 @@ namespace Inspector.Implementation
             [Fact]
             public void ReturnsEventsWithWithExpectedAccessibilityOfAddMethod() {
                 // Arrange
-                var sut = new AccessibilityScope(previous, Accessibility.ProtectedInternal);
+                var sut = new AccessibilityScope(source, Accessibility.ProtectedInternal);
 
                 Event[] expected = {
                     new Event(EventInfo(MethodAttributes.FamORAssem | MethodAttributes.Static)),
@@ -113,7 +113,7 @@ namespace Inspector.Implementation
                     new Event(EventInfo(MethodAttributes.Private | MethodAttributes.Static)),
                 };
 
-                ConfiguredCall arrange = previous.Events().Returns(all);
+                ConfiguredCall arrange = source.Events().Returns(all);
 
                 // Act
                 IEnumerable<Event> actual = sut.Events();
@@ -128,7 +128,7 @@ namespace Inspector.Implementation
             [Fact]
             public void ReturnsFieldsWithWithExpectedAccessibility() {
                 // Arrange
-                var sut = new AccessibilityScope(previous, Accessibility.ProtectedInternal);
+                var sut = new AccessibilityScope(source, Accessibility.ProtectedInternal);
 
                 Field[] expected = {
                     new Field(FieldInfo(FieldAttributes.FamORAssem | FieldAttributes.Static)),
@@ -143,7 +143,7 @@ namespace Inspector.Implementation
                     new Field(FieldInfo(FieldAttributes.Private | FieldAttributes.Static)),
                 };
 
-                ConfiguredCall arrange = previous.Fields().Returns(all);
+                ConfiguredCall arrange = source.Fields().Returns(all);
 
                 // Act
                 IEnumerable<Field> actual = sut.Fields();
@@ -158,7 +158,7 @@ namespace Inspector.Implementation
             [Fact]
             public void ReturnsMethodsWithWithExpectedAccessibility() {
                 // Arrange
-                var sut = new AccessibilityScope(previous, Accessibility.ProtectedInternal);
+                var sut = new AccessibilityScope(source, Accessibility.ProtectedInternal);
 
                 Method[] expected = {
                     new Method(MethodInfo(MethodAttributes.FamORAssem | MethodAttributes.Static)),
@@ -173,7 +173,7 @@ namespace Inspector.Implementation
                     new Method(MethodInfo(MethodAttributes.Private | MethodAttributes.Static)),
                 };
 
-                ConfiguredCall arrange = previous.Methods().Returns(all);
+                ConfiguredCall arrange = source.Methods().Returns(all);
 
                 // Act
                 IEnumerable<Method> actual = sut.Methods();
@@ -188,7 +188,7 @@ namespace Inspector.Implementation
             [Fact]
             public void ReturnsPropertiesWithWithExpectedAccessibility() {
                 // Arrange
-                var sut = new AccessibilityScope(previous, Accessibility.ProtectedInternal);
+                var sut = new AccessibilityScope(source, Accessibility.ProtectedInternal);
 
                 Property[] expected = {
                     new Property(PropertyInfo(MethodAttributes.FamORAssem | MethodAttributes.Static)),
@@ -203,7 +203,7 @@ namespace Inspector.Implementation
                     new Property(PropertyInfo(MethodAttributes.Private | MethodAttributes.Static)),
                 };
 
-                ConfiguredCall arrange = previous.Properties().Returns(all);
+                ConfiguredCall arrange = source.Properties().Returns(all);
 
                 // Act
                 IEnumerable<Property> actual = sut.Properties();

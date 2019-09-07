@@ -12,29 +12,29 @@ namespace Inspector.Implementation
         readonly Filter<Member<MemberInfo>> sut;
 
         // Constructor parameters
-        readonly IEnumerable<Member<MemberInfo>> previous = Substitute.For<IEnumerable<Member<MemberInfo>>>();
+        readonly IEnumerable<Member<MemberInfo>> source = Substitute.For<IEnumerable<Member<MemberInfo>>>();
         readonly string memberName = Guid.NewGuid().ToString();
 
         public MemberNameFilterTest() =>
-            sut = new MemberNameFilter<Member<MemberInfo>, MemberInfo>(previous, memberName);
+            sut = new MemberNameFilter<Member<MemberInfo>, MemberInfo>(source, memberName);
 
         public class Constructor: MemberNameFilterTest
         {
             [Fact]
-            public void ThrowsDescriptiveExceptionWhenPreviousFilterIsNull() {
+            public void ThrowsDescriptiveExceptionWhenSourceIsNull() {
                 var thrown = Assert.Throws<ArgumentNullException>(() => new MemberNameFilter<Member<MemberInfo>, MemberInfo>(null, memberName));
-                Assert.Equal("previous", thrown.ParamName);
+                Assert.Equal("source", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenMemberNameIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new MemberNameFilter<Member<MemberInfo>, MemberInfo>(previous, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new MemberNameFilter<Member<MemberInfo>, MemberInfo>(source, null));
                 Assert.Equal("memberName", thrown.ParamName);
             }
 
             [Fact]
-            public void PassesPreviousToBaseConstructor() =>
-                Assert.Same(previous, sut.Previous);
+            public void PassesSourceToBaseConstructor() =>
+                Assert.Same(source, sut.Source);
         }
 
         public class MemberName: MemberNameFilterTest
@@ -50,7 +50,7 @@ namespace Inspector.Implementation
             public void ReturnsMembersWithGivenName() {
                 Member<MemberInfo>[] expected = new[] { Member(memberName), Member(memberName) };
                 IEnumerable<Member<MemberInfo>> mixed = new[] { Member(), expected[0], Member(), expected[1], Member() };
-                ConfiguredCall arrange = previous.GetEnumerator().Returns(mixed.GetEnumerator());
+                ConfiguredCall arrange = source.GetEnumerator().Returns(mixed.GetEnumerator());
 
                 Assert.Equal(expected, sut);
             }

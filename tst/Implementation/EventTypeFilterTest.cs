@@ -13,29 +13,29 @@ namespace Inspector.Implementation
         readonly Filter<Event> sut;
 
         // Constructor parameters
-        readonly IEnumerable<Event> previous = Substitute.For<IEnumerable<Event>>();
+        readonly IEnumerable<Event> source = Substitute.For<IEnumerable<Event>>();
         readonly Type handlerType = Type();
 
         public EventTypeFilterTest() =>
-            sut = new EventTypeFilter(previous, handlerType);
+            sut = new EventTypeFilter(source, handlerType);
 
         public class Constructor: EventTypeFilterTest
         {
             [Fact]
-            public void ThrowsDescriptiveExceptionWhenPreviousFilterIsNull() {
+            public void ThrowsDescriptiveExceptionWhenSourceIsNull() {
                 var thrown = Assert.Throws<ArgumentNullException>(() => new EventTypeFilter(null, handlerType));
-                Assert.Equal("previous", thrown.ParamName);
+                Assert.Equal("source", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenEventHandlerTypeIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new EventTypeFilter(previous, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new EventTypeFilter(source, null));
                 Assert.Equal("handlerType", thrown.ParamName);
             }
 
             [Fact]
-            public void PassesPreviousToBaseConstructor() =>
-                Assert.Same(previous, sut.Previous);
+            public void PassesSourceToBaseConstructor() =>
+                Assert.Same(source, sut.Source);
         }
 
         public class HandlerType: EventTypeFilterTest
@@ -62,7 +62,7 @@ namespace Inspector.Implementation
                     new Event(EventInfo(MethodAttributes.Static))
                 };
 
-                ConfiguredCall arrange = previous.GetEnumerator().Returns(mixed.GetEnumerator());
+                ConfiguredCall arrange = source.GetEnumerator().Returns(mixed.GetEnumerator());
 
                 Assert.Equal(expected, sut);
             }

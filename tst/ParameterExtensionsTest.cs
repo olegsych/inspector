@@ -40,37 +40,37 @@ namespace Inspector
             public void ReturnsParameterOfGivenType() {
                 Assert.Same(parameter, method.Parameter(parameterType));
                 ParameterTypeFilter.Implementation filter = VerifyFilter(selection, parameterType);
-                VerifyParameters(filter.Previous, method);
+                VerifyParameters(filter.Source, method);
             }
 
             [Fact]
             public void ReturnsParameterOfGivenGenericType() {
                 Assert.Same(parameter, method.Parameter<ParameterType>());
                 ParameterTypeFilter.Implementation filter = VerifyFilter(selection, parameterType);
-                VerifyParameters(filter.Previous, method);
+                VerifyParameters(filter.Source, method);
             }
 
             [Fact]
             public void ReturnsParameterWithGivenName() {
                 Assert.Same(parameter, method.Parameter(parameterName));
                 ParameterNameFilter.Implementation filter = VerifyFilter(selection, parameterName);
-                VerifyParameters(filter.Previous, method);
+                VerifyParameters(filter.Source, method);
             }
 
             [Fact]
             public void ReturnsParameterWithGivenTypeAndName() {
                 Assert.Same(parameter, method.Parameter(parameterType, parameterName));
                 ParameterNameFilter.Implementation nameFilter = VerifyFilter(selection, parameterName);
-                ParameterTypeFilter.Implementation typeFilter = VerifyFilter(nameFilter.Previous, parameterType);
-                VerifyParameters(typeFilter.Previous, method);
+                ParameterTypeFilter.Implementation typeFilter = VerifyFilter(nameFilter.Source, parameterType);
+                VerifyParameters(typeFilter.Source, method);
             }
 
             [Fact]
             public void ReturnsParameterWithGivenGenericTypeAndName() {
                 Assert.Same(parameter, method.Parameter<ParameterType>(parameterName));
                 ParameterNameFilter.Implementation nameFilter = VerifyFilter(selection, parameterName);
-                ParameterTypeFilter.Implementation typeFilter = VerifyFilter(nameFilter.Previous, parameterType);
-                VerifyParameters(typeFilter.Previous, method);
+                ParameterTypeFilter.Implementation typeFilter = VerifyFilter(nameFilter.Source, parameterType);
+                VerifyParameters(typeFilter.Source, method);
             }
         }
 
@@ -86,37 +86,37 @@ namespace Inspector
             public void ReturnsParameterOfGivenType() {
                 Assert.Same(parameter, member.Parameter(parameterType));
                 ParameterTypeFilter.Implementation filter = VerifyFilter(selection, parameterType);
-                VerifyParameters(filter.Previous, method);
+                VerifyParameters(filter.Source, method);
             }
 
             [Fact]
             public void ReturnsParameterWithGivenName() {
                 Assert.Same(parameter, member.Parameter(parameterName));
                 ParameterNameFilter.Implementation filter = VerifyFilter(selection, parameterName);
-                VerifyParameters(filter.Previous, method);
+                VerifyParameters(filter.Source, method);
             }
 
             [Fact]
             public void ReturnsParameterOfGivenGenericType() {
                 Assert.Same(parameter, member.Parameter<ParameterType>());
                 ParameterTypeFilter.Implementation filter = VerifyFilter(selection, parameterType);
-                VerifyParameters(filter.Previous, method);
+                VerifyParameters(filter.Source, method);
             }
 
             [Fact]
             public void ReturnsParameterWithGivenTypeAndName() {
                 Assert.Same(parameter, member.Parameter(parameterType, parameterName));
                 ParameterNameFilter.Implementation nameFilter = VerifyFilter(selection, parameterName);
-                ParameterTypeFilter.Implementation typeFilter = VerifyFilter(nameFilter.Previous, parameterType);
-                VerifyParameters(typeFilter.Previous, method);
+                ParameterTypeFilter.Implementation typeFilter = VerifyFilter(nameFilter.Source, parameterType);
+                VerifyParameters(typeFilter.Source, method);
             }
 
             [Fact]
             public void ReturnsParameterWithGivenGenericTypeAndName() {
                 Assert.Same(parameter, member.Parameter<ParameterType>(parameterName));
                 ParameterNameFilter.Implementation nameFilter = VerifyFilter(selection, parameterName);
-                ParameterTypeFilter.Implementation typeFilter = VerifyFilter(nameFilter.Previous, parameterType);
-                VerifyParameters(typeFilter.Previous, method);
+                ParameterTypeFilter.Implementation typeFilter = VerifyFilter(nameFilter.Source, parameterType);
+                VerifyParameters(typeFilter.Source, method);
             }
         }
 

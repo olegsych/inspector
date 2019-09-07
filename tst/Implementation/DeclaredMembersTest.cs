@@ -13,21 +13,21 @@ namespace Inspector.Implementation
         readonly Filter<Member<MemberInfo>> sut;
 
         // Constructor parameters
-        readonly IEnumerable<Member<MemberInfo>> previous = Substitute.For<IEnumerable<Member<MemberInfo>>>();
+        readonly IEnumerable<Member<MemberInfo>> source = Substitute.For<IEnumerable<Member<MemberInfo>>>();
         readonly Type declaringType = typeof(ExpectedType);
 
         public DeclaredMembersTest() =>
-            sut = new DeclaredMembers<Member<MemberInfo>, MemberInfo>(previous, declaringType);
+            sut = new DeclaredMembers<Member<MemberInfo>, MemberInfo>(source, declaringType);
 
         public class Constructor: DeclaredMembersTest
         {
             [Fact]
-            public void PassesPreviousToBase() =>
-                Assert.Same(previous, sut.Previous);
+            public void PassesSourceToBase() =>
+                Assert.Same(source, sut.Source);
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenDeclaringTypeIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new DeclaredMembers<Member<MemberInfo>, MemberInfo>(previous, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new DeclaredMembers<Member<MemberInfo>, MemberInfo>(source, null));
                 Assert.Equal("declaringType", thrown.ParamName);
             }
         }
@@ -45,7 +45,7 @@ namespace Inspector.Implementation
             public void ReturnsMembersWithMatchingDeclaringType() {
                 Member<MemberInfo>[] expected = new[] { Member(declaringType), Member(declaringType) };
                 IEnumerable<Member<MemberInfo>> mixed = new[] { Member(), expected[0], Member(), expected[1], Member() };
-                ConfiguredCall arrange = previous.GetEnumerator().Returns(mixed.GetEnumerator());
+                ConfiguredCall arrange = source.GetEnumerator().Returns(mixed.GetEnumerator());
                 Assert.Equal(expected, sut);
             }
 

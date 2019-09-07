@@ -27,7 +27,7 @@ namespace Inspector
 
             static void VerifyInheritanceScope<TAncestorType>(IScope expected, IScope actual) {
                 InheritanceScope inheritanceScope = VerifyInheritanceScope(typeof(TAncestorType), actual);
-                Assert.Same(expected, inheritanceScope.Previous);
+                Assert.Same(expected, inheritanceScope.Source);
             }
         }
 
@@ -57,7 +57,7 @@ namespace Inspector
 
             static void VerifyInstanceScope<TAncestorType>(object instance, IScope actual) {
                 InheritanceScope inheritanceScope = VerifyInheritanceScope(typeof(TAncestorType), actual);
-                var instanceScope = Assert.IsType<InstanceScope>(inheritanceScope.Previous);
+                var instanceScope = Assert.IsType<InstanceScope>(inheritanceScope.Source);
                 Assert.Same(instance, instanceScope.Instance);
             }
         }
@@ -87,7 +87,7 @@ namespace Inspector
 
             static void VerifyStaticScope<TDeclaringType>(Type staticType, IScope actual) {
                 InheritanceScope inheritanceScope = VerifyInheritanceScope(typeof(TDeclaringType), actual);
-                var staticScope = Assert.IsType<StaticScope>(inheritanceScope.Previous);
+                var staticScope = Assert.IsType<StaticScope>(inheritanceScope.Source);
                 Assert.Equal(staticType, staticScope.Type);
             }
         }

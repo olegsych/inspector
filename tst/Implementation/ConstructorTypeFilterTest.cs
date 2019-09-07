@@ -13,44 +13,44 @@ namespace Inspector.Implementation
         readonly Filter<Constructor> sut;
 
         // Constructor parameters
-        readonly IEnumerable<Constructor> previous = Substitute.For<IEnumerable<Constructor>>();
+        readonly IEnumerable<Constructor> source = Substitute.For<IEnumerable<Constructor>>();
         readonly Type delegateType = typeof(Action<P, P>);
         readonly IDelegateFactory<ConstructorInfo> delegateFactory = Substitute.For<IDelegateFactory<ConstructorInfo>>();
 
         public ConstructorTypeFilterTest() =>
-            sut = new ConstructorTypeFilter(previous, delegateType, delegateFactory);
+            sut = new ConstructorTypeFilter(source, delegateType, delegateFactory);
 
         public class ConstructorTest: ConstructorTypeFilterTest
         {
             [Fact]
-            public void ThrowsDescriptiveExceptionWhenPreviousFilterIsNull() {
+            public void ThrowsDescriptiveExceptionWhenSourceIsNull() {
                 var thrown = Assert.Throws<ArgumentNullException>(() => new ConstructorTypeFilter(null, delegateType, delegateFactory));
-                Assert.Equal(nameof(previous), thrown.ParamName);
+                Assert.Equal(nameof(source), thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenDelegateTypeIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new ConstructorTypeFilter(previous, null, delegateFactory));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new ConstructorTypeFilter(source, null, delegateFactory));
                 Assert.Equal(nameof(delegateType), thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenFactoryIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new ConstructorTypeFilter(previous, delegateType, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new ConstructorTypeFilter(source, delegateType, null));
                 Assert.Equal(nameof(delegateFactory), thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenDelegateTypeIsNotDelegate() {
                 Type invalid = typeof(InvalidDelegateType);
-                var thrown = Assert.Throws<ArgumentException>(() => new ConstructorTypeFilter(previous, invalid, delegateFactory));
+                var thrown = Assert.Throws<ArgumentException>(() => new ConstructorTypeFilter(source, invalid, delegateFactory));
                 Assert.Equal(nameof(delegateType), thrown.ParamName);
                 Assert.StartsWith($"{invalid} is not a delegate.", thrown.Message);
             }
 
             [Fact]
-            public void PassesPreviousToBaseConstructor() =>
-                Assert.Same(previous, sut.Previous);
+            public void PassesSourceToBaseConstructor() =>
+                Assert.Same(source, sut.Source);
 
             class InvalidDelegateType { }
         }
@@ -79,7 +79,7 @@ namespace Inspector.Implementation
                 arrange = delegateFactory.TryCreate(delegateType, target, infos[1], out Delegate @delegate).Returns(true);
                 arrange = delegateFactory.TryCreate(delegateType, target, infos[3], out @delegate).Returns(true);
                 List<Constructor> constructors = infos.Select(_ => new Constructor(_, target)).ToList();
-                arrange = previous.GetEnumerator().Returns(constructors.GetEnumerator());
+                arrange = source.GetEnumerator().Returns(constructors.GetEnumerator());
 
                 Constructor[] expected = { constructors[1], constructors[3] };
                 Assert.Equal(expected, sut);

@@ -76,7 +76,7 @@ namespace Inspector
                 var accessibilityScope = Assert.IsType<AccessibilityScope>(actual);
                 Assert.Equal(accessibility, accessibilityScope.Accessibility);
 
-                var instanceScope = Assert.IsType<InstanceScope>(accessibilityScope.Previous);
+                var instanceScope = Assert.IsType<InstanceScope>(accessibilityScope.Source);
                 Assert.Same(instance, instanceScope.Instance);
             }
         }
@@ -113,7 +113,7 @@ namespace Inspector
                 var accessibilityScope = Assert.IsType<AccessibilityScope>(actual);
                 Assert.Equal(accessibility, accessibilityScope.Accessibility);
 
-                var instanceScope = Assert.IsType<StaticScope>(accessibilityScope.Previous);
+                var instanceScope = Assert.IsType<StaticScope>(accessibilityScope.Source);
                 Assert.Same(type, instanceScope.Type);
             }
 

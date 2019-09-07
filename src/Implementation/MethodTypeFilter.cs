@@ -7,7 +7,7 @@ namespace Inspector.Implementation
 {
     sealed class MethodTypeFilter: Filter<Method>
     {
-        public MethodTypeFilter(IEnumerable<Method> previous, Type delegateType, IDelegateFactory<MethodInfo> delegateFactory): base(previous) {
+        public MethodTypeFilter(IEnumerable<Method> source, Type delegateType, IDelegateFactory<MethodInfo> delegateFactory): base(source) {
             if(delegateType == null)
                 throw new ArgumentNullException(nameof(delegateType));
             if(!typeof(Delegate).IsAssignableFrom(delegateType))
@@ -22,6 +22,6 @@ namespace Inspector.Implementation
         public IDelegateFactory<MethodInfo> DelegateFactory { get; }
 
         public override IEnumerator<Method> GetEnumerator() =>
-            Previous.Where(method => DelegateFactory.TryCreate(DelegateType, method.Instance, method.Info, out Delegate _)).GetEnumerator();
+            Source.Where(method => DelegateFactory.TryCreate(DelegateType, method.Instance, method.Info, out Delegate _)).GetEnumerator();
     }
 }

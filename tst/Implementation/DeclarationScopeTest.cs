@@ -13,32 +13,32 @@ namespace Inspector.Implementation
         readonly IScope sut;
 
         // Constructor parameters
-        readonly IScope previous = Substitute.For<IScope>();
+        readonly IScope source = Substitute.For<IScope>();
         readonly Type declaringType = Type();
 
         public DeclarationScopeTest() =>
-            sut = new DeclarationScope(previous, declaringType);
+            sut = new DeclarationScope(source, declaringType);
 
         public class Ctor: DeclarationScopeTest
         {
             [Fact]
-            public void ThrowsDescriptiveExceptionWhenPreviousScopeIsNull() {
+            public void ThrowsDescriptiveExceptionWhenSourceIsNull() {
                 var thrown = Assert.Throws<ArgumentNullException>(() => new DeclarationScope(null, declaringType));
-                Assert.Equal("previous", thrown.ParamName);
+                Assert.Equal("source", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenDeclaringTypeIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new DeclarationScope(previous, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new DeclarationScope(source, null));
                 Assert.Equal("declaringType", thrown.ParamName);
             }
         }
 
-        public class Previous: DeclarationScopeTest
+        public class Source: DeclarationScopeTest
         {
             [Fact]
             public void ImplementsIDecoratorAndReturnsValueGivenToConstructor() =>
-                Assert.Same(previous, ((IDecorator<IScope>)sut).Previous);
+                Assert.Same(source, ((IDecorator<IScope>)sut).Source);
         }
 
         public class DeclaringType: DeclarationScopeTest
@@ -53,13 +53,13 @@ namespace Inspector.Implementation
             [Fact]
             public void ReturnsConstructorsWithMatchingDeclaringType() {
                 var allConstructors = Substitute.For<IEnumerable<Constructor>>();
-                ConfiguredCall arrange = previous.Constructors().Returns(allConstructors);
+                ConfiguredCall arrange = source.Constructors().Returns(allConstructors);
 
                 IEnumerable<Constructor> actual = sut.Constructors();
 
                 var declaredConstructors = Assert.IsType<DeclaredMembers<Constructor, ConstructorInfo>>(actual);
                 Assert.Equal(declaringType, declaredConstructors.DeclaringType);
-                Assert.Same(allConstructors, declaredConstructors.Previous);
+                Assert.Same(allConstructors, declaredConstructors.Source);
             }
         }
 
@@ -68,13 +68,13 @@ namespace Inspector.Implementation
             [Fact]
             public void ReturnsEventsWithMatchingDeclaringType() {
                 var allEvents = Substitute.For<IEnumerable<Event>>();
-                ConfiguredCall arrange = previous.Events().Returns(allEvents);
+                ConfiguredCall arrange = source.Events().Returns(allEvents);
 
                 IEnumerable<Event> actual = sut.Events();
 
                 var declaredEvents = Assert.IsType<DeclaredMembers<Event, EventInfo>>(actual);
                 Assert.Equal(declaringType, declaredEvents.DeclaringType);
-                Assert.Same(allEvents, declaredEvents.Previous);
+                Assert.Same(allEvents, declaredEvents.Source);
             }
         }
 
@@ -83,13 +83,13 @@ namespace Inspector.Implementation
             [Fact]
             public void ReturnsFieldsWithMatchingDeclaringType() {
                 var allFields = Substitute.For<IEnumerable<Field>>();
-                ConfiguredCall arrange = previous.Fields().Returns(allFields);
+                ConfiguredCall arrange = source.Fields().Returns(allFields);
 
                 IEnumerable<Field> actual = sut.Fields();
 
                 var declaredFields = Assert.IsType<DeclaredMembers<Field, FieldInfo>>(actual);
                 Assert.Equal(declaringType, declaredFields.DeclaringType);
-                Assert.Same(allFields, declaredFields.Previous);
+                Assert.Same(allFields, declaredFields.Source);
             }
         }
 
@@ -98,13 +98,13 @@ namespace Inspector.Implementation
             [Fact]
             public void ReturnsMethodsWithMatchingDeclaringType() {
                 var allMethods = Substitute.For<IEnumerable<Method>>();
-                ConfiguredCall arrange = previous.Methods().Returns(allMethods);
+                ConfiguredCall arrange = source.Methods().Returns(allMethods);
 
                 IEnumerable<Method> actual = sut.Methods();
 
                 var declaredMethods = Assert.IsType<DeclaredMembers<Method, MethodInfo>>(actual);
                 Assert.Equal(declaringType, declaredMethods.DeclaringType);
-                Assert.Same(allMethods, declaredMethods.Previous);
+                Assert.Same(allMethods, declaredMethods.Source);
             }
         }
 
@@ -113,13 +113,13 @@ namespace Inspector.Implementation
             [Fact]
             public void ReturnsPropertiesWithMatchingDeclaringType() {
                 var allProperties = Substitute.For<IEnumerable<Property>>();
-                ConfiguredCall arrange = previous.Properties().Returns(allProperties);
+                ConfiguredCall arrange = source.Properties().Returns(allProperties);
 
                 IEnumerable<Property> actual = sut.Properties();
 
                 var declaredProperties = Assert.IsType<DeclaredMembers<Property, PropertyInfo>>(actual);
                 Assert.Equal(declaringType, declaredProperties.DeclaringType);
-                Assert.Same(allProperties, declaredProperties.Previous);
+                Assert.Same(allProperties, declaredProperties.Source);
             }
         }
     }

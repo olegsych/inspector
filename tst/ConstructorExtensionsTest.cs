@@ -57,7 +57,7 @@ namespace Inspector
             public void ReturnsConstructorWithGivenDelegateType() {
                 Assert.Same(selected, scope.Constructor(delegateType));
                 ConstructorTypeFilter filter = VerifyFilter(selection, delegateType);
-                Assert.Same(constructors, filter.Previous);
+                Assert.Same(constructors, filter.Source);
             }
 
             [Fact]
@@ -66,7 +66,7 @@ namespace Inspector
 
                 VerifyGenericConstructor(selected, generic);
                 ConstructorTypeFilter typeFilter = VerifyFilter(selection, typeof(TestDelegate));
-                Assert.Same(constructors, typeFilter.Previous);
+                Assert.Same(constructors, typeFilter.Source);
             }
         }
 
@@ -77,14 +77,14 @@ namespace Inspector
                 Assert.Same(selected, instance.Constructor());
                 var declared = Assert.IsType<DeclaredMembers<Constructor, ConstructorInfo>>(selection);
                 Assert.Equal(instance.GetType(), declared.DeclaringType);
-                VerifyScope(declared.Previous, instance);
+                VerifyScope(declared.Source, instance);
             }
 
             [Fact]
             public void ReturnsConstructorWithGivenDelegateType() {
                 Assert.Same(selected, instance.Constructor(delegateType));
                 ConstructorTypeFilter filter = VerifyFilter(selection, delegateType);
-                VerifyScope(filter.Previous, instance);
+                VerifyScope(filter.Source, instance);
             }
 
             [Fact]
@@ -93,7 +93,7 @@ namespace Inspector
 
                 VerifyGenericConstructor(selected, generic);
                 ConstructorTypeFilter typed = VerifyFilter(selection, typeof(TestDelegate));
-                VerifyScope(typed.Previous, instance);
+                VerifyScope(typed.Source, instance);
             }
 
             static void VerifyScope(IEnumerable<Constructor> filter, object instance) {

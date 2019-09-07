@@ -27,7 +27,7 @@ namespace Inspector
 
             static void VerifyDeclarationScope<TDeclaringType>(IScope expected, IScope actual) {
                 DeclarationScope declarationScope = VerifyDeclarationScope(typeof(TDeclaringType), actual);
-                Assert.Same(expected, declarationScope.Previous);
+                Assert.Same(expected, declarationScope.Source);
             }
         }
 
@@ -57,7 +57,7 @@ namespace Inspector
 
             static void VerifyInstanceScope<TDeclaringType>(object instance, IScope actual) {
                 DeclarationScope declarationScope = VerifyDeclarationScope(typeof(TDeclaringType), actual);
-                var instanceScope = Assert.IsType<InstanceScope>(declarationScope.Previous);
+                var instanceScope = Assert.IsType<InstanceScope>(declarationScope.Source);
                 Assert.Same(instance, instanceScope.Instance);
             }
         }
@@ -87,7 +87,7 @@ namespace Inspector
 
             static void VerifyStaticScope<TDeclaringType>(Type staticType, IScope actual) {
                 DeclarationScope declarationScope = VerifyDeclarationScope(typeof(TDeclaringType), actual);
-                var staticScope = Assert.IsType<StaticScope>(declarationScope.Previous);
+                var staticScope = Assert.IsType<StaticScope>(declarationScope.Source);
                 Assert.Equal(staticType, staticScope.Type);
             }
         }

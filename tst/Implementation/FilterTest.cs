@@ -15,27 +15,27 @@ namespace Inspector.Implementation
         readonly IEnumerable<TestType> sut;
 
         // Constructor parameters
-        readonly IEnumerable<TestType> previous = Substitute.For<IEnumerable<TestType>>();
+        readonly IEnumerable<TestType> source = Substitute.For<IEnumerable<TestType>>();
 
         public FilterTest() =>
-            sut = Substitute.ForPartsOf<Filter<TestType>>(previous);
+            sut = Substitute.ForPartsOf<Filter<TestType>>(source);
 
         public class Constructor: FilterTest
         {
             [Fact]
-            public void ThrowsDescriptiveExceptionWhenPreviousIsNull() {
+            public void ThrowsDescriptiveExceptionWhenSourceIsNull() {
                 var thrown = Assert.Throws<TargetInvocationException>(() => Substitute.ForPartsOf<Filter<TestType>>(new object[] { null }));
                 var actual = Assert.IsType<ArgumentNullException>(thrown.InnerException);
-                Assert.Equal("previous", actual.ParamName);
+                Assert.Equal("source", actual.ParamName);
             }
         }
 
-        public class Previous: FilterTest
+        public class Source: FilterTest
         {
             [Fact]
             public void ImplementsIDecoratorAndReturnsValueGivenToConstructor() {
                 var decorator = (IDecorator<IEnumerable<TestType>>)sut;
-                Assert.Same(previous, decorator.Previous);
+                Assert.Same(source, decorator.Source);
             }
         }
 

@@ -13,44 +13,44 @@ namespace Inspector.Implementation
         readonly Filter<Method> sut;
 
         // Constructor parameters
-        readonly IEnumerable<Method> previous = Substitute.For<IEnumerable<Method>>();
+        readonly IEnumerable<Method> source = Substitute.For<IEnumerable<Method>>();
         readonly Type delegateType = typeof(Action<P, P>);
         readonly IDelegateFactory<MethodInfo> delegateFactory = Substitute.For<IDelegateFactory<MethodInfo>>();
 
         public MethodTypeFilterTest() =>
-            sut = new MethodTypeFilter(previous, delegateType, delegateFactory);
+            sut = new MethodTypeFilter(source, delegateType, delegateFactory);
 
         public class Constructor: MethodTypeFilterTest
         {
             [Fact]
-            public void ThrowsArgumentNullExceptionWhenPreviousIsNull() {
+            public void ThrowsArgumentNullExceptionWhenSourceIsNull() {
                 var thrown = Assert.Throws<ArgumentNullException>(() => new MethodTypeFilter(null, delegateType, delegateFactory));
-                Assert.Equal("previous", thrown.ParamName);
+                Assert.Equal("source", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsArgumentNullExceptionWhenDelegateTypeIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new MethodTypeFilter(previous, null, delegateFactory));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new MethodTypeFilter(source, null, delegateFactory));
                 Assert.Equal("delegateType", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsArgumentNullExceptionWhenDelegateFactoryIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new MethodTypeFilter(previous, delegateType, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new MethodTypeFilter(source, delegateType, null));
                 Assert.Equal("delegateFactory", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenDelegateTypeIsInvalid() {
                 Type invalid = typeof(InvalidMethodType);
-                var thrown = Assert.Throws<ArgumentException>(() => new MethodTypeFilter(previous, invalid, delegateFactory));
+                var thrown = Assert.Throws<ArgumentException>(() => new MethodTypeFilter(source, invalid, delegateFactory));
                 Assert.Equal("delegateType", thrown.ParamName);
                 Assert.StartsWith($"{invalid} is not a delegate.", thrown.Message);
             }
 
             [Fact]
-            public void PassesPreviousToBaseConstructor() =>
-                Assert.Same(previous, sut.Previous);
+            public void PassesSourceToBaseConstructor() =>
+                Assert.Same(source, sut.Source);
 
             class InvalidMethodType { }
         }
@@ -80,7 +80,7 @@ namespace Inspector.Implementation
                 arrange = delegateFactory.TryCreate(delegateType, target, infos[3], out @delegate).Returns(true);
 
                 List<Method> methods = infos.Select(_ => new Method(_, target)).ToList();
-                arrange = previous.GetEnumerator().Returns(methods.GetEnumerator());
+                arrange = source.GetEnumerator().Returns(methods.GetEnumerator());
 
                 Method[] expected = { methods[1], methods[3] };
                 Assert.Equal(expected, sut);
