@@ -5,14 +5,9 @@ using System.Reflection;
 
 namespace Inspector.Implementation
 {
-    /// <summary>
-    /// Filters methods by type.
-    /// </summary>
-    sealed class MethodTypeFilter: IFilter<Method>, IDecorator<IFilter<Method>>
+    sealed class MethodTypeFilter: Filter<Method>
     {
-        public MethodTypeFilter(IFilter<Method> previous, Type delegateType, IDelegateFactory<MethodInfo> delegateFactory) {
-            Previous = previous ?? throw new ArgumentNullException(nameof(previous));
-
+        public MethodTypeFilter(IEnumerable<Method> previous, Type delegateType, IDelegateFactory<MethodInfo> delegateFactory): base(previous) {
             if(delegateType == null)
                 throw new ArgumentNullException(nameof(delegateType));
             if(!typeof(Delegate).IsAssignableFrom(delegateType))
@@ -22,11 +17,11 @@ namespace Inspector.Implementation
             DelegateFactory = delegateFactory ?? throw new ArgumentNullException(nameof(delegateFactory));
         }
 
-        public IFilter<Method> Previous { get; }
         public Type DelegateType { get; }
+
         public IDelegateFactory<MethodInfo> DelegateFactory { get; }
 
-        IEnumerable<Method> IFilter<Method>.Get() =>
-            Previous.Get().Where(method => DelegateFactory.TryCreate(DelegateType, method.Instance, method.Info, out Delegate _));
+        public override IEnumerator<Method> GetEnumerator() =>
+            Previous.Where(method => DelegateFactory.TryCreate(DelegateType, method.Instance, method.Info, out Delegate _)).GetEnumerator();
     }
 }

@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using NSubstitute;
+using NSubstitute.Core;
 using Xunit;
 
 namespace Inspector.Implementation
 {
     public class MethodTypeFilterTest
     {
-        readonly IFilter<Method> sut;
+        readonly Filter<Method> sut;
 
         // Constructor parameters
-        readonly IFilter<Method> previous = Substitute.For<IFilter<Method>>();
+        readonly IEnumerable<Method> previous = Substitute.For<IEnumerable<Method>>();
         readonly Type delegateType = typeof(Action<P, P>);
         readonly IDelegateFactory<MethodInfo> delegateFactory = Substitute.For<IDelegateFactory<MethodInfo>>();
 
@@ -47,6 +48,10 @@ namespace Inspector.Implementation
                 Assert.StartsWith($"{invalid} is not a delegate.", thrown.Message);
             }
 
+            [Fact]
+            public void PassesPreviousToBaseConstructor() =>
+                Assert.Same(previous, sut.Previous);
+
             class InvalidMethodType { }
         }
 
@@ -64,34 +69,21 @@ namespace Inspector.Implementation
                 Assert.Same(delegateFactory, ((MethodTypeFilter)sut).DelegateFactory);
         }
 
-        public class Previous: MethodTypeFilterTest
-        {
-            [Fact]
-            public void ImplementsIDecoratorAndReturnsValueGivenToConstructor() {
-                var decorator = (IDecorator<IFilter<Method>>)sut;
-                Assert.Same(previous, decorator.Previous);
-            }
-        }
-
-        public class Get: MethodTypeFilterTest
+        public class GetEnumerator: MethodTypeFilterTest
         {
             [Fact]
             public void ReturnsMethodsWithGivenDelegateType() {
-                // Arrange
-                MethodInfo[] infos = typeof(TestType).GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public);
+                ConfiguredCall arrange;
                 var target = new TestType();
-                delegateFactory.TryCreate(delegateType, target, infos[1], out Delegate @delegate).Returns(true);
-                delegateFactory.TryCreate(delegateType, target, infos[3], out @delegate).Returns(true);
+                MethodInfo[] infos = typeof(TestType).GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public);
+                arrange = delegateFactory.TryCreate(delegateType, target, infos[1], out Delegate @delegate).Returns(true);
+                arrange = delegateFactory.TryCreate(delegateType, target, infos[3], out @delegate).Returns(true);
 
-                Method[] methods = infos.Select(_ => new Method(_, target)).ToArray();
-                previous.Get().Returns(methods);
+                List<Method> methods = infos.Select(_ => new Method(_, target)).ToList();
+                arrange = previous.GetEnumerator().Returns(methods.GetEnumerator());
 
-                // Act
-                IEnumerable<Method> actual = sut.Get();
-
-                // Assert
                 Method[] expected = { methods[1], methods[3] };
-                Assert.Equal(expected, actual);
+                Assert.Equal(expected, sut);
             }
         }
 
