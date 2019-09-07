@@ -10,15 +10,15 @@ namespace Inspector.Implementation
 {
     public class ParameterTypeFilterTest
     {
-        readonly IFilter<ParameterInfo> parameters = Substitute.For<IFilter<ParameterInfo>>();
+        readonly IEnumerable<ParameterInfo> parameters = Substitute.For<IEnumerable<ParameterInfo>>();
         readonly Type parameterType = Type();
 
         public class WithType: ParameterTypeFilterTest
         {
             [Fact]
-            public void ThrowsDescriptiveExceptionWhenParametersIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => default(IFilter<ParameterInfo>).WithType(parameterType));
-                Assert.Equal("parameters", thrown.ParamName);
+            public void ThrowsDescriptiveExceptionWhenPreviousIsNull() {
+                var thrown = Assert.Throws<ArgumentNullException>(() => default(IEnumerable<ParameterInfo>).WithType(parameterType));
+                Assert.Equal("previous", thrown.ParamName);
             }
 
             [Fact]
@@ -30,7 +30,7 @@ namespace Inspector.Implementation
 
         public class Implementation: ParameterTypeFilterTest
         {
-            readonly IFilter<ParameterInfo> sut;
+            readonly IEnumerable<ParameterInfo> sut;
 
             public Implementation() =>
                 sut = parameters.WithType(parameterType);
@@ -41,19 +41,17 @@ namespace Inspector.Implementation
 
             [Fact]
             public void PreviousImplementsIDecoratorAndRetursParametersGivenToWithType() {
-                var decorator = (IDecorator<IFilter<ParameterInfo>>)sut;
+                var decorator = (IDecorator<IEnumerable<ParameterInfo>>)sut;
                 Assert.Same(parameters, decorator.Previous);
             }
 
             [Fact]
             public void GetReturnsParametersWithGivenParameterType() {
                 var expected = new ParameterInfo[] { ParameterInfo(parameterType), ParameterInfo(parameterType) };
-                var mixed = new ParameterInfo[] { ParameterInfo(), expected[0], ParameterInfo(), expected[1], ParameterInfo() };
-                ConfiguredCall arrange = parameters.Get().Returns(mixed);
+                IEnumerable<ParameterInfo> mixed = new ParameterInfo[] { ParameterInfo(), expected[0], ParameterInfo(), expected[1], ParameterInfo() };
+                ConfiguredCall arrange = parameters.GetEnumerator().Returns(mixed.GetEnumerator());
 
-                IEnumerable<ParameterInfo> actual = sut.Get();
-
-                Assert.Equal(expected, actual);
+                Assert.Equal(expected, sut);
             }
         }
     }
