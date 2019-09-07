@@ -4,21 +4,14 @@ using System.Linq;
 
 namespace Inspector.Implementation
 {
-    /// <summary>
-    /// Filters fields by type.
-    /// </summary>
-    sealed class FieldTypeFilter: IFilter<Field>, IDecorator<IFilter<Field>>
+    sealed class FieldTypeFilter: Filter<Field>
     {
-        public FieldTypeFilter(IFilter<Field> previous, Type fieldType) {
-            Previous = previous ?? throw new ArgumentNullException(nameof(previous));
+        public FieldTypeFilter(IEnumerable<Field> previous, Type fieldType) : base(previous) =>
             FieldType = fieldType ?? throw new ArgumentNullException(nameof(fieldType));
-        }
-
-        public IFilter<Field> Previous { get; }
 
         public Type FieldType { get; }
 
-        IEnumerable<Field> IFilter<Field>.Get() =>
-            Previous.Get().Where(field => field.Info.FieldType == FieldType);
+        public override IEnumerator<Field> GetEnumerator() =>
+            Previous.Where(field => field.Info.FieldType == FieldType).GetEnumerator();
     }
 }

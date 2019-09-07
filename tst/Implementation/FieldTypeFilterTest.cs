@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using NSubstitute;
+using NSubstitute.Core;
 using Xunit;
 using static Inspector.Substitutes;
 
@@ -9,10 +10,10 @@ namespace Inspector.Implementation
 {
     public class FieldTypeFilterTest
     {
-        readonly IFilter<Field> sut;
+        readonly Filter<Field> sut;
 
         // Constructor parameters
-        readonly IFilter<Field> previous = Substitute.For<IFilter<Field>>();
+        readonly IEnumerable<Field> previous = Substitute.For<IEnumerable<Field>>();
         readonly Type fieldType = Type();
 
         public FieldTypeFilterTest() =>
@@ -31,6 +32,10 @@ namespace Inspector.Implementation
                 var thrown = Assert.Throws<ArgumentNullException>(() => new FieldTypeFilter(previous, null));
                 Assert.Equal("fieldType", thrown.ParamName);
             }
+
+            [Fact]
+            public void PassesPreviousToBaseConstructor() =>
+                Assert.Same(previous, sut.Previous);
         }
 
         public class FieldType: FieldTypeFilterTest
@@ -40,25 +45,15 @@ namespace Inspector.Implementation
                 Assert.Same(fieldType, ((FieldTypeFilter)sut).FieldType);
         }
 
-        public class Previous: FieldTypeFilterTest
-        {
-            [Fact]
-            public void ImplementsIDecoratorAndReturnsValueGivenToConstructor() {
-                var decorator = (IDecorator<IFilter<Field>>)sut;
-                Assert.Same(previous, decorator.Previous);
-            }
-        }
-
-        public class Get: FieldTypeFilterTest
+        public class GetEnumerator: FieldTypeFilterTest
         {
             [Fact]
             public void ReturnsFieldsWithGivenFieldType() {
-                // Arrange
                 FieldInfo fieldInfo = FieldInfo(FieldAttributes.Static, fieldType);
 
                 var expected = new[] { new Field(fieldInfo), new Field(fieldInfo) };
 
-                var mixed = new[] {
+                IEnumerable<Field> mixed = new[] {
                     new Field(FieldInfo(FieldAttributes.Static)),
                     expected[0],
                     new Field(FieldInfo(FieldAttributes.Static)),
@@ -66,12 +61,9 @@ namespace Inspector.Implementation
                     new Field(FieldInfo(FieldAttributes.Static))
                 };
 
-                previous.Get().Returns(mixed);
+                ConfiguredCall arrange = previous.GetEnumerator().Returns(mixed.GetEnumerator());
 
-                // Act
-                IEnumerable<Field> actual = sut.Get();
-
-                Assert.Equal(expected, actual);
+                Assert.Equal(expected, sut);
             }
         }
     }
