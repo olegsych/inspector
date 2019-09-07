@@ -25,35 +25,20 @@ namespace Inspector.Implementation
 
         public IScope Previous { get; }
 
-        IEnumerable<Constructor> IFilter<Constructor>.Get() =>
-            ((IFilter<Constructor>)Previous).Get().Where(AccessibilityMatches);
+        public IEnumerable<Constructor> Constructors() =>
+            Previous.Constructors().Where(c => Accessibility == (Accessibility)(c.Info.Attributes & MethodAttributes.MemberAccessMask));
 
-        IEnumerable<Event> IFilter<Event>.Get() =>
-            ((IFilter<Event>)Previous).Get().Where(AccessibilityMatches);
+        public IEnumerable<Event> Events() =>
+            Previous.Events().Where(e => Accessibility == (Accessibility)(e.Info.AddMethod.Attributes & MethodAttributes.MemberAccessMask));
 
-        IEnumerable<Field> IFilter<Field>.Get() =>
-            ((IFilter<Field>)Previous).Get().Where(AccessibilityMatches);
+        public IEnumerable<Field> Fields() =>
+            Previous.Fields().Where(f => Accessibility == (Accessibility)(f.Info.Attributes & FieldAttributes.FieldAccessMask));
 
-        IEnumerable<Method> IFilter<Method>.Get() =>
-            ((IFilter<Method>)Previous).Get().Where(AccessibilityMatches);
+        public IEnumerable<Method> Methods() =>
+            Previous.Methods().Where(m => Accessibility == (Accessibility)(m.Info.Attributes & MethodAttributes.MemberAccessMask));
 
-        IEnumerable<Property> IFilter<Property>.Get() =>
-            ((IFilter<Property>)Previous).Get().Where(AccessibilityMatches);
-
-        bool AccessibilityMatches(Constructor constructor) =>
-            Accessibility == (Accessibility)(constructor.Info.Attributes & MethodAttributes.MemberAccessMask);
-
-        bool AccessibilityMatches(Event @event) =>
-            Accessibility == (Accessibility)(@event.Info.AddMethod.Attributes & MethodAttributes.MemberAccessMask);
-
-        bool AccessibilityMatches(Field field) =>
-            Accessibility == (Accessibility)(field.Info.Attributes & FieldAttributes.FieldAccessMask);
-
-        bool AccessibilityMatches(Method method) =>
-            Accessibility == (Accessibility)(method.Info.Attributes & MethodAttributes.MemberAccessMask);
-
-        bool AccessibilityMatches(Property property) =>
-            Accessibility == (Accessibility)(property.Info.GetMethod.Attributes & MethodAttributes.MemberAccessMask);
+        public IEnumerable<Property> Properties() =>
+            Previous.Properties().Where(p => Accessibility == (Accessibility)(p.Info.GetMethod.Attributes & MethodAttributes.MemberAccessMask));
 
         static Accessibility Combine(Accessibility a1, Accessibility a2) {
             if(a1 == Accessibility.Private && a2 == Accessibility.Protected)

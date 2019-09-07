@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using NSubstitute;
+using NSubstitute.Core;
 using Xunit;
 using static Inspector.Substitutes;
 
@@ -62,7 +63,7 @@ namespace Inspector.Implementation
                 first == Accessibility.Protected && second == Accessibility.Internal;
         }
 
-        public class GetConstructors: AccessibilityScopeTest
+        public class Constructors: AccessibilityScopeTest
         {
             [Fact]
             public void ReturnsConstructorsWithWithExpectedAccessibility() {
@@ -82,17 +83,17 @@ namespace Inspector.Implementation
                     new Constructor(ConstructorInfo(MethodAttributes.Private | MethodAttributes.Static)),
                 };
 
-                ((IFilter<Constructor>)previous).Get().Returns(all);
+                ConfiguredCall arrange = previous.Constructors().Returns(all);
 
                 // Act
-                IEnumerable<Constructor> actual = ((IFilter<Constructor>)sut).Get();
+                IEnumerable<Constructor> actual = sut.Constructors();
 
                 // Assert
                 Assert.Equal(expected, actual);
             }
         }
 
-        public class GetEvents: AccessibilityScopeTest
+        public class Events: AccessibilityScopeTest
         {
             [Fact]
             public void ReturnsEventsWithWithExpectedAccessibilityOfAddMethod() {
@@ -112,17 +113,17 @@ namespace Inspector.Implementation
                     new Event(EventInfo(MethodAttributes.Private | MethodAttributes.Static)),
                 };
 
-                ((IFilter<Event>)previous).Get().Returns(all);
+                ConfiguredCall arrange = previous.Events().Returns(all);
 
                 // Act
-                IEnumerable<Event> actual = ((IFilter<Event>)sut).Get();
+                IEnumerable<Event> actual = sut.Events();
 
                 // Assert
                 Assert.Equal(expected, actual);
             }
         }
 
-        public class GetFields: AccessibilityScopeTest
+        public class Fields: AccessibilityScopeTest
         {
             [Fact]
             public void ReturnsFieldsWithWithExpectedAccessibility() {
@@ -142,17 +143,17 @@ namespace Inspector.Implementation
                     new Field(FieldInfo(FieldAttributes.Private | FieldAttributes.Static)),
                 };
 
-                ((IFilter<Field>)previous).Get().Returns(all);
+                ConfiguredCall arrange = previous.Fields().Returns(all);
 
                 // Act
-                IEnumerable<Field> actual = ((IFilter<Field>)sut).Get();
+                IEnumerable<Field> actual = sut.Fields();
 
                 // Assert
                 Assert.Equal(expected, actual);
             }
         }
 
-        public class GetMethods: AccessibilityScopeTest
+        public class Methods: AccessibilityScopeTest
         {
             [Fact]
             public void ReturnsMethodsWithWithExpectedAccessibility() {
@@ -172,17 +173,17 @@ namespace Inspector.Implementation
                     new Method(MethodInfo(MethodAttributes.Private | MethodAttributes.Static)),
                 };
 
-                ((IFilter<Method>)previous).Get().Returns(all);
+                ConfiguredCall arrange = previous.Methods().Returns(all);
 
                 // Act
-                IEnumerable<Method> actual = ((IFilter<Method>)sut).Get();
+                IEnumerable<Method> actual = sut.Methods();
 
                 // Assert
                 Assert.Equal(expected, actual);
             }
         }
 
-        public class GetProperties: AccessibilityScopeTest
+        public class Properties: AccessibilityScopeTest
         {
             [Fact]
             public void ReturnsPropertiesWithWithExpectedAccessibility() {
@@ -202,10 +203,10 @@ namespace Inspector.Implementation
                     new Property(PropertyInfo(MethodAttributes.Private | MethodAttributes.Static)),
                 };
 
-                ((IFilter<Property>)previous).Get().Returns(all);
+                ConfiguredCall arrange = previous.Properties().Returns(all);
 
                 // Act
-                IEnumerable<Property> actual = ((IFilter<Property>)sut).Get();
+                IEnumerable<Property> actual = sut.Properties();
 
                 // Assert
                 Assert.Equal(expected, actual);
