@@ -1,17 +1,19 @@
+using System.Collections.Generic;
 using NSubstitute;
 using NSubstitute.Core;
 using Xunit;
+
 namespace Inspector
 {
-    public class IFilterExtensionsTest: SelectorFixture<IFilterExtensionsTest.TestType>
+    public class IEnumerableExtensionsTest: SelectorFixture<IEnumerableExtensionsTest.TestType>
     {
         public class TestType { }
 
-        public class Single : IFilterExtensionsTest
+        public class Single : IEnumerableExtensionsTest
         {
             [Fact]
             public void ReturnsValueReturnedBySelector() {
-                var filter = Substitute.For<IFilter<TestType>>();
+                var filter = Substitute.For<IEnumerable<TestType>>();
                 var expected = new TestType();
                 ConfiguredCall arrange = select.Invoke(filter).Returns(expected);
 
