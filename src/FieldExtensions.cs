@@ -12,16 +12,16 @@ namespace Inspector
         #region IScope
 
         public static Field Field(this IScope scope) =>
-            scope.Single<Field>();
+            scope.Fields().Single();
 
         public static Field Field(this IScope scope, string fieldName) =>
-            new MemberNameFilter<Field, FieldInfo>(scope, fieldName).Single();
+            new MemberNameFilter<Field, FieldInfo>(scope.Fields(), fieldName).Single();
 
         public static Field Field(this IScope scope, Type fieldType) =>
-            new FieldTypeFilter(scope, fieldType).Single();
+            new FieldTypeFilter(scope.Fields(), fieldType).Single();
 
         public static Field Field(this IScope scope, Type fieldType, string fieldName) {
-            var typed = new FieldTypeFilter(scope, fieldType);
+            var typed = new FieldTypeFilter(scope.Fields(), fieldType);
             var named = new MemberNameFilter<Field, FieldInfo>(typed, fieldName);
             return named.Single();
         }

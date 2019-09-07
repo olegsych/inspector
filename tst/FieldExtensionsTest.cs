@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Inspector.Implementation;
 using NSubstitute;
@@ -19,11 +20,11 @@ namespace Inspector
         // Shared test fixture
         protected readonly object instance = new TestType();
         protected readonly Field selected;
-        protected IFilter<Field> selection;
+        protected IEnumerable<Field> selection;
 
         public FieldExtensionsTest() {
             selected = new Field(typeof(TestType).GetField(nameof(TestType.Field)), instance);
-            select.Invoke(Arg.Do<IFilter<Field>>(f => selection = f)).Returns(selected);
+            select.Invoke(Arg.Do<IEnumerable<Field>>(f => selection = f)).Returns(selected);
         }
 
         protected static void VerifyGenericField<T>(Field selected, Field<T> generic) {
@@ -31,13 +32,13 @@ namespace Inspector
             Assert.Same(selected.Instance, generic.Instance);
         }
 
-        internal static MemberNameFilter<Field, FieldInfo> VerifyFilter(IFilter<Field> selection, string fieldName) {
+        internal static MemberNameFilter<Field, FieldInfo> VerifyFilter(IEnumerable<Field> selection, string fieldName) {
             var filter = Assert.IsType<MemberNameFilter<Field, FieldInfo>>(selection);
             Assert.Equal(fieldName, filter.MemberName);
             return filter;
         }
 
-        internal static FieldTypeFilter VerifyFilter(IFilter<Field> selection, Type expectedFieldType) {
+        internal static FieldTypeFilter VerifyFilter(IEnumerable<Field> selection, Type expectedFieldType) {
             var filter = Assert.IsType<FieldTypeFilter>(selection);
             Assert.Equal(expectedFieldType, filter.FieldType);
             return filter;
@@ -55,55 +56,55 @@ namespace Inspector
             // Method parameters
             readonly IScope scope = Substitute.For<IScope>();
 
+            // Arrange
+            readonly IEnumerable<Field> fields = Substitute.For<IEnumerable<Field>>();
+
+            public IScopeExtension() =>
+                scope.Fields().Returns(fields);
+
             [Fact]
             public void ReturnsSingleFieldInGivenScope() {
                 Assert.Same(selected, scope.Field());
-
-                Assert.Same(scope, selection);
+                Assert.Same(fields, selection);
             }
 
             [Fact]
             public void ReturnsFieldWithGivenName() {
                 Assert.Same(selected, scope.Field(fieldName));
-
                 MemberNameFilter<Field, FieldInfo> filter = VerifyFilter(selection, fieldName);
-                Assert.Same(scope, filter.Previous);
+                Assert.Same(fields, filter.Previous);
             }
 
             [Fact]
             public void ReturnsFieldWithGivenType() {
                 Assert.Same(selected, scope.Field(fieldType));
-
                 FieldTypeFilter filter = VerifyFilter(selection, fieldType);
-                Assert.Same(scope, filter.Previous);
+                Assert.Same(fields, filter.Previous);
             }
 
             [Fact]
             public void ReturnsFieldWithGivenTypeAndName() {
                 Assert.Same(selected, scope.Field(fieldType, fieldName));
-
                 MemberNameFilter<Field, FieldInfo> nameFilter = VerifyFilter(selection, fieldName);
                 FieldTypeFilter typeFilter = VerifyFilter(nameFilter.Previous, fieldType);
-                Assert.Same(scope, typeFilter.Previous);
+                Assert.Same(fields, typeFilter.Previous);
             }
 
             [Fact]
             public void ReturnsGenericFieldWithGivenType() {
                 Field<FieldValue> generic = scope.Field<FieldValue>();
-
                 VerifyGenericField(selected, generic);
                 FieldTypeFilter typeFilter = VerifyFilter(selection, typeof(FieldValue));
-                Assert.Same(scope, typeFilter.Previous);
+                Assert.Same(fields, typeFilter.Previous);
             }
 
             [Fact]
             public void ReturnsGenericFieldWithGivenTypeAndName() {
                 Field<FieldValue> generic = scope.Field<FieldValue>(fieldName);
-
                 VerifyGenericField(selected, generic);
                 MemberNameFilter<Field, FieldInfo> nameFilter = VerifyFilter(selection, fieldName);
                 FieldTypeFilter typeFilter = VerifyFilter(nameFilter.Previous, fieldType);
-                Assert.Same(scope, typeFilter.Previous);
+                Assert.Same(fields, typeFilter.Previous);
             }
         }
 
@@ -160,9 +161,9 @@ namespace Inspector
                 VerifyScope(typed.Previous, instance);
             }
 
-            static void VerifyScope(IFilter<Field> filter, object instance) {
-                var scope = Assert.IsType<InstanceScope>(filter);
-                Assert.Same(instance, scope.Instance);
+            static void VerifyScope(IEnumerable<Field> filter, object instance) {
+                var fields = Assert.IsType<Members<FieldInfo, Field>>(filter);
+                Assert.Same(instance, fields.Instance);
             }
         }
 
@@ -222,9 +223,9 @@ namespace Inspector
                 VerifyScope(typed.Previous, testType);
             }
 
-            static void VerifyScope(IFilter<Field> selection, Type expected) {
-                var scope = Assert.IsType<StaticScope>(selection);
-                Assert.Same(expected, scope.Type);
+            static void VerifyScope(IEnumerable<Field> selection, Type expected) {
+                var fields = Assert.IsType<Members<FieldInfo, Field>>(selection);
+                Assert.Same(expected, fields.Type);
             }
         }
     }
