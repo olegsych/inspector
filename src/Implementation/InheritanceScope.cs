@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace Inspector.Implementation
 {
@@ -16,22 +15,19 @@ namespace Inspector.Implementation
 
         public Type AncestorType { get; }
 
-        IEnumerable<Constructor> IFilter<Constructor>.Get() =>
-            Get<Constructor, ConstructorInfo>();
+        public IEnumerable<Constructor> Constructors() =>
+            Previous.Constructors().Where(c => c.Info.DeclaringType.IsAssignableFrom(AncestorType));
 
-        IEnumerable<Event> IFilter<Event>.Get() =>
-            Get<Event, EventInfo>();
+        public IEnumerable<Event> Events() =>
+            Previous.Events().Where(e => e.Info.DeclaringType.IsAssignableFrom(AncestorType));
 
-        IEnumerable<Field> IFilter<Field>.Get() =>
-            Get<Field, FieldInfo>();
+        public IEnumerable<Field> Fields() =>
+            Previous.Fields().Where(f => f.Info.DeclaringType.IsAssignableFrom(AncestorType));
 
-        IEnumerable<Method> IFilter<Method>.Get() =>
-            Get<Method, MethodInfo>();
+        public IEnumerable<Method> Methods() =>
+            Previous.Methods().Where(m => m.Info.DeclaringType.IsAssignableFrom(AncestorType));
 
-        IEnumerable<Property> IFilter<Property>.Get() =>
-            Get<Property, PropertyInfo>();
-
-        IEnumerable<TMember> Get<TMember, TInfo>() where TMember : Member<TInfo> where TInfo : MemberInfo =>
-            ((IFilter<TMember>)Previous).Get().Where(m => m.Info.DeclaringType.IsAssignableFrom(AncestorType));
+        public IEnumerable<Property> Properties() =>
+            Previous.Properties().Where(p => p.Info.DeclaringType.IsAssignableFrom(AncestorType));
     }
 }

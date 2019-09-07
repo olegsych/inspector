@@ -52,16 +52,8 @@ namespace Inspector.Implementation
                 Assert.Same(ancestor, ((InheritanceScope)sut).AncestorType);
         }
 
-        public class GetConstructors: InheritanceScopeTest
+        public class Constructors: InheritanceScopeTest
         {
-            new readonly IFilter<Constructor> sut;
-            new readonly IFilter<Constructor> previous;
-
-            public GetConstructors() {
-                sut = base.sut;
-                previous = base.previous;
-            }
-
             [Fact]
             public void ReturnsConstructorsInheritedFromAncestor() {
                 // Arrange
@@ -78,25 +70,17 @@ namespace Inspector.Implementation
                     new Constructor(ConstructorInfo(MethodAttributes.Static).WithDeclaringType(child))
                 };
 
-                previous.Get().Returns(mixed);
+                previous.Constructors().Returns(mixed);
 
                 // Act
-                IEnumerable<Constructor> actual = sut.Get();
+                IEnumerable<Constructor> actual = sut.Constructors();
 
                 Assert.Equal(expected, actual);
             }
         }
 
-        public class GetEvents: InheritanceScopeTest
+        public class Events: InheritanceScopeTest
         {
-            new readonly IFilter<Event> sut;
-            new readonly IFilter<Event> previous;
-
-            public GetEvents() {
-                sut = base.sut;
-                previous = base.previous;
-            }
-
             [Fact]
             public void ReturnsEventsInheritedFromAncestor() {
                 // Arrange
@@ -113,25 +97,17 @@ namespace Inspector.Implementation
                     new Event(EventInfo(MethodAttributes.Static).WithDeclaringType(child)),
                 };
 
-                previous.Get().Returns(mixed);
+                previous.Events().Returns(mixed);
 
                 // Act
-                IEnumerable<Event> actual = sut.Get();
+                IEnumerable<Event> actual = sut.Events();
 
                 Assert.Equal(expected, actual);
             }
         }
 
-        public class GetFields: InheritanceScopeTest
+        public class Fields: InheritanceScopeTest
         {
-            new readonly IFilter<Field> sut;
-            new readonly IFilter<Field> previous;
-
-            public GetFields() {
-                sut = base.sut;
-                previous = base.previous;
-            }
-
             [Fact]
             public void ReturnsFieldsInheritedFromAncestor() {
                 // Arrange
@@ -148,25 +124,17 @@ namespace Inspector.Implementation
                     new Field(FieldInfo(FieldAttributes.Static).WithDeclaringType(child)),
                 };
 
-                previous.Get().Returns(mixed);
+                previous.Fields().Returns(mixed);
 
                 // Act
-                IEnumerable<Field> actual = sut.Get();
+                IEnumerable<Field> actual = sut.Fields();
 
                 Assert.Equal(expected, actual);
             }
         }
 
-        public class GetMethods: InheritanceScopeTest
+        public class Methods: InheritanceScopeTest
         {
-            new readonly IFilter<Method> sut;
-            new readonly IFilter<Method> previous;
-
-            public GetMethods() {
-                sut = base.sut;
-                previous = base.previous;
-            }
-
             [Fact]
             public void ReturnsMethodsInheritedFromAncestor() {
                 // Arrange
@@ -183,25 +151,17 @@ namespace Inspector.Implementation
                     new Method(MethodInfo(MethodAttributes.Static).WithDeclaringType(child)),
                 };
 
-                previous.Get().Returns(mixed);
+                previous.Methods().Returns(mixed);
 
                 // Act
-                IEnumerable<Method> actual = sut.Get();
+                IEnumerable<Method> actual = sut.Methods();
 
                 Assert.Equal(expected, actual);
             }
         }
 
-        public class GetProperties: InheritanceScopeTest
+        public class Properties: InheritanceScopeTest
         {
-            new readonly IFilter<Property> sut;
-            new readonly IFilter<Property> previous;
-
-            public GetProperties() {
-                sut = base.sut;
-                previous = base.previous;
-            }
-
             [Fact]
             public void ReturnsPropertiesInheritedFromAncestor() {
                 // Arrange
@@ -218,10 +178,10 @@ namespace Inspector.Implementation
                     new Property(PropertyInfo(MethodAttributes.Static).WithDeclaringType(child)),
                 };
 
-                previous.Get().Returns(mixed);
+                previous.Properties().Returns(mixed);
 
                 // Act
-                IEnumerable<Property> actual = sut.Get();
+                IEnumerable<Property> actual = sut.Properties();
 
                 Assert.Equal(expected, actual);
             }
