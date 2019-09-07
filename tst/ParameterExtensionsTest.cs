@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Inspector.Implementation;
 using NSubstitute;
@@ -19,11 +20,11 @@ namespace Inspector
         readonly string parameterName = Guid.NewGuid().ToString();
         readonly Type parameterType = typeof(ParameterType);
 
-        IFilter<ParameterInfo> selection;
+        IEnumerable<ParameterInfo> selection;
 
         public ParameterExtensionsTest() {
             ConfiguredCall arrange;
-            arrange = select.Invoke(Arg.Do<IFilter<ParameterInfo>>(_ => selection = _)).Returns(parameter);
+            arrange = select.Invoke(Arg.Do<IEnumerable<ParameterInfo>>(_ => selection = _)).Returns(parameter);
             arrange = member.Info.Returns(method);
         }
 
@@ -119,18 +120,18 @@ namespace Inspector
             }
         }
 
-        static void VerifyParameters(IFilter<ParameterInfo> selection, MethodBase method) {
+        static void VerifyParameters(IEnumerable<ParameterInfo> selection, MethodBase method) {
             var filter = Assert.IsType<Parameters>(selection);
             Assert.Same(method, filter.Method);
         }
 
-        static ParameterNameFilter.Implementation VerifyFilter(IFilter<ParameterInfo> selection, string parameterName) {
+        static ParameterNameFilter.Implementation VerifyFilter(IEnumerable<ParameterInfo> selection, string parameterName) {
             var filter = Assert.IsType<ParameterNameFilter.Implementation>(selection);
             Assert.Equal(parameterName, filter.ParameterName);
             return filter;
         }
 
-        static ParameterTypeFilter.Implementation VerifyFilter(IFilter<ParameterInfo> selection, Type parameterType) {
+        static ParameterTypeFilter.Implementation VerifyFilter(IEnumerable<ParameterInfo> selection, Type parameterType) {
             var filter = Assert.IsType<ParameterTypeFilter.Implementation>(selection);
             Assert.Equal(parameterType, filter.ParameterType);
             return filter;
