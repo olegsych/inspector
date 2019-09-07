@@ -14,7 +14,7 @@ namespace Inspector.Implementation
 
         public Type DeclaringType { get; }
 
-        public override IEnumerator<TMember> GetEnumerator() =>
-            Source.Where(p => p.Info.DeclaringType == DeclaringType).GetEnumerator();
+        protected override IEnumerable<TMember> Where() =>
+            Source.Where(p => p.Info.DeclaringType == DeclaringType);
     }
 }

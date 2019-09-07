@@ -10,15 +10,13 @@ namespace Inspector.Implementation
 {
     public class FilterTest
     {
-        public class TestType { }
-
-        readonly IEnumerable<TestType> sut;
+        readonly TestableFilter<TestType> sut;
 
         // Constructor parameters
         readonly IEnumerable<TestType> source = Substitute.For<IEnumerable<TestType>>();
 
         public FilterTest() =>
-            sut = Substitute.ForPartsOf<Filter<TestType>>(source);
+            sut = Substitute.ForPartsOf<TestableFilter<TestType>>(source);
 
         public class Constructor: FilterTest
         {
@@ -34,22 +32,41 @@ namespace Inspector.Implementation
         {
             [Fact]
             public void ImplementsIDecoratorAndReturnsValueGivenToConstructor() {
-                var decorator = (IDecorator<IEnumerable<TestType>>)sut;
+                IDecorator<IEnumerable<TestType>> decorator = sut;
                 Assert.Same(source, decorator.Source);
             }
         }
 
         public class GetEnumerator: FilterTest
         {
-            [Fact]
-            public void ReturnsStronglyTypedEnumerator() {
-                IEnumerator<TestType> expected = Substitute.For<IEnumerator<TestType>>();
-                ConfiguredCall arrange = sut.GetEnumerator().Returns(expected);
+            readonly IEnumerator<TestType> filteredEnumerator = Substitute.For<IEnumerator<TestType>>();
 
-                IEnumerator actual = ((IEnumerable)sut).GetEnumerator();
-
-                Assert.Same(expected, actual);
+            public GetEnumerator() {
+                IEnumerable<TestType> filtered = Substitute.For<IEnumerable<TestType>>();
+                ConfiguredCall arrange = sut.TestableWhere().Returns(filtered);
+                arrange = filtered.GetEnumerator().Returns(filteredEnumerator);
             }
+
+            [Fact]
+            public void ImplementsStronglyTypedIEnumerable() {
+                IEnumerable<TestType> typed = sut;
+                Assert.Same(filteredEnumerator, typed.GetEnumerator());
+            }
+
+            [Fact]
+            public void ImplementsUntypedIEnumerable() {
+                IEnumerable untyped = sut;
+                Assert.Same(filteredEnumerator, untyped.GetEnumerator());
+            }
+        }
+
+        public class TestType { }
+
+        internal abstract class TestableFilter<T>: Filter<T>
+        {
+            protected TestableFilter(IEnumerable<T> source) : base(source) { }
+            protected override IEnumerable<T> Where() => TestableWhere();
+            public abstract IEnumerable<T> TestableWhere();
         }
     }
 }

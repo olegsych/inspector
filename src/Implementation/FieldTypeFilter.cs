@@ -11,7 +11,7 @@ namespace Inspector.Implementation
 
         public Type FieldType { get; }
 
-        public override IEnumerator<Field> GetEnumerator() =>
-            Source.Where(field => field.Info.FieldType == FieldType).GetEnumerator();
+        protected override IEnumerable<Field> Where() =>
+            Source.Where(field => field.Info.FieldType == FieldType);
     }
 }

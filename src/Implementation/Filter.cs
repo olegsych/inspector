@@ -11,9 +11,12 @@ namespace Inspector.Implementation
 
         public IEnumerable<T> Source { get; }
 
-        public abstract IEnumerator<T> GetEnumerator();
+        public IEnumerator<T> GetEnumerator() =>
+            Where().GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() =>
             GetEnumerator();
+
+        protected abstract IEnumerable<T> Where();
     }
 }

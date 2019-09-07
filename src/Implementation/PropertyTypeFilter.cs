@@ -11,7 +11,7 @@ namespace Inspector.Implementation
 
         public Type PropertyType { get; }
 
-        public override IEnumerator<Property> GetEnumerator() =>
-            Source.Where(p => p.Info.PropertyType == PropertyType).GetEnumerator();
+        protected override IEnumerable<Property> Where() =>
+            Source.Where(p => p.Info.PropertyType == PropertyType);
     }
 }

@@ -14,7 +14,7 @@ namespace Inspector.Implementation
 
         public string MemberName { get; }
 
-        public override IEnumerator<TMember> GetEnumerator() =>
-            Source.Where(member => member.Info.Name == MemberName).GetEnumerator();
+        protected override IEnumerable<TMember> Where() =>
+            Source.Where(member => member.Info.Name == MemberName);
     }
 }

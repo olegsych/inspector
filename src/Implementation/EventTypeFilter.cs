@@ -11,7 +11,7 @@ namespace Inspector.Implementation
 
         public Type HandlerType { get; }
 
-        public override IEnumerator<Event> GetEnumerator() =>
-            Source.Where(@event => @event.Info.EventHandlerType == HandlerType).GetEnumerator();
+        protected override IEnumerable<Event> Where() =>
+            Source.Where(@event => @event.Info.EventHandlerType == HandlerType);
     }
 }

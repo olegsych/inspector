@@ -21,7 +21,7 @@ namespace Inspector.Implementation
 
         public IDelegateFactory<ConstructorInfo> DelegateFactory { get; }
 
-        public override IEnumerator<Constructor> GetEnumerator() =>
-            Source.Where(constructor => DelegateFactory.TryCreate(DelegateType, constructor.Instance, constructor.Info, out Delegate _)).GetEnumerator();
+        protected override IEnumerable<Constructor> Where() =>
+            Source.Where(constructor => DelegateFactory.TryCreate(DelegateType, constructor.Instance, constructor.Info, out Delegate _));
     }
 }
