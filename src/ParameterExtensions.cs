@@ -10,7 +10,7 @@ namespace Inspector
         #region MethodBase
 
         public static ParameterInfo Parameter(this MethodBase method) =>
-            Selector<ParameterInfo>.Select(new Parameters(method));
+            new Parameters(method).Single();
 
         public static ParameterInfo Parameter<TParameterType>(this MethodBase method) =>
             method.Parameter(typeof(TParameterType));
@@ -19,13 +19,13 @@ namespace Inspector
             method.Parameter(typeof(TParameterType), parameterName);
 
         public static ParameterInfo Parameter(this MethodBase method, Type parameterType) =>
-            Selector<ParameterInfo>.Select(new Parameters(method).WithType(parameterType));
+            new Parameters(method).WithType(parameterType).Single();
 
         public static ParameterInfo Parameter(this MethodBase method, string parameterName) =>
-            Selector<ParameterInfo>.Select(new Parameters(method).WithName(parameterName));
+            new Parameters(method).WithName(parameterName).Single();
 
         public static ParameterInfo Parameter(this MethodBase method, Type parameterType, string parameterName) =>
-            Selector<ParameterInfo>.Select(new Parameters(method).WithType(parameterType).WithName(parameterName));
+            new Parameters(method).WithType(parameterType).WithName(parameterName).Single();
 
         #endregion
 

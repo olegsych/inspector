@@ -14,18 +14,18 @@ namespace Inspector
         #region IScope
 
         public static Method Method(this IScope scope) =>
-            Selector<Method>.Select(scope);
+            scope.Single<Method>();
 
         public static Method Method(this IScope scope, string methodName) =>
-            Selector<Method>.Select(new MemberNameFilter<Method, MethodInfo>(scope, methodName));
+            new MemberNameFilter<Method, MethodInfo>(scope, methodName).Single<Method>();
 
         public static Method Method(this IScope scope, Type methodType) =>
-            Selector<Method>.Select(new MethodTypeFilter(scope, methodType, delegateFactory));
+            new MethodTypeFilter(scope, methodType, delegateFactory).Single<Method>();
 
         public static Method Method(this IScope scope, Type methodType, string methodName) {
             var typed = new MethodTypeFilter(scope, methodType, delegateFactory);
             var named = new MemberNameFilter<Method, MethodInfo>(typed, methodName);
-            return Selector<Method>.Select(named);
+            return named.Single();
         }
 
         public static Method<T> Method<T>(this IScope scope) where T : Delegate =>

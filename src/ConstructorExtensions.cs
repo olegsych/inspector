@@ -14,10 +14,10 @@ namespace Inspector
         #region IScope
 
         public static Constructor Constructor(this IScope scope) =>
-            Selector<Constructor>.Select(scope);
+            scope.Single<Constructor>();
 
         public static Constructor Constructor(this IScope scope, Type delegateType) =>
-            Selector<Constructor>.Select(new ConstructorTypeFilter(scope, delegateType, delegateFactory));
+            new ConstructorTypeFilter(scope, delegateType, delegateFactory).Single();
 
         public static Constructor<TSignature> Constructor<TSignature>(this IScope scope) where TSignature : Delegate =>
             new Constructor<TSignature>(scope.Constructor(typeof(TSignature)), delegateFactory);
