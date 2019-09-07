@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace Inspector.Implementation
 {
-    sealed class Parameters: IFilter<ParameterInfo>, IEnumerable<ParameterInfo>
+    sealed class Parameters: IEnumerable<ParameterInfo>
     {
         public Parameters(MethodBase method) =>
             Method = method ?? throw new ArgumentNullException(nameof(method));
@@ -16,9 +16,6 @@ namespace Inspector.Implementation
             IEnumerable<ParameterInfo> parameters = Method.GetParameters();
             return parameters.GetEnumerator();
         }
-
-        IEnumerable<ParameterInfo> IFilter<ParameterInfo>.Get() =>
-            this;
 
         IEnumerator IEnumerable.GetEnumerator() =>
             GetEnumerator();

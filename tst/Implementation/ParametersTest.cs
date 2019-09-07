@@ -43,18 +43,6 @@ namespace Inspector.Implementation
                 Assert.Equal(parameters, (IEnumerable)sut); // Force IEnumerable.GetEnumerator call
         }
 
-        public class Get: ParametersTest
-        {
-            new readonly IFilter<ParameterInfo> sut;
-
-            public Get() =>
-                sut = new Parameters(method);
-
-            [Fact]
-            public void ReturnsItself() =>
-                Assert.Same(sut, sut.Get());
-        }
-
         public class Method: ParametersTest
         {
             [Fact]
