@@ -29,14 +29,14 @@ namespace Inspector.Implementation
             class TestType { }
         }
 
-        public class GetFields: InstanceScopeTest
+        public class Fields: InstanceScopeTest
         {
             [Fact]
             public void ReturnsAllFieldsDeclaredByGivenInstance() {
                 var instance = new TestType();
-                IFilter<Field> sut = new InstanceScope(instance);
+                var sut = new InstanceScope(instance);
 
-                IEnumerable<Field> fields = sut.Get();
+                IEnumerable<Field> fields = sut.Fields();
 
                 VerifyFieldsOfTestType(instance, fields);
             }
@@ -44,9 +44,9 @@ namespace Inspector.Implementation
             [Fact]
             public void ReturnsAllFieldsInheritedByGivenInstanceType() {
                 var instance = new TwiceDerivedType();
-                IFilter<Field> sut = new InstanceScope(instance);
+                var sut = new InstanceScope(instance);
 
-                IEnumerable<Field> fields = sut.Get();
+                IEnumerable<Field> fields = sut.Fields();
 
                 VerifyFieldsOfTestType(instance, fields);
             }
@@ -76,14 +76,14 @@ namespace Inspector.Implementation
             class FieldType { }
         }
 
-        public class GetMethods: InstanceScopeTest
+        public class Methods: InstanceScopeTest
         {
             [Fact]
             public void ReturnsAllMethodsDeclaredAndInheritedByGivenInstanceType() {
                 var instance = new TwiceDerivedType();
-                IFilter<Method> sut = new InstanceScope(instance);
+                var sut = new InstanceScope(instance);
 
-                IEnumerable<Method> methods = sut.Get();
+                IEnumerable<Method> methods = sut.Methods();
 
                 VerifyMethodsOfTestType(instance, methods);
             }
