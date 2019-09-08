@@ -9,6 +9,17 @@ namespace Inspector
     /// </summary>
     public static class IMembersExtensions
     {
+        static readonly IDelegateFactory<ConstructorInfo> delegateFactory = new ConstructorDelegateFactory();
+
+        public static Constructor Constructor(this IMembers members) =>
+            members.Constructors().Single();
+
+        public static Constructor Constructor(this IMembers members, Type delegateType) =>
+            new ConstructorTypeFilter(members.Constructors(), delegateType, delegateFactory).Single();
+
+        public static Constructor<TSignature> Constructor<TSignature>(this IMembers members) where TSignature : Delegate =>
+            new Constructor<TSignature>(members.Constructor(typeof(TSignature)), delegateFactory);
+
         public static IMembers DeclaredBy(this IMembers members, Type declaringType) =>
             new DeclaredMembers(members, declaringType);
 

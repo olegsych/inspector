@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Inspector.Implementation;
 using NSubstitute;
 using Xunit;
@@ -7,6 +8,43 @@ namespace Inspector
     public class IMembersExtensionsTest
     {
         readonly IMembers members = Substitute.For<IMembers>();
+
+        public class ConstructorTest: ConstructorExtensionsTest
+        {
+            readonly IMembers members = Substitute.For<IMembers>();
+
+            // Test fixture
+            readonly IEnumerable<Constructor> constructors = Substitute.For<IEnumerable<Constructor>>();
+
+            public ConstructorTest() =>
+                members.Constructors().Returns(constructors);
+
+            [Fact]
+            public void ReturnsSingleConstructor() {
+                Constructor actual = members.Constructor();
+
+                Assert.Same(selected, actual);
+                Assert.Same(constructors, selection);
+            }
+
+            [Fact]
+            public void ReturnsConstructorWithGivenDelegateType() {
+                Constructor actual = members.Constructor(delegateType);
+
+                Assert.Same(selected, actual);
+                ConstructorTypeFilter filter = VerifyFilter(selection, delegateType);
+                Assert.Same(constructors, filter.Source);
+            }
+
+            [Fact]
+            public void ReturnsGenericConstructorWithGivenSignature() {
+                Constructor<TestDelegate> generic = members.Constructor<TestDelegate>();
+
+                VerifyGenericConstructor(selected, generic);
+                ConstructorTypeFilter typeFilter = VerifyFilter(selection, typeof(TestDelegate));
+                Assert.Same(constructors, typeFilter.Source);
+            }
+        }
 
         [Fact]
         public void DeclaredByReturnsMembersDeclaredByGivenType() {

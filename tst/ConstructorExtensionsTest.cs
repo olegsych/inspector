@@ -12,62 +12,28 @@ namespace Inspector
     {
         // Shared test fixture
         class TestType { }
-        delegate void TestDelegate();
+        protected delegate void TestDelegate();
         readonly object instance = new TestType();
-        readonly Type delegateType = typeof(TestDelegate);
-        readonly Constructor selected;
-        IEnumerable<Constructor> selection;
+        protected readonly Type delegateType = typeof(TestDelegate);
+        protected readonly Constructor selected;
+        protected IEnumerable<Constructor> selection;
 
         public ConstructorExtensionsTest() {
             selected = new Constructor(typeof(TestType).GetConstructor(new Type[0]), instance);
             select.Invoke(Arg.Do<IEnumerable<Constructor>>(_ => selection = _)).Returns(selected);
         }
 
-        static ConstructorTypeFilter VerifyFilter(IEnumerable<Constructor> selection, Type expectedDelegateType) {
+        internal static ConstructorTypeFilter VerifyFilter(IEnumerable<Constructor> selection, Type expectedDelegateType) {
             var filter = Assert.IsType<ConstructorTypeFilter>(selection);
             Assert.IsType<ConstructorDelegateFactory>(filter.DelegateFactory);
             Assert.Equal(expectedDelegateType, filter.DelegateType);
             return filter;
         }
 
-        static void VerifyGenericConstructor<T>(Constructor selected, Constructor<T> generic) where T : Delegate {
+        internal static void VerifyGenericConstructor<T>(Constructor selected, Constructor<T> generic) where T : Delegate {
             Assert.Same(selected.Info, generic.Info);
             Assert.Same(selected.Instance, generic.Instance);
             Assert.NotNull(generic.Invoke);
-        }
-
-        public class IMembersExtension: ConstructorExtensionsTest
-        {
-            // Method parameters
-            readonly IMembers members = Substitute.For<IMembers>();
-
-            // Test fixture
-            readonly IEnumerable<Constructor> constructors = Substitute.For<IEnumerable<Constructor>>();
-
-            public IMembersExtension() =>
-                members.Constructors().Returns(constructors);
-
-            [Fact]
-            public void ReturnsSingleConstructor() {
-                Assert.Same(selected, members.Constructor());
-                Assert.Same(constructors, selection);
-            }
-
-            [Fact]
-            public void ReturnsConstructorWithGivenDelegateType() {
-                Assert.Same(selected, members.Constructor(delegateType));
-                ConstructorTypeFilter filter = VerifyFilter(selection, delegateType);
-                Assert.Same(constructors, filter.Source);
-            }
-
-            [Fact]
-            public void ReturnsGenericConstructorWithGivenSignature() {
-                Constructor<TestDelegate> generic = members.Constructor<TestDelegate>();
-
-                VerifyGenericConstructor(selected, generic);
-                ConstructorTypeFilter typeFilter = VerifyFilter(selection, typeof(TestDelegate));
-                Assert.Same(constructors, typeFilter.Source);
-            }
         }
 
         public class ObjectExtension: ConstructorExtensionsTest
