@@ -10,6 +10,9 @@ namespace Inspector
     /// </summary>
     public static class TypeExtensions
     {
+        public static Constructor Constructor(this Type type) =>
+            new StaticMembers(type).Constructor();
+
         public static IMembers Internal(this Type type) =>
             new StaticMembers(type).Internal();
 

@@ -21,12 +21,5 @@ namespace Inspector
             new InstanceMembers(instance).Constructor<TSignature>();
 
         #endregion
-
-        #region Type
-
-        public static Constructor Constructor(this Type type) =>
-            new StaticMembers(type).Constructor();
-
-        #endregion
     }
 }

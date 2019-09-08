@@ -67,21 +67,5 @@ namespace Inspector
                 Assert.Same(instance, members.Instance);
             }
         }
-
-        public class TypeExtension: ConstructorExtensionsTest
-        {
-            // Method parameters
-            readonly Type type;
-
-            public TypeExtension() =>
-                type = instance.GetType();
-
-            [Fact]
-            public void ReturnsSingleConstructorOfGivenType() {
-                Assert.Same(selected, type.Constructor());
-                var members = Assert.IsType<Members<ConstructorInfo, Constructor>>(selection);
-                Assert.Same(type, members.Type);
-            }
-        }
     }
 }

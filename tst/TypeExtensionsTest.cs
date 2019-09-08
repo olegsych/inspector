@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using Inspector.Implementation;
 using Xunit;
 
@@ -6,6 +7,8 @@ namespace Inspector
 {
     public class TypeExtensionsTest
     {
+        class TestClass { }
+
         public class AccessibilityMethod: TypeExtensionsTest
         {
             readonly Type type = typeof(TestClass);
@@ -41,8 +44,18 @@ namespace Inspector
                 var staticMembers = Assert.IsType<StaticMembers>(accessibleMembers.Source);
                 Assert.Same(type, staticMembers.Type);
             }
+        }
 
-            class TestClass { }
+        public class ConstructorMethod: ConstructorExtensionsTest
+        {
+            readonly Type type = typeof(TestClass);
+
+            [Fact]
+            public void ReturnsSingleConstructorOfGivenType() {
+                Assert.Same(selected, type.Constructor());
+                var members = Assert.IsType<Members<ConstructorInfo, Constructor>>(selection);
+                Assert.Same(type, members.Type);
+            }
         }
 
         public class New: TypeExtensionsTest
