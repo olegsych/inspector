@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using Inspector.Implementation;
 using Xunit;
+using static Inspector.Substitutes;
 
 namespace Inspector
 {
@@ -55,6 +56,37 @@ namespace Inspector
                 Assert.Same(selected, type.Constructor());
                 var members = Assert.IsType<Members<ConstructorInfo, Constructor>>(selection);
                 Assert.Same(type, members.Type);
+            }
+        }
+
+        public class TypeExtensions: TypeExtensionsTest
+        {
+            // Method parameters
+            readonly Type type = Type();
+
+            [Fact]
+            public void ReturnsStaticMembersDeclaredByGivenType() {
+                IMembers actual = type.DeclaredBy(typeof(TestClass));
+                VerifyStaticMembers<TestClass>(type, actual);
+            }
+
+            [Fact]
+            public void ReturnsStaticMembersDeclaredByGivenGenericType() {
+                IMembers actual = type.DeclaredBy<TestClass>();
+                VerifyStaticMembers<TestClass>(type, actual);
+            }
+
+            [Fact]
+            public void ReturnsStaticMembersDeclaredByTypeItself() {
+                IMembers actual = typeof(TestClass).Declared();
+                VerifyStaticMembers<TestClass>(typeof(TestClass), actual);
+            }
+
+            static void VerifyStaticMembers<TDeclaringType>(Type staticType, IMembers actual) {
+                var declaredMembers = Assert.IsType<DeclaredMembers>(actual);
+                Assert.Equal(typeof(TDeclaringType), declaredMembers.DeclaringType);
+                var staticMembers = Assert.IsType<StaticMembers>(declaredMembers.Source);
+                Assert.Equal(staticType, staticMembers.Type);
             }
         }
 

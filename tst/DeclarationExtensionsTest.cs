@@ -39,36 +39,6 @@ namespace Inspector
             }
         }
 
-        public class TypeExtensions: DeclarationExtensionsTest
-        {
-            // Method parameters
-            readonly Type type = Type();
-
-            [Fact]
-            public void ReturnsStaticMembersDeclaredByGivenType() {
-                IMembers actual = type.DeclaredBy(typeof(TestType));
-                VerifyStaticMembers<TestType>(type, actual);
-            }
-
-            [Fact]
-            public void ReturnsStaticMembersDeclaredByGivenGenericType() {
-                IMembers actual = type.DeclaredBy<TestType>();
-                VerifyStaticMembers<TestType>(type, actual);
-            }
-
-            [Fact]
-            public void ReturnsStaticMembersDeclaredByTypeItself() {
-                IMembers actual = typeof(TestType).Declared();
-                VerifyStaticMembers<TestType>(typeof(TestType), actual);
-            }
-
-            static void VerifyStaticMembers<TDeclaringType>(Type staticType, IMembers actual) {
-                DeclaredMembers declaredMembers = VerifyDeclaredMembers(typeof(TDeclaringType), actual);
-                var staticMembers = Assert.IsType<StaticMembers>(declaredMembers.Source);
-                Assert.Equal(staticType, staticMembers.Type);
-            }
-        }
-
         static DeclaredMembers VerifyDeclaredMembers(Type declaringType, IMembers actual) {
             var declaredMembers = Assert.IsType<DeclaredMembers>(actual);
             Assert.Equal(declaringType, declaredMembers.DeclaringType);

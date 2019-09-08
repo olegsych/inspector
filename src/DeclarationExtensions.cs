@@ -20,18 +20,5 @@ namespace Inspector
             new InstanceMembers(instance).DeclaredBy<T>();
 
         #endregion
-
-        #region Type
-
-        public static IMembers Declared(this Type type) =>
-            new StaticMembers(type).DeclaredBy(type);
-
-        public static IMembers DeclaredBy(this Type type, Type declaringType) =>
-            new StaticMembers(type).DeclaredBy(declaringType);
-
-        public static IMembers DeclaredBy<T>(this Type type) =>
-            new StaticMembers(type).DeclaredBy<T>();
-
-        #endregion
     }
 }
