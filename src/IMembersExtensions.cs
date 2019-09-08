@@ -9,16 +9,17 @@ namespace Inspector
     /// </summary>
     public static class IMembersExtensions
     {
-        static readonly IDelegateFactory<ConstructorInfo> delegateFactory = new ConstructorDelegateFactory();
+        static readonly IDelegateFactory<ConstructorInfo> constructorFactory = new ConstructorDelegateFactory();
+        static readonly IDelegateFactory<MethodInfo> methodFactory = new MethodDelegateFactory();
 
         public static Constructor Constructor(this IMembers members) =>
             members.Constructors().Single();
 
         public static Constructor Constructor(this IMembers members, Type delegateType) =>
-            new ConstructorTypeFilter(members.Constructors(), delegateType, delegateFactory).Single();
+            new ConstructorTypeFilter(members.Constructors(), delegateType, constructorFactory).Single();
 
         public static Constructor<TSignature> Constructor<TSignature>(this IMembers members) where TSignature : Delegate =>
-            new Constructor<TSignature>(members.Constructor(typeof(TSignature)), delegateFactory);
+            new Constructor<TSignature>(members.Constructor(typeof(TSignature)), constructorFactory);
 
         public static IMembers DeclaredBy(this IMembers members, Type declaringType) =>
             new DeclaredMembers(members, declaringType);
@@ -76,6 +77,27 @@ namespace Inspector
 
         public static IMembers Internal(this IMembers members) =>
             new AccessibleMembers(members, Accessibility.Internal);
+
+        public static Method Method(this IMembers members) =>
+            members.Methods().Single();
+
+        public static Method Method(this IMembers members, string methodName) =>
+            new MemberNameFilter<Method, MethodInfo>(members.Methods(), methodName).Single();
+
+        public static Method Method(this IMembers members, Type methodType) =>
+            new MethodTypeFilter(members.Methods(), methodType, methodFactory).Single();
+
+        public static Method Method(this IMembers members, Type methodType, string methodName) {
+            var typed = new MethodTypeFilter(members.Methods(), methodType, methodFactory);
+            var named = new MemberNameFilter<Method, MethodInfo>(typed, methodName);
+            return named.Single();
+        }
+
+        public static Method<T> Method<T>(this IMembers members) where T : Delegate =>
+            new Method<T>(members.Method(typeof(T)), methodFactory);
+
+        public static Method<T> Method<T>(this IMembers members, string methodName) where T : Delegate =>
+            new Method<T>(members.Method(typeof(T), methodName), methodFactory);
 
         public static IMembers Private(this IMembers members) =>
             new AccessibleMembers(members, Accessibility.Private);

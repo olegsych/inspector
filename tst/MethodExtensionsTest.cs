@@ -55,63 +55,6 @@ namespace Inspector
 
         protected delegate void MethodType(Parameter p1, Parameter p2);
 
-        public class IMembersExtensions: MethodExtensionsTest
-        {
-            // Method parameters
-            readonly IMembers members = Substitute.For<IMembers>();
-
-            // Arrange
-            readonly IEnumerable<Method> methods = Substitute.For<IEnumerable<Method>>();
-
-            public IMembersExtensions() =>
-                members.Methods().Returns(methods);
-
-            [Fact]
-            public void ReturnsSingleMethod() {
-                Assert.Same(selected, members.Method());
-                Assert.Same(methods, selection);
-            }
-
-            [Fact]
-            public void ReturnsMethodWithGivenName() {
-                Assert.Same(selected, members.Method(methodName));
-                MemberNameFilter<Method, MethodInfo> filter = VerifyFilter(selection, methodName);
-                Assert.Same(methods, filter.Source);
-            }
-
-            [Fact]
-            public void ReturnsMethodWithGivenType() {
-                Assert.Same(selected, members.Method(methodType));
-                MethodTypeFilter filter = VerifyFilter(selection, methodType);
-                Assert.Same(methods, filter.Source);
-            }
-
-            [Fact]
-            public void ReturnsMethodWithGivenTypeAndName() {
-                Assert.Same(selected, members.Method(methodType, methodName));
-                MemberNameFilter<Method, MethodInfo> nameFilter = VerifyFilter(selection, methodName);
-                MethodTypeFilter typeFilter = VerifyFilter(nameFilter.Source, methodType);
-                Assert.Same(methods, typeFilter.Source);
-            }
-
-            [Fact]
-            public void ReturnsGenericMethodWithGivenType() {
-                Method<MethodType> generic = members.Method<MethodType>();
-                VerifyGenericMethod(selected, generic);
-                MethodTypeFilter typeFilter = VerifyFilter(selection, typeof(MethodType));
-                Assert.Same(methods, typeFilter.Source);
-            }
-
-            [Fact]
-            public void ReturnsGenericMethodWithGivenTypeAndName() {
-                Method<MethodType> generic = members.Method<MethodType>(methodName);
-                VerifyGenericMethod(selected, generic);
-                MemberNameFilter<Method, MethodInfo> nameFilter = VerifyFilter(selection, methodName);
-                MethodTypeFilter typeFilter = VerifyFilter(nameFilter.Source, methodType);
-                Assert.Same(methods, typeFilter.Source);
-            }
-        }
-
         public class ObjectExtension: MethodExtensionsTest
         {
             [Fact]

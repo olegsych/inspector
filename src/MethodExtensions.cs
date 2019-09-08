@@ -9,33 +9,6 @@ namespace Inspector
     /// </summary>
     public static class MethodExtensions
     {
-        static readonly IDelegateFactory<MethodInfo> delegateFactory = new MethodDelegateFactory();
-
-        #region IMembers
-
-        public static Method Method(this IMembers members) =>
-            members.Methods().Single();
-
-        public static Method Method(this IMembers members, string methodName) =>
-            new MemberNameFilter<Method, MethodInfo>(members.Methods(), methodName).Single();
-
-        public static Method Method(this IMembers members, Type methodType) =>
-            new MethodTypeFilter(members.Methods(), methodType, delegateFactory).Single();
-
-        public static Method Method(this IMembers members, Type methodType, string methodName) {
-            var typed = new MethodTypeFilter(members.Methods(), methodType, delegateFactory);
-            var named = new MemberNameFilter<Method, MethodInfo>(typed, methodName);
-            return named.Single();
-        }
-
-        public static Method<T> Method<T>(this IMembers members) where T : Delegate =>
-            new Method<T>(members.Method(typeof(T)), delegateFactory);
-
-        public static Method<T> Method<T>(this IMembers members, string methodName) where T : Delegate =>
-            new Method<T>(members.Method(typeof(T), methodName), delegateFactory);
-
-        #endregion
-
         #region Object
 
         public static Method Method(this object instance) =>
