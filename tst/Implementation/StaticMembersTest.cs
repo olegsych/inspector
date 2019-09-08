@@ -6,21 +6,21 @@ using Xunit;
 
 namespace Inspector.Implementation
 {
-    public class StaticScopeTest
+    public class StaticMembersTest
     {
-        public class Constructor: StaticScopeTest
+        public class Constructor: StaticMembersTest
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenTypeIsNullToFailFast() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new StaticScope(null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new StaticMembers(null));
                 Assert.Equal("type", thrown.ParamName);
             }
 
             [Fact]
-            public void InitializesScopeWithGivenType() {
+            public void PassesTypeToBase() {
                 Type type = typeof(TestType);
 
-                TypeScope sut = new StaticScope(type);
+                TypeMembers sut = new StaticMembers(type);
 
                 Assert.Same(type, sut.Type);
                 Assert.Null(sut.Instance);
@@ -29,11 +29,11 @@ namespace Inspector.Implementation
             static class TestType { }
         }
 
-        public class Fields: StaticScopeTest
+        public class Fields: StaticMembersTest
         {
             [Fact]
             public void ReturnsAllStaticFieldsDeclaredByGivenType() {
-                var sut = new StaticScope(typeof(TestType));
+                var sut = new StaticMembers(typeof(TestType));
 
                 IEnumerable<Field> fields = sut.Fields();
 
@@ -42,7 +42,7 @@ namespace Inspector.Implementation
 
             [Fact]
             public void ReturnsAllStaticFieldsInheritedByGivenType() {
-                var sut = new StaticScope(typeof(TwiceDerivedType));
+                var sut = new StaticMembers(typeof(TwiceDerivedType));
 
                 IEnumerable<Field> fields = sut.Fields();
 
@@ -74,11 +74,11 @@ namespace Inspector.Implementation
             class FieldType { }
         }
 
-        public class Methods: StaticScopeTest
+        public class Methods: StaticMembersTest
         {
             [Fact]
             public void ReturnsAllStaticMethodsInheritedByGivenType() {
-                var sut = new StaticScope(typeof(TwiceDerivedType));
+                var sut = new StaticMembers(typeof(TwiceDerivedType));
 
                 IEnumerable<Method> methods = sut.Methods();
 

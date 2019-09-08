@@ -8,26 +8,26 @@ namespace Inspector
 {
     public class DeclarationExtensionsTest
     {
-        public class IScopeExtensions: DeclarationExtensionsTest
+        public class IMembersExtensions: DeclarationExtensionsTest
         {
             // Method parameters
-            readonly IScope scope = Substitute.For<IScope>();
+            readonly IMembers members = Substitute.For<IMembers>();
 
             [Fact]
-            public void ReturnsScopeLimitedToDeclarationScopeOfGivenType() {
-                IScope actual = scope.DeclaredBy(typeof(TestType));
-                VerifyDeclarationScope<TestType>(scope, actual);
+            public void ReturnsMembersDeclaredByGivenType() {
+                IMembers actual = members.DeclaredBy(typeof(TestType));
+                VerifyDeclaredMembers<TestType>(members, actual);
             }
 
             [Fact]
-            public void ReturnsScopeLimitedToDeclarationScopeOfGivenTypeParameter() {
-                IScope actual = scope.DeclaredBy<TestType>();
-                VerifyDeclarationScope<TestType>(scope, actual);
+            public void ReturnsMembersDeclaredByGivenGenericType() {
+                IMembers actual = members.DeclaredBy<TestType>();
+                VerifyDeclaredMembers<TestType>(members, actual);
             }
 
-            static void VerifyDeclarationScope<TDeclaringType>(IScope expected, IScope actual) {
-                DeclarationScope declarationScope = VerifyDeclarationScope(typeof(TDeclaringType), actual);
-                Assert.Same(expected, declarationScope.Source);
+            static void VerifyDeclaredMembers<TDeclaringType>(IMembers expected, IMembers actual) {
+                DeclaredMembers declaredMembers = VerifyDeclaredMembers(typeof(TDeclaringType), actual);
+                Assert.Same(expected, declaredMembers.Source);
             }
         }
 
@@ -37,28 +37,28 @@ namespace Inspector
             readonly object instance = new object();
 
             [Fact]
-            public void ReturnsInstanceScopeLimitedToDeclarationScopeOfGivenType() {
-                IScope actual = instance.DeclaredBy(typeof(TestType));
-                VerifyInstanceScope<TestType>(instance, actual);
+            public void ReturnsInstanceMembersDeclaredByGivenType() {
+                IMembers actual = instance.DeclaredBy(typeof(TestType));
+                VerifyInstanceMembers<TestType>(instance, actual);
             }
 
             [Fact]
-            public void ReturnsInstanceScopeLimitedToDeclarationScopeOfGivenTypeParameter() {
-                IScope actual = instance.DeclaredBy<TestType>();
-                VerifyInstanceScope<TestType>(instance, actual);
+            public void ReturnsInstanceMembersDeclaredByGivenGenericType() {
+                IMembers actual = instance.DeclaredBy<TestType>();
+                VerifyInstanceMembers<TestType>(instance, actual);
             }
 
             [Fact]
-            public void ReturnsInstanceScopeLimitedToDeclarationScopeOfInstanceType() {
+            public void ReturnsInstanceMembersDeclaredByInstanceType() {
                 var instance = new TestType();
-                IScope actual = instance.Declared();
-                VerifyInstanceScope<TestType>(instance, actual);
+                IMembers actual = instance.Declared();
+                VerifyInstanceMembers<TestType>(instance, actual);
             }
 
-            static void VerifyInstanceScope<TDeclaringType>(object instance, IScope actual) {
-                DeclarationScope declarationScope = VerifyDeclarationScope(typeof(TDeclaringType), actual);
-                var instanceScope = Assert.IsType<InstanceScope>(declarationScope.Source);
-                Assert.Same(instance, instanceScope.Instance);
+            static void VerifyInstanceMembers<TDeclaringType>(object instance, IMembers actual) {
+                DeclaredMembers declaredMembers = VerifyDeclaredMembers(typeof(TDeclaringType), actual);
+                var instanceMembers = Assert.IsType<InstanceMembers>(declaredMembers.Source);
+                Assert.Same(instance, instanceMembers.Instance);
             }
         }
 
@@ -68,34 +68,34 @@ namespace Inspector
             readonly Type type = Type();
 
             [Fact]
-            public void ReturnsStaticScopeLimitedToGivenDeclaringType() {
-                IScope actual = type.DeclaredBy(typeof(TestType));
-                VerifyStaticScope<TestType>(type, actual);
+            public void ReturnsStaticMembersDeclaredByGivenType() {
+                IMembers actual = type.DeclaredBy(typeof(TestType));
+                VerifyStaticMembers<TestType>(type, actual);
             }
 
             [Fact]
-            public void ReturnsStaticScopeLimitedToGivenDeclaringTypeParameter() {
-                IScope actual = type.DeclaredBy<TestType>();
-                VerifyStaticScope<TestType>(type, actual);
+            public void ReturnsStaticMembersDeclaredByGivenGenericType() {
+                IMembers actual = type.DeclaredBy<TestType>();
+                VerifyStaticMembers<TestType>(type, actual);
             }
 
             [Fact]
-            public void ReturnsStaticScopeLimitedToTypeItself() {
-                IScope actual = typeof(TestType).Declared();
-                VerifyStaticScope<TestType>(typeof(TestType), actual);
+            public void ReturnsStaticMembersDeclaredByTypeItself() {
+                IMembers actual = typeof(TestType).Declared();
+                VerifyStaticMembers<TestType>(typeof(TestType), actual);
             }
 
-            static void VerifyStaticScope<TDeclaringType>(Type staticType, IScope actual) {
-                DeclarationScope declarationScope = VerifyDeclarationScope(typeof(TDeclaringType), actual);
-                var staticScope = Assert.IsType<StaticScope>(declarationScope.Source);
-                Assert.Equal(staticType, staticScope.Type);
+            static void VerifyStaticMembers<TDeclaringType>(Type staticType, IMembers actual) {
+                DeclaredMembers declaredMembers = VerifyDeclaredMembers(typeof(TDeclaringType), actual);
+                var staticMembers = Assert.IsType<StaticMembers>(declaredMembers.Source);
+                Assert.Equal(staticType, staticMembers.Type);
             }
         }
 
-        static DeclarationScope VerifyDeclarationScope(Type declaringType, IScope actual) {
-            var declarationScope = Assert.IsType<DeclarationScope>(actual);
-            Assert.Equal(declaringType, declarationScope.DeclaringType);
-            return declarationScope;
+        static DeclaredMembers VerifyDeclaredMembers(Type declaringType, IMembers actual) {
+            var declaredMembers = Assert.IsType<DeclaredMembers>(actual);
+            Assert.Equal(declaringType, declaredMembers.DeclaringType);
+            return declaredMembers;
         }
 
         class TestType { }

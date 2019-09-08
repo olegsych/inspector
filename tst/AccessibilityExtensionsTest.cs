@@ -7,40 +7,40 @@ namespace Inspector
 {
     public class AccessibilityExtensionsTest
     {
-        public class IScopeExtension: AccessibilityExtensionsTest
+        public class IMembersExtension: AccessibilityExtensionsTest
         {
-            readonly IScope scope = Substitute.For<IScope>();
+            readonly IMembers members = Substitute.For<IMembers>();
 
             [Fact]
-            public void InternalReturnsInternalAccessibilityScope() {
-                IScope actual = scope.Internal();
+            public void InternalReturnsInternalMembers() {
+                IMembers actual = members.Internal();
 
-                var accessibilityScope = Assert.IsType<AccessibilityScope>(actual);
-                Assert.Equal(Accessibility.Internal, accessibilityScope.Accessibility);
+                var accessibleMembers = Assert.IsType<AccessibleMembers>(actual);
+                Assert.Equal(Accessibility.Internal, accessibleMembers.Accessibility);
             }
 
             [Fact]
-            public void PrivateReturnsPrivateAccessibilityScope() {
-                IScope actual = scope.Private();
+            public void PrivateReturnsPrivateMembers() {
+                IMembers actual = members.Private();
 
-                var accessibilityScope = Assert.IsType<AccessibilityScope>(actual);
-                Assert.Equal(Accessibility.Private, accessibilityScope.Accessibility);
+                var accessibleMembers = Assert.IsType<AccessibleMembers>(actual);
+                Assert.Equal(Accessibility.Private, accessibleMembers.Accessibility);
             }
 
             [Fact]
-            public void ProtectedReturnsProtectedAccessibilityScope() {
-                IScope actual = scope.Protected();
+            public void ProtectedReturnsProtectedMembers() {
+                IMembers actual = members.Protected();
 
-                var accessibilityScope = Assert.IsType<AccessibilityScope>(actual);
-                Assert.Equal(Accessibility.Protected, accessibilityScope.Accessibility);
+                var accessibleMembers = Assert.IsType<AccessibleMembers>(actual);
+                Assert.Equal(Accessibility.Protected, accessibleMembers.Accessibility);
             }
 
             [Fact]
-            public void PublicReturnsPublicAccessibilityScope() {
-                IScope actual = scope.Public();
+            public void PublicReturnsPublicMembers() {
+                IMembers actual = members.Public();
 
-                var accessibilityScope = Assert.IsType<AccessibilityScope>(actual);
-                Assert.Equal(Accessibility.Public, accessibilityScope.Accessibility);
+                var accessibleMembers = Assert.IsType<AccessibleMembers>(actual);
+                Assert.Equal(Accessibility.Public, accessibleMembers.Accessibility);
             }
         }
 
@@ -49,35 +49,35 @@ namespace Inspector
             readonly object instance = new object();
 
             [Fact]
-            public void InternalReturnsInternalAccessibilityScopeOfGivenInstance() {
-                IScope actual = instance.Internal();
-                VerifyScope(actual, instance, Accessibility.Internal);
+            public void InternalReturnsInternalMembersOfGivenInstance() {
+                IMembers actual = instance.Internal();
+                VerifyMembers(actual, instance, Accessibility.Internal);
             }
 
             [Fact]
-            public void PrivateReturnsPrivateAccessibilityScopeOfGivenInstance() {
-                IScope actual = instance.Private();
-                VerifyScope(actual, instance, Accessibility.Private);
+            public void PrivateReturnsPrivateMembersOfGivenInstance() {
+                IMembers actual = instance.Private();
+                VerifyMembers(actual, instance, Accessibility.Private);
             }
 
             [Fact]
-            public void ProtectedReturnsProtectedAccessibilityScopeOfGivenInstance() {
-                IScope actual = instance.Protected();
-                VerifyScope(actual, instance, Accessibility.Protected);
+            public void ProtectedReturnsProtectedMembersOfGivenInstance() {
+                IMembers actual = instance.Protected();
+                VerifyMembers(actual, instance, Accessibility.Protected);
             }
 
             [Fact]
-            public void PublicReturnsPublicAccessibilityScopeOfGivenInstance() {
-                IScope actual = instance.Public();
-                VerifyScope(actual, instance, Accessibility.Public);
+            public void PublicReturnsPublicMembersOfGivenInstance() {
+                IMembers actual = instance.Public();
+                VerifyMembers(actual, instance, Accessibility.Public);
             }
 
-            static void VerifyScope(IScope actual, object instance, Accessibility accessibility) {
-                var accessibilityScope = Assert.IsType<AccessibilityScope>(actual);
-                Assert.Equal(accessibility, accessibilityScope.Accessibility);
+            static void VerifyMembers(IMembers actual, object instance, Accessibility accessibility) {
+                var accessibleMembers = Assert.IsType<AccessibleMembers>(actual);
+                Assert.Equal(accessibility, accessibleMembers.Accessibility);
 
-                var instanceScope = Assert.IsType<InstanceScope>(accessibilityScope.Source);
-                Assert.Same(instance, instanceScope.Instance);
+                var instanceMembers = Assert.IsType<InstanceMembers>(accessibleMembers.Source);
+                Assert.Same(instance, instanceMembers.Instance);
             }
         }
 
@@ -86,35 +86,35 @@ namespace Inspector
             readonly Type type = typeof(TestClass);
 
             [Fact]
-            public void InternalReturnsInternalAccessibilityScopeOfGivenType() {
-                IScope actual = type.Internal();
-                VerifyScope(actual, type, Accessibility.Internal);
+            public void InternalReturnsInternalMembersOfGivenType() {
+                IMembers actual = type.Internal();
+                VerifyMembers(actual, type, Accessibility.Internal);
             }
 
             [Fact]
-            public void PrivateReturnsPrivateAccessibilityScopeOfGivenType() {
-                IScope actual = type.Private();
-                VerifyScope(actual, type, Accessibility.Private);
+            public void PrivateReturnsPrivateMembersOfGivenType() {
+                IMembers actual = type.Private();
+                VerifyMembers(actual, type, Accessibility.Private);
             }
 
             [Fact]
-            public void ProtectedReturnsProtectedAccessibilityScopeOfGivenType() {
-                IScope actual = type.Protected();
-                VerifyScope(actual, type, Accessibility.Protected);
+            public void ProtectedReturnsProtectedMembersOfGivenType() {
+                IMembers actual = type.Protected();
+                VerifyMembers(actual, type, Accessibility.Protected);
             }
 
             [Fact]
-            public void PublicReturnsPublicAccessibilityScopeOfGivenType() {
-                IScope actual = type.Public();
-                VerifyScope(actual, type, Accessibility.Public);
+            public void PublicReturnsPublicMembersOfGivenType() {
+                IMembers actual = type.Public();
+                VerifyMembers(actual, type, Accessibility.Public);
             }
 
-            static void VerifyScope(IScope actual, Type type, Accessibility accessibility) {
-                var accessibilityScope = Assert.IsType<AccessibilityScope>(actual);
-                Assert.Equal(accessibility, accessibilityScope.Accessibility);
+            static void VerifyMembers(IMembers actual, Type type, Accessibility accessibility) {
+                var accessibleMembers = Assert.IsType<AccessibleMembers>(actual);
+                Assert.Equal(accessibility, accessibleMembers.Accessibility);
 
-                var instanceScope = Assert.IsType<StaticScope>(accessibilityScope.Source);
-                Assert.Same(type, instanceScope.Type);
+                var staticMembers = Assert.IsType<StaticMembers>(accessibleMembers.Source);
+                Assert.Same(type, staticMembers.Type);
             }
 
             class TestClass { }

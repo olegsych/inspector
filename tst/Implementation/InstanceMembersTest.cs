@@ -6,13 +6,13 @@ using Xunit;
 
 namespace Inspector.Implementation
 {
-    public class InstanceScopeTest
+    public class InstanceMembersTest
     {
-        public class Constructor: InstanceScopeTest
+        public class Constructor: InstanceMembersTest
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenInstanceIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new InstanceScope(null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new InstanceMembers(null));
                 Assert.Equal("instance", thrown.ParamName);
             }
 
@@ -20,7 +20,7 @@ namespace Inspector.Implementation
             public void InitializesInstanceProperty() {
                 var instance = new TestType();
 
-                TypeScope sut = new InstanceScope(instance);
+                TypeMembers sut = new InstanceMembers(instance);
 
                 Assert.Same(instance.GetType(), sut.Type);
                 Assert.Same(instance, sut.Instance);
@@ -29,12 +29,12 @@ namespace Inspector.Implementation
             class TestType { }
         }
 
-        public class Fields: InstanceScopeTest
+        public class Fields: InstanceMembersTest
         {
             [Fact]
             public void ReturnsAllFieldsDeclaredByGivenInstance() {
                 var instance = new TestType();
-                var sut = new InstanceScope(instance);
+                var sut = new InstanceMembers(instance);
 
                 IEnumerable<Field> fields = sut.Fields();
 
@@ -44,7 +44,7 @@ namespace Inspector.Implementation
             [Fact]
             public void ReturnsAllFieldsInheritedByGivenInstanceType() {
                 var instance = new TwiceDerivedType();
-                var sut = new InstanceScope(instance);
+                var sut = new InstanceMembers(instance);
 
                 IEnumerable<Field> fields = sut.Fields();
 
@@ -76,12 +76,12 @@ namespace Inspector.Implementation
             class FieldType { }
         }
 
-        public class Methods: InstanceScopeTest
+        public class Methods: InstanceMembersTest
         {
             [Fact]
             public void ReturnsAllMethodsDeclaredAndInheritedByGivenInstanceType() {
                 var instance = new TwiceDerivedType();
-                var sut = new InstanceScope(instance);
+                var sut = new InstanceMembers(instance);
 
                 IEnumerable<Method> methods = sut.Methods();
 

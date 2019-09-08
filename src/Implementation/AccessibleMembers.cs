@@ -5,15 +5,15 @@ using System.Reflection;
 
 namespace Inspector.Implementation
 {
-    sealed class AccessibilityScope: IScope, IDecorator<IScope>
+    sealed class AccessibleMembers: IMembers, IDecorator<IMembers>
     {
-        public AccessibilityScope(IScope source, Accessibility accessibility) {
+        public AccessibleMembers(IMembers source, Accessibility accessibility) {
             if(source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            if(source is AccessibilityScope scope) {
-                Accessibility = Combine(scope.Accessibility, accessibility);
-                Source = scope.Source;
+            if(source is AccessibleMembers previous) {
+                Accessibility = Combine(previous.Accessibility, accessibility);
+                Source = previous.Source;
             }
             else {
                 Source = source;
@@ -23,7 +23,7 @@ namespace Inspector.Implementation
 
         public Accessibility Accessibility { get; }
 
-        public IScope Source { get; }
+        public IMembers Source { get; }
 
         public IEnumerable<Constructor> Constructors() =>
             Source.Constructors().Where(c => Accessibility == (Accessibility)(c.Info.Attributes & MethodAttributes.MemberAccessMask));

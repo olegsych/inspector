@@ -7,52 +7,52 @@ using static Inspector.Substitutes;
 
 namespace Inspector.Implementation
 {
-    public class InheritanceScopeTest
+    public class InheritedMembersTest
     {
-        readonly IScope sut;
+        readonly IMembers sut;
 
         // Constructor parameters
-        readonly IScope source = Substitute.For<IScope>();
+        readonly IMembers source = Substitute.For<IMembers>();
         readonly Type ancestor = typeof(Parent);
 
         // Test fixture
-        public InheritanceScopeTest() =>
-            sut = new InheritanceScope(source, ancestor);
+        public InheritedMembersTest() =>
+            sut = new InheritedMembers(source, ancestor);
 
         readonly Type grandParent = typeof(GrandParent);
         readonly Type parent = typeof(Parent);
         readonly Type child = typeof(Child);
 
-        public class Ctor: InheritanceScopeTest
+        public class Ctor: InheritedMembersTest
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenSourceIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new InheritanceScope(null, ancestor));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new InheritedMembers(null, ancestor));
                 Assert.Equal("source", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenAncestorTypeIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new InheritanceScope(source, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new InheritedMembers(source, null));
                 Assert.Equal("ancestorType", thrown.ParamName);
             }
         }
 
-        public class Source: InheritanceScopeTest
+        public class Source: InheritedMembersTest
         {
             [Fact]
             public void ImplementsIDecoratorAndReturnsValueGivenToConstructor() =>
-                Assert.Same(source, ((IDecorator<IScope>)sut).Source);
+                Assert.Same(source, ((IDecorator<IMembers>)sut).Source);
         }
 
-        public class AncestorType: InheritanceScopeTest
+        public class AncestorType: InheritedMembersTest
         {
             [Fact]
             public void IsAssignedByConstructor() =>
-                Assert.Same(ancestor, ((InheritanceScope)sut).AncestorType);
+                Assert.Same(ancestor, ((InheritedMembers)sut).AncestorType);
         }
 
-        public class Constructors: InheritanceScopeTest
+        public class Constructors: InheritedMembersTest
         {
             [Fact]
             public void ReturnsConstructorsInheritedFromAncestor() {
@@ -79,7 +79,7 @@ namespace Inspector.Implementation
             }
         }
 
-        public class Events: InheritanceScopeTest
+        public class Events: InheritedMembersTest
         {
             [Fact]
             public void ReturnsEventsInheritedFromAncestor() {
@@ -106,7 +106,7 @@ namespace Inspector.Implementation
             }
         }
 
-        public class Fields: InheritanceScopeTest
+        public class Fields: InheritedMembersTest
         {
             [Fact]
             public void ReturnsFieldsInheritedFromAncestor() {
@@ -133,7 +133,7 @@ namespace Inspector.Implementation
             }
         }
 
-        public class Methods: InheritanceScopeTest
+        public class Methods: InheritedMembersTest
         {
             [Fact]
             public void ReturnsMethodsInheritedFromAncestor() {
@@ -160,7 +160,7 @@ namespace Inspector.Implementation
             }
         }
 
-        public class Properties: InheritanceScopeTest
+        public class Properties: InheritedMembersTest
         {
             [Fact]
             public void ReturnsPropertiesInheritedFromAncestor() {

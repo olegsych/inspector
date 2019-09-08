@@ -8,29 +8,29 @@ using static Inspector.Substitutes;
 
 namespace Inspector.Implementation
 {
-    public class AccessibilityScopeTest
+    public class AccessibleMembersTest
     {
         // Constructor parameters
-        readonly IScope source = Substitute.For<IScope>();
+        readonly IMembers source = Substitute.For<IMembers>();
         readonly Accessibility accessibility = Accessibility.PrivateProtected;
 
-        public class Ctor: AccessibilityScopeTest
+        public class Ctor: AccessibleMembersTest
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenSourceIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new AccessibilityScope(null, accessibility));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new AccessibleMembers(null, accessibility));
                 Assert.Equal("source", thrown.ParamName);
             }
 
             [Fact]
             public void InitializesIDecoratorSourcePropertyForSelectorAccessToEntireFilterChain() {
-                IDecorator<IScope> sut = new AccessibilityScope(source, accessibility);
+                IDecorator<IMembers> sut = new AccessibleMembers(source, accessibility);
                 Assert.Same(source, sut.Source);
             }
 
             [Fact]
             public void InitializesAccessiblityPropertyForUseInTests() {
-                var sut = new AccessibilityScope(source, accessibility);
+                var sut = new AccessibleMembers(source, accessibility);
                 Assert.Equal(accessibility, sut.Accessibility);
             }
 
@@ -38,7 +38,7 @@ namespace Inspector.Implementation
             [InlineData(Accessibility.Private, Accessibility.Protected, Accessibility.PrivateProtected)]
             [InlineData(Accessibility.Protected, Accessibility.Internal, Accessibility.ProtectedInternal)]
             internal void CombinesPrivateAndProtectedAccessibility(Accessibility first, Accessibility second, Accessibility combined) {
-                var sut = new AccessibilityScope(new AccessibilityScope(source, first), second);
+                var sut = new AccessibleMembers(new AccessibleMembers(source, first), second);
 
                 Assert.Equal(combined, sut.Accessibility);
                 Assert.Same(source, sut.Source);
@@ -46,7 +46,7 @@ namespace Inspector.Implementation
 
             [Theory, MemberData(nameof(InvalidAccessibilityCombinations))]
             internal void ThrowsDescriptiveExceptionWhenAccessibilitiesCannotBeCombined(Accessibility first, Accessibility second) {
-                var thrown = Assert.Throws<InvalidOperationException>(() => new AccessibilityScope(new AccessibilityScope(source, first), second));
+                var thrown = Assert.Throws<InvalidOperationException>(() => new AccessibleMembers(new AccessibleMembers(source, first), second));
                 Assert.StartsWith($"'{first.ToString().ToLower()} {second.ToString().ToLower()}' is not a valid accessibility.", thrown.Message);
             }
 
@@ -63,12 +63,12 @@ namespace Inspector.Implementation
                 first == Accessibility.Protected && second == Accessibility.Internal;
         }
 
-        public class Constructors: AccessibilityScopeTest
+        public class Constructors: AccessibleMembersTest
         {
             [Fact]
             public void ReturnsConstructorsWithWithExpectedAccessibility() {
                 // Arrange
-                var sut = new AccessibilityScope(source, Accessibility.ProtectedInternal);
+                var sut = new AccessibleMembers(source, Accessibility.ProtectedInternal);
 
                 Constructor[] expected = {
                     new Constructor(ConstructorInfo(MethodAttributes.FamORAssem | MethodAttributes.Static)),
@@ -93,12 +93,12 @@ namespace Inspector.Implementation
             }
         }
 
-        public class Events: AccessibilityScopeTest
+        public class Events: AccessibleMembersTest
         {
             [Fact]
             public void ReturnsEventsWithWithExpectedAccessibilityOfAddMethod() {
                 // Arrange
-                var sut = new AccessibilityScope(source, Accessibility.ProtectedInternal);
+                var sut = new AccessibleMembers(source, Accessibility.ProtectedInternal);
 
                 Event[] expected = {
                     new Event(EventInfo(MethodAttributes.FamORAssem | MethodAttributes.Static)),
@@ -123,12 +123,12 @@ namespace Inspector.Implementation
             }
         }
 
-        public class Fields: AccessibilityScopeTest
+        public class Fields: AccessibleMembersTest
         {
             [Fact]
             public void ReturnsFieldsWithWithExpectedAccessibility() {
                 // Arrange
-                var sut = new AccessibilityScope(source, Accessibility.ProtectedInternal);
+                var sut = new AccessibleMembers(source, Accessibility.ProtectedInternal);
 
                 Field[] expected = {
                     new Field(FieldInfo(FieldAttributes.FamORAssem | FieldAttributes.Static)),
@@ -153,12 +153,12 @@ namespace Inspector.Implementation
             }
         }
 
-        public class Methods: AccessibilityScopeTest
+        public class Methods: AccessibleMembersTest
         {
             [Fact]
             public void ReturnsMethodsWithWithExpectedAccessibility() {
                 // Arrange
-                var sut = new AccessibilityScope(source, Accessibility.ProtectedInternal);
+                var sut = new AccessibleMembers(source, Accessibility.ProtectedInternal);
 
                 Method[] expected = {
                     new Method(MethodInfo(MethodAttributes.FamORAssem | MethodAttributes.Static)),
@@ -183,12 +183,12 @@ namespace Inspector.Implementation
             }
         }
 
-        public class Properties: AccessibilityScopeTest
+        public class Properties: AccessibleMembersTest
         {
             [Fact]
             public void ReturnsPropertiesWithWithExpectedAccessibility() {
                 // Arrange
-                var sut = new AccessibilityScope(source, Accessibility.ProtectedInternal);
+                var sut = new AccessibleMembers(source, Accessibility.ProtectedInternal);
 
                 Property[] expected = {
                     new Property(PropertyInfo(MethodAttributes.FamORAssem | MethodAttributes.Static)),

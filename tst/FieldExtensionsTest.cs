@@ -51,40 +51,40 @@ namespace Inspector
 
         protected class FieldValue { }
 
-        public class IScopeExtension: FieldExtensionsTest
+        public class IMembersExtension: FieldExtensionsTest
         {
             // Method parameters
-            readonly IScope scope = Substitute.For<IScope>();
+            readonly IMembers members = Substitute.For<IMembers>();
 
             // Arrange
             readonly IEnumerable<Field> fields = Substitute.For<IEnumerable<Field>>();
 
-            public IScopeExtension() =>
-                scope.Fields().Returns(fields);
+            public IMembersExtension() =>
+                members.Fields().Returns(fields);
 
             [Fact]
-            public void ReturnsSingleFieldInGivenScope() {
-                Assert.Same(selected, scope.Field());
+            public void ReturnsSingleField() {
+                Assert.Same(selected, members.Field());
                 Assert.Same(fields, selection);
             }
 
             [Fact]
             public void ReturnsFieldWithGivenName() {
-                Assert.Same(selected, scope.Field(fieldName));
+                Assert.Same(selected, members.Field(fieldName));
                 MemberNameFilter<Field, FieldInfo> filter = VerifyFilter(selection, fieldName);
                 Assert.Same(fields, filter.Source);
             }
 
             [Fact]
             public void ReturnsFieldWithGivenType() {
-                Assert.Same(selected, scope.Field(fieldType));
+                Assert.Same(selected, members.Field(fieldType));
                 FieldTypeFilter filter = VerifyFilter(selection, fieldType);
                 Assert.Same(fields, filter.Source);
             }
 
             [Fact]
             public void ReturnsFieldWithGivenTypeAndName() {
-                Assert.Same(selected, scope.Field(fieldType, fieldName));
+                Assert.Same(selected, members.Field(fieldType, fieldName));
                 MemberNameFilter<Field, FieldInfo> nameFilter = VerifyFilter(selection, fieldName);
                 FieldTypeFilter typeFilter = VerifyFilter(nameFilter.Source, fieldType);
                 Assert.Same(fields, typeFilter.Source);
@@ -92,7 +92,7 @@ namespace Inspector
 
             [Fact]
             public void ReturnsGenericFieldWithGivenType() {
-                Field<FieldValue> generic = scope.Field<FieldValue>();
+                Field<FieldValue> generic = members.Field<FieldValue>();
                 VerifyGenericField(selected, generic);
                 FieldTypeFilter typeFilter = VerifyFilter(selection, typeof(FieldValue));
                 Assert.Same(fields, typeFilter.Source);
@@ -100,7 +100,7 @@ namespace Inspector
 
             [Fact]
             public void ReturnsGenericFieldWithGivenTypeAndName() {
-                Field<FieldValue> generic = scope.Field<FieldValue>(fieldName);
+                Field<FieldValue> generic = members.Field<FieldValue>(fieldName);
                 VerifyGenericField(selected, generic);
                 MemberNameFilter<Field, FieldInfo> nameFilter = VerifyFilter(selection, fieldName);
                 FieldTypeFilter typeFilter = VerifyFilter(nameFilter.Source, fieldType);
@@ -114,7 +114,7 @@ namespace Inspector
             public void ReturnsSingleFieldInGivenType() {
                 Assert.Same(selected, instance.Field());
 
-                VerifyScope(selection, instance);
+                VerifyInstanceMembers(selection, instance);
             }
 
             [Fact]
@@ -122,7 +122,7 @@ namespace Inspector
                 Assert.Same(selected, instance.Field(fieldType));
 
                 FieldTypeFilter named = VerifyFilter(selection, fieldType);
-                VerifyScope(named.Source, instance);
+                VerifyInstanceMembers(named.Source, instance);
             }
 
             [Fact]
@@ -130,7 +130,7 @@ namespace Inspector
                 Assert.Same(selected, instance.Field(fieldName));
 
                 MemberNameFilter<Field, FieldInfo> named = VerifyFilter(selection, fieldName);
-                VerifyScope(named.Source, instance);
+                VerifyInstanceMembers(named.Source, instance);
             }
 
             [Fact]
@@ -139,7 +139,7 @@ namespace Inspector
 
                 MemberNameFilter<Field, FieldInfo> named = VerifyFilter(selection, fieldName);
                 FieldTypeFilter typed = VerifyFilter(named.Source, fieldType);
-                VerifyScope(typed.Source, instance);
+                VerifyInstanceMembers(typed.Source, instance);
             }
 
             [Fact]
@@ -148,7 +148,7 @@ namespace Inspector
 
                 VerifyGenericField(selected, generic);
                 FieldTypeFilter typed = VerifyFilter(selection, typeof(FieldValue));
-                VerifyScope(typed.Source, instance);
+                VerifyInstanceMembers(typed.Source, instance);
             }
 
             [Fact]
@@ -158,10 +158,10 @@ namespace Inspector
                 VerifyGenericField(selected, generic);
                 MemberNameFilter<Field, FieldInfo> named = VerifyFilter(selection, fieldName);
                 FieldTypeFilter typed = VerifyFilter(named.Source, typeof(FieldValue));
-                VerifyScope(typed.Source, instance);
+                VerifyInstanceMembers(typed.Source, instance);
             }
 
-            static void VerifyScope(IEnumerable<Field> filter, object instance) {
+            static void VerifyInstanceMembers(IEnumerable<Field> filter, object instance) {
                 var fields = Assert.IsType<Members<FieldInfo, Field>>(filter);
                 Assert.Same(instance, fields.Instance);
             }
@@ -176,7 +176,7 @@ namespace Inspector
             public void ReturnsSingleFieldInGivenType() {
                 Assert.Same(selected, testType.Field());
 
-                VerifyScope(selection, testType);
+                VerifyStaticMembers(selection, testType);
             }
 
             [Fact]
@@ -184,7 +184,7 @@ namespace Inspector
                 Assert.Same(selected, testType.Field(fieldType));
 
                 FieldTypeFilter typed = VerifyFilter(selection, fieldType);
-                VerifyScope(typed.Source, testType);
+                VerifyStaticMembers(typed.Source, testType);
             }
 
             [Fact]
@@ -192,7 +192,7 @@ namespace Inspector
                 Assert.Same(selected, testType.Field(fieldName));
 
                 MemberNameFilter<Field, FieldInfo> named = VerifyFilter(selection, fieldName);
-                VerifyScope(named.Source, testType);
+                VerifyStaticMembers(named.Source, testType);
             }
 
             [Fact]
@@ -201,7 +201,7 @@ namespace Inspector
 
                 MemberNameFilter<Field, FieldInfo> named = VerifyFilter(selection, fieldName);
                 FieldTypeFilter typed = VerifyFilter(named.Source, fieldType);
-                VerifyScope(typed.Source, testType);
+                VerifyStaticMembers(typed.Source, testType);
             }
 
             [Fact]
@@ -210,7 +210,7 @@ namespace Inspector
 
                 VerifyGenericField(selected, generic);
                 FieldTypeFilter typed = VerifyFilter(selection, typeof(FieldValue));
-                VerifyScope(typed.Source, testType);
+                VerifyStaticMembers(typed.Source, testType);
             }
 
             [Fact]
@@ -220,10 +220,10 @@ namespace Inspector
                 VerifyGenericField(selected, generic);
                 MemberNameFilter<Field, FieldInfo> named = VerifyFilter(selection, fieldName);
                 FieldTypeFilter typed = VerifyFilter(named.Source, typeof(FieldValue));
-                VerifyScope(typed.Source, testType);
+                VerifyStaticMembers(typed.Source, testType);
             }
 
-            static void VerifyScope(IEnumerable<Field> selection, Type expected) {
+            static void VerifyStaticMembers(IEnumerable<Field> selection, Type expected) {
                 var fields = Assert.IsType<Members<FieldInfo, Field>>(selection);
                 Assert.Same(expected, fields.Type);
             }

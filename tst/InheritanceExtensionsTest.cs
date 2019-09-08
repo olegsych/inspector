@@ -8,26 +8,26 @@ namespace Inspector
 {
     public class InheritanceExtensionsTest
     {
-        public class IScopeExtensions: InheritanceExtensionsTest
+        public class IMembersExtensions: InheritanceExtensionsTest
         {
             // Method parameters
-            readonly IScope scope = Substitute.For<IScope>();
+            readonly IMembers members = Substitute.For<IMembers>();
 
             [Fact]
-            public void InheritedFromReturnsScopeLimitedToInheritanceScopeOfGivenAncestorType() {
-                IScope actual = scope.InheritedFrom(typeof(TestType));
-                VerifyInheritanceScope<TestType>(scope, actual);
+            public void InheritedFromReturnsMembersInheritedFromGivenType() {
+                IMembers actual = members.InheritedFrom(typeof(TestType));
+                VerifyInheritedMembers<TestType>(members, actual);
             }
 
             [Fact]
-            public void InheritedFromReturnsScopeLimitedToInheritanceScopeOfGivenAncestorTypeParameter() {
-                IScope actual = scope.InheritedFrom<TestType>();
-                VerifyInheritanceScope<TestType>(scope, actual);
+            public void GenericInheritedFromReturnsMembersInheritedFromGivenType() {
+                IMembers actual = members.InheritedFrom<TestType>();
+                VerifyInheritedMembers<TestType>(members, actual);
             }
 
-            static void VerifyInheritanceScope<TAncestorType>(IScope expected, IScope actual) {
-                InheritanceScope inheritanceScope = VerifyInheritanceScope(typeof(TAncestorType), actual);
-                Assert.Same(expected, inheritanceScope.Source);
+            static void VerifyInheritedMembers<TAncestorType>(IMembers expected, IMembers actual) {
+                InheritedMembers inheritedMembers = VerifyInheritedMembers(typeof(TAncestorType), actual);
+                Assert.Same(expected, inheritedMembers.Source);
             }
         }
 
@@ -37,28 +37,28 @@ namespace Inspector
             readonly object instance = new object();
 
             [Fact]
-            public void InheritedReturnsInstanceScopeLimitedToInheritanceScopeOfBaseType() {
+            public void InheritedReturnsInstanceMembersInheritedFromBaseType() {
                 var instance = new TestType();
-                IScope actual = instance.Inherited();
-                VerifyInstanceScope<BaseType>(instance, actual);
+                IMembers actual = instance.Inherited();
+                VerifyInheritedMembers<BaseType>(instance, actual);
             }
 
             [Fact]
-            public void InheritedFromReturnsInstanceScopeLimitedToInheritanceScopeOfGivenAncestorType() {
-                IScope actual = instance.InheritedFrom(typeof(TestType));
-                VerifyInstanceScope<TestType>(instance, actual);
+            public void InheritedFromReturnsInstanceMembersInheritedFromGivenType() {
+                IMembers actual = instance.InheritedFrom(typeof(TestType));
+                VerifyInheritedMembers<TestType>(instance, actual);
             }
 
             [Fact]
-            public void InheritedFromReturnsInstanceScopeLimitedToInheritanceScopeOfGivenAncestorTypeParameter() {
-                IScope actual = instance.InheritedFrom<TestType>();
-                VerifyInstanceScope<TestType>(instance, actual);
+            public void GenericInheritedFromReturnsInstanceMembersInheritedFromGivenType() {
+                IMembers actual = instance.InheritedFrom<TestType>();
+                VerifyInheritedMembers<TestType>(instance, actual);
             }
 
-            static void VerifyInstanceScope<TAncestorType>(object instance, IScope actual) {
-                InheritanceScope inheritanceScope = VerifyInheritanceScope(typeof(TAncestorType), actual);
-                var instanceScope = Assert.IsType<InstanceScope>(inheritanceScope.Source);
-                Assert.Same(instance, instanceScope.Instance);
+            static void VerifyInheritedMembers<TAncestorType>(object instance, IMembers actual) {
+                InheritedMembers inheritedMembers = VerifyInheritedMembers(typeof(TAncestorType), actual);
+                var instanceMembers = Assert.IsType<InstanceMembers>(inheritedMembers.Source);
+                Assert.Same(instance, instanceMembers.Instance);
             }
         }
 
@@ -68,34 +68,34 @@ namespace Inspector
             readonly Type type = Type();
 
             [Fact]
-            public void InheritedReturnsStaticScopeLimitedToInheritanceScopeOfBaseType() {
-                IScope actual = typeof(TestType).Inherited();
-                VerifyStaticScope<BaseType>(typeof(TestType), actual);
+            public void InheritedReturnsStaticMembersInheritedFromBaseType() {
+                IMembers actual = typeof(TestType).Inherited();
+                VerifyInheritedMembers<BaseType>(typeof(TestType), actual);
             }
 
             [Fact]
-            public void InheritedFromReturnsStaticScopeLimitedToInheritanceScopeOfGivenAcestorType() {
-                IScope actual = type.InheritedFrom(typeof(TestType));
-                VerifyStaticScope<TestType>(type, actual);
+            public void InheritedFromReturnsStaticMembersInheritedFromGivenType() {
+                IMembers actual = type.InheritedFrom(typeof(TestType));
+                VerifyInheritedMembers<TestType>(type, actual);
             }
 
             [Fact]
-            public void InheritedFromReturnsStaticScopeLimitedToInheritanceScopeOfGivenAncestorTypeParameter() {
-                IScope actual = type.InheritedFrom<TestType>();
-                VerifyStaticScope<TestType>(type, actual);
+            public void GenericInheritedFromReturnsStaticMembersInheritedFromGivenType() {
+                IMembers actual = type.InheritedFrom<TestType>();
+                VerifyInheritedMembers<TestType>(type, actual);
             }
 
-            static void VerifyStaticScope<TDeclaringType>(Type staticType, IScope actual) {
-                InheritanceScope inheritanceScope = VerifyInheritanceScope(typeof(TDeclaringType), actual);
-                var staticScope = Assert.IsType<StaticScope>(inheritanceScope.Source);
-                Assert.Equal(staticType, staticScope.Type);
+            static void VerifyInheritedMembers<TDeclaringType>(Type staticType, IMembers actual) {
+                InheritedMembers inheritedMembers = VerifyInheritedMembers(typeof(TDeclaringType), actual);
+                var staticMembers = Assert.IsType<StaticMembers>(inheritedMembers.Source);
+                Assert.Equal(staticType, staticMembers.Type);
             }
         }
 
-        static InheritanceScope VerifyInheritanceScope(Type ancestorType, IScope actual) {
-            var inheritanceScope = Assert.IsType<InheritanceScope>(actual);
-            Assert.Equal(ancestorType, inheritanceScope.AncestorType);
-            return inheritanceScope;
+        static InheritedMembers VerifyInheritedMembers(Type ancestorType, IMembers actual) {
+            var inheritedMembers = Assert.IsType<InheritedMembers>(actual);
+            Assert.Equal(ancestorType, inheritedMembers.AncestorType);
+            return inheritedMembers;
         }
 
         class BaseType { }

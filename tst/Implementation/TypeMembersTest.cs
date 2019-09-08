@@ -6,14 +6,14 @@ using Xunit;
 
 namespace Inspector.Implementation
 {
-    public class TypeScopeTest
+    public class TypeMembersTest
     {
         class TestType { }
 
-        public class Constructors: TypeScopeTest
+        public class Constructors: TypeMembersTest
         {
             [Theory, MemberData(nameof(ConstructorData))]
-            internal void ReturnsConstructorsOfGivenTypeOrInstance(IScope sut, Type type, object instance) {
+            internal void ReturnsConstructorsOfGivenTypeOrInstance(IMembers sut, Type type, object instance) {
                 var members = Assert.IsType<Members<ConstructorInfo, Constructor>>(sut.Constructors());
 
                 Assert.Same(type, members.Type);
@@ -25,15 +25,15 @@ namespace Inspector.Implementation
 
             public static IEnumerable<object[]> ConstructorData() {
                 var instance = new TestType();
-                yield return new object[] { Substitute.ForPartsOf<TypeScope>(instance), instance.GetType(), instance };
-                yield return new object[] { Substitute.ForPartsOf<TypeScope>(typeof(TestType)), typeof(TestType), null };
+                yield return new object[] { Substitute.ForPartsOf<TypeMembers>(instance), instance.GetType(), instance };
+                yield return new object[] { Substitute.ForPartsOf<TypeMembers>(typeof(TestType)), typeof(TestType), null };
             }
         }
 
-        public class Events: TypeScopeTest
+        public class Events: TypeMembersTest
         {
             [Theory, MemberData(nameof(MemberData))]
-            internal void ReturnsEventsOfGivenTypeOrInstance(IScope sut, Type type, object instance, Lifetime lifetime) {
+            internal void ReturnsEventsOfGivenTypeOrInstance(IMembers sut, Type type, object instance, Lifetime lifetime) {
                 var members = Assert.IsType<Members<EventInfo, Event>>(sut.Events());
 
                 Assert.Same(type, members.Type);
@@ -44,10 +44,10 @@ namespace Inspector.Implementation
             }
         }
 
-        public class Fields: TypeScopeTest
+        public class Fields: TypeMembersTest
         {
             [Theory, MemberData(nameof(MemberData))]
-            internal void ReturnsFieldsOfGivenTypeOrInstance(IScope sut, Type type, object instance, Lifetime lifetime) {
+            internal void ReturnsFieldsOfGivenTypeOrInstance(IMembers sut, Type type, object instance, Lifetime lifetime) {
                 var members = Assert.IsType<Members<FieldInfo, Field>>(sut.Fields());
 
                 Assert.Same(type, members.Type);
@@ -58,10 +58,10 @@ namespace Inspector.Implementation
             }
         }
 
-        public class Methods: TypeScopeTest
+        public class Methods: TypeMembersTest
         {
             [Theory, MemberData(nameof(MemberData))]
-            internal void ReturnsMethodsOfGivenTypeOrInstance(IScope sut, Type type, object instance, Lifetime lifetime) {
+            internal void ReturnsMethodsOfGivenTypeOrInstance(IMembers sut, Type type, object instance, Lifetime lifetime) {
                 var members = Assert.IsType<Members<MethodInfo, Method>>(sut.Methods());
 
                 Assert.Same(type, members.Type);
@@ -72,10 +72,10 @@ namespace Inspector.Implementation
             }
         }
 
-        public class Properties: TypeScopeTest
+        public class Properties: TypeMembersTest
         {
             [Theory, MemberData(nameof(MemberData))]
-            internal void ReturnsPropertiesOfGivenTypeOrInstance(IScope sut, Type type, object instance, Lifetime lifetime) {
+            internal void ReturnsPropertiesOfGivenTypeOrInstance(IMembers sut, Type type, object instance, Lifetime lifetime) {
                 var members = Assert.IsType<Members<PropertyInfo, Property>>(sut.Properties());
 
                 Assert.Same(type, members.Type);
@@ -88,8 +88,8 @@ namespace Inspector.Implementation
 
         public static IEnumerable<object[]> MemberData() {
             var instance = new TestType();
-            yield return new object[] { Substitute.ForPartsOf<TypeScope>(instance), instance.GetType(), instance, Lifetime.Instance };
-            yield return new object[] { Substitute.ForPartsOf<TypeScope>(typeof(TestType)), typeof(TestType), null, Lifetime.Static };
+            yield return new object[] { Substitute.ForPartsOf<TypeMembers>(instance), instance.GetType(), instance, Lifetime.Instance };
+            yield return new object[] { Substitute.ForPartsOf<TypeMembers>(typeof(TestType)), typeof(TestType), null, Lifetime.Static };
         }
     }
 }

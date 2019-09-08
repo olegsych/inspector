@@ -5,76 +5,76 @@ using Inspector.Implementation;
 namespace Inspector
 {
     /// <summary>
-    /// Extension methods for selecting events from a given scope.
+    /// Extension methods for selecting events.
     /// </summary>
     public static class EventExtensions
     {
-        #region IScope
+        #region IMembers
 
-        public static Event Event(this IScope scope) =>
-            scope.Events().Single();
+        public static Event Event(this IMembers members) =>
+            members.Events().Single();
 
-        public static Event Event(this IScope scope, string eventName) =>
-            new MemberNameFilter<Event, EventInfo>(scope.Events(), eventName).Single();
+        public static Event Event(this IMembers members, string eventName) =>
+            new MemberNameFilter<Event, EventInfo>(members.Events(), eventName).Single();
 
-        public static Event Event(this IScope scope, Type handlerType) =>
-            new EventTypeFilter(scope.Events(), handlerType).Single();
+        public static Event Event(this IMembers members, Type handlerType) =>
+            new EventTypeFilter(members.Events(), handlerType).Single();
 
-        public static Event Event(this IScope scope, Type handlerType, string eventName) {
-            var typed = new EventTypeFilter(scope.Events(), handlerType);
+        public static Event Event(this IMembers members, Type handlerType, string eventName) {
+            var typed = new EventTypeFilter(members.Events(), handlerType);
             var named = new MemberNameFilter<Event, EventInfo>(typed, eventName);
             return named.Single();
         }
 
-        public static Event<T> Event<T>(this IScope scope) where T : Delegate =>
-            new Event<T>(scope.Event(typeof(T)));
+        public static Event<T> Event<T>(this IMembers members) where T : Delegate =>
+            new Event<T>(members.Event(typeof(T)));
 
-        public static Event<T> Event<T>(this IScope scope, string eventName) where T : Delegate =>
-            new Event<T>(scope.Event(typeof(T), eventName));
+        public static Event<T> Event<T>(this IMembers members, string eventName) where T : Delegate =>
+            new Event<T>(members.Event(typeof(T), eventName));
 
         #endregion
 
         #region Object
 
         public static Event Event(this object instance) =>
-            new InstanceScope(instance).Event();
+            new InstanceMembers(instance).Event();
 
         public static Event Event(this object instance, string eventName) =>
-            new InstanceScope(instance).Event(eventName);
+            new InstanceMembers(instance).Event(eventName);
 
         public static Event Event(this object instance, Type handlerType) =>
-            new InstanceScope(instance).Event(handlerType);
+            new InstanceMembers(instance).Event(handlerType);
 
         public static Event Event(this object instance, Type handlerType, string eventName) =>
-            new InstanceScope(instance).Event(handlerType, eventName);
+            new InstanceMembers(instance).Event(handlerType, eventName);
 
         public static Event<T> Event<T>(this object instance) where T : Delegate =>
-            new InstanceScope(instance).Event<T>();
+            new InstanceMembers(instance).Event<T>();
 
         public static Event<T> Event<T>(this object instance, string eventName) where T : Delegate =>
-            new InstanceScope(instance).Event<T>(eventName);
+            new InstanceMembers(instance).Event<T>(eventName);
 
         #endregion
 
         #region Type
 
         public static Event Event(this Type type) =>
-            new StaticScope(type).Event();
+            new StaticMembers(type).Event();
 
         public static Event Event(this Type type, string eventName) =>
-            new StaticScope(type).Event(eventName);
+            new StaticMembers(type).Event(eventName);
 
         public static Event Event(this Type type, Type handlerType) =>
-            new StaticScope(type).Event(handlerType);
+            new StaticMembers(type).Event(handlerType);
 
         public static Event Event(this Type type, Type handlerType, string eventName) =>
-            new StaticScope(type).Event(handlerType, eventName);
+            new StaticMembers(type).Event(handlerType, eventName);
 
         public static Event<T> Event<T>(this Type type) where T : Delegate =>
-            new StaticScope(type).Event<T>();
+            new StaticMembers(type).Event<T>();
 
         public static Event<T> Event<T>(this Type type, string eventName) where T : Delegate =>
-            new StaticScope(type).Event<T>(eventName);
+            new StaticMembers(type).Event<T>(eventName);
 
         #endregion
     }

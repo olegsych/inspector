@@ -36,33 +36,33 @@ namespace Inspector
             Assert.NotNull(generic.Invoke);
         }
 
-        public class IScopeExtension: ConstructorExtensionsTest
+        public class IMembersExtension: ConstructorExtensionsTest
         {
             // Method parameters
-            readonly IScope scope = Substitute.For<IScope>();
+            readonly IMembers members = Substitute.For<IMembers>();
 
             // Test fixture
             readonly IEnumerable<Constructor> constructors = Substitute.For<IEnumerable<Constructor>>();
 
-            public IScopeExtension() =>
-                scope.Constructors().Returns(constructors);
+            public IMembersExtension() =>
+                members.Constructors().Returns(constructors);
 
             [Fact]
-            public void ReturnsSingleConstructorInGivenScope() {
-                Assert.Same(selected, scope.Constructor());
+            public void ReturnsSingleConstructor() {
+                Assert.Same(selected, members.Constructor());
                 Assert.Same(constructors, selection);
             }
 
             [Fact]
             public void ReturnsConstructorWithGivenDelegateType() {
-                Assert.Same(selected, scope.Constructor(delegateType));
+                Assert.Same(selected, members.Constructor(delegateType));
                 ConstructorTypeFilter filter = VerifyFilter(selection, delegateType);
                 Assert.Same(constructors, filter.Source);
             }
 
             [Fact]
             public void ReturnsGenericConstructorWithGivenSignature() {
-                Constructor<TestDelegate> generic = scope.Constructor<TestDelegate>();
+                Constructor<TestDelegate> generic = members.Constructor<TestDelegate>();
 
                 VerifyGenericConstructor(selected, generic);
                 ConstructorTypeFilter typeFilter = VerifyFilter(selection, typeof(TestDelegate));
@@ -75,16 +75,16 @@ namespace Inspector
             [Fact]
             public void ReturnsSingleConstructorDeclaredByTypeOfGivenInstance() {
                 Assert.Same(selected, instance.Constructor());
-                var declared = Assert.IsType<DeclaredMembers<Constructor, ConstructorInfo>>(selection);
+                var declared = Assert.IsType<DeclarationFilter<Constructor, ConstructorInfo>>(selection);
                 Assert.Equal(instance.GetType(), declared.DeclaringType);
-                VerifyScope(declared.Source, instance);
+                VerifyMembers(declared.Source, instance);
             }
 
             [Fact]
             public void ReturnsConstructorWithGivenDelegateType() {
                 Assert.Same(selected, instance.Constructor(delegateType));
                 ConstructorTypeFilter filter = VerifyFilter(selection, delegateType);
-                VerifyScope(filter.Source, instance);
+                VerifyMembers(filter.Source, instance);
             }
 
             [Fact]
@@ -93,12 +93,12 @@ namespace Inspector
 
                 VerifyGenericConstructor(selected, generic);
                 ConstructorTypeFilter typed = VerifyFilter(selection, typeof(TestDelegate));
-                VerifyScope(typed.Source, instance);
+                VerifyMembers(typed.Source, instance);
             }
 
-            static void VerifyScope(IEnumerable<Constructor> filter, object instance) {
-                var scope = Assert.IsType<Members<ConstructorInfo, Constructor>>(filter);
-                Assert.Same(instance, scope.Instance);
+            static void VerifyMembers(IEnumerable<Constructor> filter, object instance) {
+                var members = Assert.IsType<Members<ConstructorInfo, Constructor>>(filter);
+                Assert.Same(instance, members.Instance);
             }
         }
 
@@ -113,11 +113,7 @@ namespace Inspector
             [Fact]
             public void ReturnsSingleConstructorOfGivenType() {
                 Assert.Same(selected, type.Constructor());
-                VerifyScope(selection, type);
-            }
-
-            static void VerifyScope(IEnumerable<Constructor> filter, Type type) {
-                var members = Assert.IsType<Members<ConstructorInfo, Constructor>>(filter);
+                var members = Assert.IsType<Members<ConstructorInfo, Constructor>>(selection);
                 Assert.Same(type, members.Type);
             }
         }

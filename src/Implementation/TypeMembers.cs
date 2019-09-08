@@ -4,12 +4,12 @@ using System.Reflection;
 
 namespace Inspector.Implementation
 {
-    abstract class TypeScope: IScope
+    abstract class TypeMembers: IMembers
     {
-        protected TypeScope(Type type) =>
+        protected TypeMembers(Type type) =>
             Type = type ?? throw new ArgumentNullException(nameof(type));
 
-        protected TypeScope(object instance) {
+        protected TypeMembers(object instance) {
             Instance = instance ?? throw new ArgumentNullException(nameof(instance));
             Type = instance.GetType();
         }

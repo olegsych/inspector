@@ -8,39 +8,39 @@ namespace Inspector
     /// </summary>
     public static class InheritanceExtensions
     {
-        #region IScope
+        #region IMembers
 
-        public static IScope InheritedFrom(this IScope scope, Type ancestorType) =>
-            new InheritanceScope(scope, ancestorType);
+        public static IMembers InheritedFrom(this IMembers members, Type ancestorType) =>
+            new InheritedMembers(members, ancestorType);
 
-        public static IScope InheritedFrom<T>(this IScope scope) =>
-            new InheritanceScope(scope, typeof(T));
+        public static IMembers InheritedFrom<T>(this IMembers members) =>
+            new InheritedMembers(members, typeof(T));
 
         #endregion
 
         #region Object
 
-        public static IScope Inherited(this object instance) =>
-            new InstanceScope(instance).InheritedFrom(instance.GetType().BaseType);
+        public static IMembers Inherited(this object instance) =>
+            new InstanceMembers(instance).InheritedFrom(instance.GetType().BaseType);
 
-        public static IScope InheritedFrom(this object instance, Type ancestorType) =>
-            new InstanceScope(instance).InheritedFrom(ancestorType);
+        public static IMembers InheritedFrom(this object instance, Type ancestorType) =>
+            new InstanceMembers(instance).InheritedFrom(ancestorType);
 
-        public static IScope InheritedFrom<T>(this object instance) =>
-            new InstanceScope(instance).InheritedFrom<T>();
+        public static IMembers InheritedFrom<T>(this object instance) =>
+            new InstanceMembers(instance).InheritedFrom<T>();
 
         #endregion
 
         #region Type
 
-        public static IScope Inherited(this Type type) =>
-            new StaticScope(type).InheritedFrom(type.BaseType);
+        public static IMembers Inherited(this Type type) =>
+            new StaticMembers(type).InheritedFrom(type.BaseType);
 
-        public static IScope InheritedFrom(this Type type, Type ancestorType) =>
-            new StaticScope(type).InheritedFrom(ancestorType);
+        public static IMembers InheritedFrom(this Type type, Type ancestorType) =>
+            new StaticMembers(type).InheritedFrom(ancestorType);
 
-        public static IScope InheritedFrom<T>(this Type type) =>
-            new StaticScope(type).InheritedFrom<T>();
+        public static IMembers InheritedFrom<T>(this Type type) =>
+            new StaticMembers(type).InheritedFrom<T>();
 
         #endregion
     }

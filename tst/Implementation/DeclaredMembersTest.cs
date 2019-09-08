@@ -10,59 +10,117 @@ namespace Inspector.Implementation
 {
     public class DeclaredMembersTest
     {
-        readonly Filter<Member<MemberInfo>> sut;
+        readonly IMembers sut;
 
         // Constructor parameters
-        readonly IEnumerable<Member<MemberInfo>> source = Substitute.For<IEnumerable<Member<MemberInfo>>>();
-        readonly Type declaringType = typeof(ExpectedType);
+        readonly IMembers source = Substitute.For<IMembers>();
+        readonly Type declaringType = Type();
 
         public DeclaredMembersTest() =>
-            sut = new DeclaredMembers<Member<MemberInfo>, MemberInfo>(source, declaringType);
+            sut = new DeclaredMembers(source, declaringType);
 
-        public class Constructor: DeclaredMembersTest
+        public class Ctor: DeclaredMembersTest
         {
             [Fact]
-            public void PassesSourceToBase() =>
-                Assert.Same(source, sut.Source);
+            public void ThrowsDescriptiveExceptionWhenSourceIsNull() {
+                var thrown = Assert.Throws<ArgumentNullException>(() => new DeclaredMembers(null, declaringType));
+                Assert.Equal("source", thrown.ParamName);
+            }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenDeclaringTypeIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new DeclaredMembers<Member<MemberInfo>, MemberInfo>(source, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new DeclaredMembers(source, null));
                 Assert.Equal("declaringType", thrown.ParamName);
             }
+        }
+
+        public class Source: DeclaredMembersTest
+        {
+            [Fact]
+            public void ImplementsIDecoratorAndReturnsValueGivenToConstructor() =>
+                Assert.Same(source, ((IDecorator<IMembers>)sut).Source);
         }
 
         public class DeclaringType: DeclaredMembersTest
         {
             [Fact]
-            public void IsInitializedByConstructor() =>
-                Assert.Equal(declaringType, ((DeclaredMembers<Member<MemberInfo>, MemberInfo>)sut).DeclaringType);
+            public void IsAssignedByConstructor() =>
+                Assert.Same(declaringType, ((DeclaredMembers)sut).DeclaringType);
         }
 
-        public class GetEnumerator: DeclaredMembersTest
+        public class Constructors: DeclaredMembersTest
         {
             [Fact]
-            public void ReturnsMembersWithMatchingDeclaringType() {
-                Member<MemberInfo>[] expected = new[] { Member(declaringType), Member(declaringType) };
-                IEnumerable<Member<MemberInfo>> mixed = new[] { Member(), expected[0], Member(), expected[1], Member() };
-                ConfiguredCall arrange = source.GetEnumerator().Returns(mixed.GetEnumerator());
-                Assert.Equal(expected, sut);
-            }
+            public void ReturnsConstructorsWithMatchingDeclaringType() {
+                var allConstructors = Substitute.For<IEnumerable<Constructor>>();
+                ConfiguredCall arrange = source.Constructors().Returns(allConstructors);
 
-            class TestMember: Member<MemberInfo>
-            {
-                public TestMember(MemberInfo info) : base(info, null) { }
-                public override bool IsStatic => true;
-            }
+                IEnumerable<Constructor> actual = sut.Constructors();
 
-            static Member<MemberInfo> Member(Type declaringType = default) {
-                MemberInfo info = Substitute.For<MemberInfo>();
-                ConfiguredCall arrange = info.DeclaringType.Returns(declaringType ?? typeof(UnexpectedType));
-                return new TestMember(info);
+                var declaredConstructors = Assert.IsType<DeclarationFilter<Constructor, ConstructorInfo>>(actual);
+                Assert.Equal(declaringType, declaredConstructors.DeclaringType);
+                Assert.Same(allConstructors, declaredConstructors.Source);
             }
         }
 
-        class ExpectedType { }
-        class UnexpectedType { }
+        public class Events: DeclaredMembersTest
+        {
+            [Fact]
+            public void ReturnsEventsWithMatchingDeclaringType() {
+                var allEvents = Substitute.For<IEnumerable<Event>>();
+                ConfiguredCall arrange = source.Events().Returns(allEvents);
+
+                IEnumerable<Event> actual = sut.Events();
+
+                var declaredEvents = Assert.IsType<DeclarationFilter<Event, EventInfo>>(actual);
+                Assert.Equal(declaringType, declaredEvents.DeclaringType);
+                Assert.Same(allEvents, declaredEvents.Source);
+            }
+        }
+
+        public class Fields: DeclaredMembersTest
+        {
+            [Fact]
+            public void ReturnsFieldsWithMatchingDeclaringType() {
+                var allFields = Substitute.For<IEnumerable<Field>>();
+                ConfiguredCall arrange = source.Fields().Returns(allFields);
+
+                IEnumerable<Field> actual = sut.Fields();
+
+                var declaredFields = Assert.IsType<DeclarationFilter<Field, FieldInfo>>(actual);
+                Assert.Equal(declaringType, declaredFields.DeclaringType);
+                Assert.Same(allFields, declaredFields.Source);
+            }
+        }
+
+        public class Methods: DeclaredMembersTest
+        {
+            [Fact]
+            public void ReturnsMethodsWithMatchingDeclaringType() {
+                var allMethods = Substitute.For<IEnumerable<Method>>();
+                ConfiguredCall arrange = source.Methods().Returns(allMethods);
+
+                IEnumerable<Method> actual = sut.Methods();
+
+                var declaredMethods = Assert.IsType<DeclarationFilter<Method, MethodInfo>>(actual);
+                Assert.Equal(declaringType, declaredMethods.DeclaringType);
+                Assert.Same(allMethods, declaredMethods.Source);
+            }
+        }
+
+        public class Properties: DeclaredMembersTest
+        {
+            [Fact]
+            public void ReturnsPropertiesWithMatchingDeclaringType() {
+                var allProperties = Substitute.For<IEnumerable<Property>>();
+                ConfiguredCall arrange = source.Properties().Returns(allProperties);
+
+                IEnumerable<Property> actual = sut.Properties();
+
+                var declaredProperties = Assert.IsType<DeclarationFilter<Property, PropertyInfo>>(actual);
+                Assert.Equal(declaringType, declaredProperties.DeclaringType);
+                Assert.Same(allProperties, declaredProperties.Source);
+            }
+        }
     }
 }

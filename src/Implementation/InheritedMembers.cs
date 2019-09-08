@@ -4,14 +4,14 @@ using System.Linq;
 
 namespace Inspector.Implementation
 {
-    sealed class InheritanceScope: IScope, IDecorator<IScope>
+    sealed class InheritedMembers: IMembers, IDecorator<IMembers>
     {
-        public InheritanceScope(IScope source, Type ancestorType) {
+        public InheritedMembers(IMembers source, Type ancestorType) {
             Source = source ?? throw new ArgumentNullException(nameof(source));
             AncestorType = ancestorType ?? throw new ArgumentNullException(nameof(ancestorType));
         }
 
-        public IScope Source { get; }
+        public IMembers Source { get; }
 
         public Type AncestorType { get; }
 

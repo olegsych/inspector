@@ -8,51 +8,51 @@ namespace Inspector
     /// </summary>
     public static class AccessibiltyExtensions
     {
-        #region IScope
+        #region IMembers
 
-        public static IScope Internal(this IScope scope) =>
-            new AccessibilityScope(scope, Accessibility.Internal);
+        public static IMembers Internal(this IMembers members) =>
+            new AccessibleMembers(members, Accessibility.Internal);
 
-        public static IScope Private(this IScope scope) =>
-            new AccessibilityScope(scope, Accessibility.Private);
+        public static IMembers Private(this IMembers members) =>
+            new AccessibleMembers(members, Accessibility.Private);
 
-        public static IScope Protected(this IScope scope) =>
-            new AccessibilityScope(scope, Accessibility.Protected);
+        public static IMembers Protected(this IMembers members) =>
+            new AccessibleMembers(members, Accessibility.Protected);
 
-        public static IScope Public(this IScope scope) =>
-            new AccessibilityScope(scope, Accessibility.Public);
+        public static IMembers Public(this IMembers members) =>
+            new AccessibleMembers(members, Accessibility.Public);
 
         #endregion
 
         #region Object
 
-        public static IScope Internal(this object instance) =>
-            new InstanceScope(instance).Internal();
+        public static IMembers Internal(this object instance) =>
+            new InstanceMembers(instance).Internal();
 
-        public static IScope Private(this object instance) =>
-            new InstanceScope(instance).Private();
+        public static IMembers Private(this object instance) =>
+            new InstanceMembers(instance).Private();
 
-        public static IScope Protected(this object instance) =>
-            new InstanceScope(instance).Protected();
+        public static IMembers Protected(this object instance) =>
+            new InstanceMembers(instance).Protected();
 
-        public static IScope Public(this object instance) =>
-            new InstanceScope(instance).Public();
+        public static IMembers Public(this object instance) =>
+            new InstanceMembers(instance).Public();
 
         #endregion
 
         #region Type
 
-        public static IScope Internal(this Type type) =>
-            new StaticScope(type).Internal();
+        public static IMembers Internal(this Type type) =>
+            new StaticMembers(type).Internal();
 
-        public static IScope Private(this Type type) =>
-            new StaticScope(type).Private();
+        public static IMembers Private(this Type type) =>
+            new StaticMembers(type).Private();
 
-        public static IScope Protected(this Type type) =>
-            new StaticScope(type).Protected();
+        public static IMembers Protected(this Type type) =>
+            new StaticMembers(type).Protected();
 
-        public static IScope Public(this Type type) =>
-            new StaticScope(type).Public();
+        public static IMembers Public(this Type type) =>
+            new StaticMembers(type).Public();
 
         #endregion
     }

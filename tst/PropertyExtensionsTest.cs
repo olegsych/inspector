@@ -51,40 +51,40 @@ namespace Inspector
 
         protected class PropertyValue { }
 
-        public class IScopeExtension: PropertyExtensionsTest
+        public class IMembersExtensions: PropertyExtensionsTest
         {
             // Method parameters
-            readonly IScope scope = Substitute.For<IScope>();
+            readonly IMembers members = Substitute.For<IMembers>();
 
             // Arrange
             readonly IEnumerable<Property> properties = Substitute.For<IEnumerable<Property>>();
 
-            public IScopeExtension() =>
-                scope.Properties().Returns(properties);
+            public IMembersExtensions() =>
+                members.Properties().Returns(properties);
 
             [Fact]
-            public void ReturnsSinglePropertyInGivenScope() {
-                Assert.Same(selected, scope.Property());
+            public void ReturnsSingleProperty() {
+                Assert.Same(selected, members.Property());
                 Assert.Same(properties, selection);
             }
 
             [Fact]
             public void ReturnsPropertyWithGivenName() {
-                Assert.Same(selected, scope.Property(propertyName));
+                Assert.Same(selected, members.Property(propertyName));
                 MemberNameFilter<Property, PropertyInfo> filter = VerifyFilter(selection, propertyName);
                 Assert.Same(properties, filter.Source);
             }
 
             [Fact]
             public void ReturnsPropertyWithGivenType() {
-                Assert.Same(selected, scope.Property(propertyType));
+                Assert.Same(selected, members.Property(propertyType));
                 PropertyTypeFilter filter = VerifyFilter(selection, propertyType);
                 Assert.Same(properties, filter.Source);
             }
 
             [Fact]
             public void ReturnsPropertyWithGivenTypeAndName() {
-                Assert.Same(selected, scope.Property(propertyType, propertyName));
+                Assert.Same(selected, members.Property(propertyType, propertyName));
                 MemberNameFilter<Property, PropertyInfo> nameFilter = VerifyFilter(selection, propertyName);
                 PropertyTypeFilter typeFilter = VerifyFilter(nameFilter.Source, propertyType);
                 Assert.Same(properties, typeFilter.Source);
@@ -92,7 +92,7 @@ namespace Inspector
 
             [Fact]
             public void ReturnsGenericPropertyWithGivenType() {
-                Property<PropertyValue> generic = scope.Property<PropertyValue>();
+                Property<PropertyValue> generic = members.Property<PropertyValue>();
                 VerifyGenericProperty(selected, generic);
                 PropertyTypeFilter typeFilter = VerifyFilter(selection, typeof(PropertyValue));
                 Assert.Same(properties, typeFilter.Source);
@@ -100,7 +100,7 @@ namespace Inspector
 
             [Fact]
             public void ReturnsGenericPropertyWithGivenTypeAndName() {
-                Property<PropertyValue> generic = scope.Property<PropertyValue>(propertyName);
+                Property<PropertyValue> generic = members.Property<PropertyValue>(propertyName);
                 VerifyGenericProperty(selected, generic);
                 MemberNameFilter<Property, PropertyInfo> nameFilter = VerifyFilter(selection, propertyName);
                 PropertyTypeFilter typeFilter = VerifyFilter(nameFilter.Source, propertyType);
@@ -114,7 +114,7 @@ namespace Inspector
             public void ReturnsSinglePropertyInGivenType() {
                 Assert.Same(selected, instance.Property());
 
-                VerifyScope(selection, instance);
+                VerifyMembers(selection, instance);
             }
 
             [Fact]
@@ -122,7 +122,7 @@ namespace Inspector
                 Assert.Same(selected, instance.Property(propertyName));
 
                 MemberNameFilter<Property, PropertyInfo> named = VerifyFilter(selection, propertyName);
-                VerifyScope(named.Source, instance);
+                VerifyMembers(named.Source, instance);
             }
 
             [Fact]
@@ -130,7 +130,7 @@ namespace Inspector
                 Assert.Same(selected, instance.Property(propertyType));
 
                 PropertyTypeFilter named = VerifyFilter(selection, propertyType);
-                VerifyScope(named.Source, instance);
+                VerifyMembers(named.Source, instance);
             }
 
             [Fact]
@@ -139,7 +139,7 @@ namespace Inspector
 
                 MemberNameFilter<Property, PropertyInfo> named = VerifyFilter(selection, propertyName);
                 PropertyTypeFilter typed = VerifyFilter(named.Source, propertyType);
-                VerifyScope(typed.Source, instance);
+                VerifyMembers(typed.Source, instance);
             }
 
             [Fact]
@@ -148,7 +148,7 @@ namespace Inspector
 
                 VerifyGenericProperty(selected, generic);
                 PropertyTypeFilter typed = VerifyFilter(selection, typeof(PropertyValue));
-                VerifyScope(typed.Source, instance);
+                VerifyMembers(typed.Source, instance);
             }
 
             [Fact]
@@ -158,10 +158,10 @@ namespace Inspector
                 VerifyGenericProperty(selected, generic);
                 MemberNameFilter<Property, PropertyInfo> named = VerifyFilter(selection, propertyName);
                 PropertyTypeFilter typed = VerifyFilter(named.Source, typeof(PropertyValue));
-                VerifyScope(typed.Source, instance);
+                VerifyMembers(typed.Source, instance);
             }
 
-            static void VerifyScope(IEnumerable<Property> filter, object instance) {
+            static void VerifyMembers(IEnumerable<Property> filter, object instance) {
                 var properties = Assert.IsType<Members<PropertyInfo, Property>>(filter);
                 Assert.Same(instance, properties.Instance);
             }
@@ -176,7 +176,7 @@ namespace Inspector
             public void ReturnsSinglePropertyInGivenType() {
                 Assert.Same(selected, testType.Property());
 
-                VerifyScope(selection, testType);
+                VerifyMembers(selection, testType);
             }
 
             [Fact]
@@ -184,7 +184,7 @@ namespace Inspector
                 Assert.Same(selected, testType.Property(propertyName));
 
                 MemberNameFilter<Property, PropertyInfo> named = VerifyFilter(selection, propertyName);
-                VerifyScope(named.Source, testType);
+                VerifyMembers(named.Source, testType);
             }
 
             [Fact]
@@ -192,7 +192,7 @@ namespace Inspector
                 Assert.Same(selected, testType.Property(propertyType));
 
                 PropertyTypeFilter typed = VerifyFilter(selection, propertyType);
-                VerifyScope(typed.Source, testType);
+                VerifyMembers(typed.Source, testType);
             }
 
             [Fact]
@@ -201,7 +201,7 @@ namespace Inspector
 
                 MemberNameFilter<Property, PropertyInfo> named = VerifyFilter(selection, propertyName);
                 PropertyTypeFilter typed = VerifyFilter(named.Source, propertyType);
-                VerifyScope(typed.Source, testType);
+                VerifyMembers(typed.Source, testType);
             }
 
             [Fact]
@@ -210,7 +210,7 @@ namespace Inspector
 
                 VerifyGenericProperty(selected, generic);
                 PropertyTypeFilter typed = VerifyFilter(selection, typeof(PropertyValue));
-                VerifyScope(typed.Source, testType);
+                VerifyMembers(typed.Source, testType);
             }
 
             [Fact]
@@ -220,10 +220,10 @@ namespace Inspector
                 VerifyGenericProperty(selected, generic);
                 MemberNameFilter<Property, PropertyInfo> named = VerifyFilter(selection, propertyName);
                 PropertyTypeFilter typed = VerifyFilter(named.Source, typeof(PropertyValue));
-                VerifyScope(typed.Source, testType);
+                VerifyMembers(typed.Source, testType);
             }
 
-            static void VerifyScope(IEnumerable<Property> selection, Type expected) {
+            static void VerifyMembers(IEnumerable<Property> selection, Type expected) {
                 var properties = Assert.IsType<Members<PropertyInfo, Property>>(selection);
                 Assert.Same(expected, properties.Type);
             }

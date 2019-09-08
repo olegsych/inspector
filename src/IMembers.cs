@@ -2,7 +2,10 @@ using System.Collections.Generic;
 
 namespace Inspector
 {
-    public interface IScope
+    /// <summary>
+    /// Provides access to members of an object type or instance.
+    /// </summary>
+    public interface IMembers
     {
         IEnumerable<Constructor> Constructors();
         IEnumerable<Event> Events();
