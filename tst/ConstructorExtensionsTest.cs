@@ -35,37 +35,5 @@ namespace Inspector
             Assert.Same(selected.Instance, generic.Instance);
             Assert.NotNull(generic.Invoke);
         }
-
-        public class ObjectExtension: ConstructorExtensionsTest
-        {
-            [Fact]
-            public void ReturnsSingleConstructorDeclaredByTypeOfGivenInstance() {
-                Assert.Same(selected, instance.Constructor());
-                var declared = Assert.IsType<DeclarationFilter<Constructor, ConstructorInfo>>(selection);
-                Assert.Equal(instance.GetType(), declared.DeclaringType);
-                VerifyMembers(declared.Source, instance);
-            }
-
-            [Fact]
-            public void ReturnsConstructorWithGivenDelegateType() {
-                Assert.Same(selected, instance.Constructor(delegateType));
-                ConstructorTypeFilter filter = VerifyFilter(selection, delegateType);
-                VerifyMembers(filter.Source, instance);
-            }
-
-            [Fact]
-            public void ReturnsGenericConstructorWithGivenSignature() {
-                Constructor<TestDelegate> generic = instance.Constructor<TestDelegate>();
-
-                VerifyGenericConstructor(selected, generic);
-                ConstructorTypeFilter typed = VerifyFilter(selection, typeof(TestDelegate));
-                VerifyMembers(typed.Source, instance);
-            }
-
-            static void VerifyMembers(IEnumerable<Constructor> filter, object instance) {
-                var members = Assert.IsType<Members<ConstructorInfo, Constructor>>(filter);
-                Assert.Same(instance, members.Instance);
-            }
-        }
     }
 }

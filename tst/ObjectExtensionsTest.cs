@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using Inspector.Implementation;
 using NSubstitute;
 using Xunit;
@@ -43,6 +45,40 @@ namespace Inspector
             }
         }
 
+        public class ConstructorMethod: ConstructorExtensionsTest
+        {
+            readonly object instance = new object();
+
+            [Fact]
+            public void ReturnsSingleConstructorDeclaredByTypeOfGivenInstance() {
+                Assert.Same(selected, instance.Constructor());
+                var declared = Assert.IsType<DeclarationFilter<Constructor, ConstructorInfo>>(selection);
+                Assert.Equal(instance.GetType(), declared.DeclaringType);
+                VerifyInstanceConstructors(declared.Source, instance);
+            }
+
+            [Fact]
+            public void ReturnsConstructorWithGivenDelegateType() {
+                Assert.Same(selected, instance.Constructor(delegateType));
+                ConstructorTypeFilter filter = VerifyFilter(selection, delegateType);
+                VerifyInstanceConstructors(filter.Source, instance);
+            }
+
+            [Fact]
+            public void ReturnsGenericConstructorWithGivenSignature() {
+                Constructor<TestDelegate> generic = instance.Constructor<TestDelegate>();
+
+                VerifyGenericConstructor(selected, generic);
+                ConstructorTypeFilter typed = VerifyFilter(selection, typeof(TestDelegate));
+                VerifyInstanceConstructors(typed.Source, instance);
+            }
+
+            static void VerifyInstanceConstructors(IEnumerable<Constructor> filter, object instance) {
+                var members = Assert.IsType<Members<ConstructorInfo, Constructor>>(filter);
+                Assert.Same(instance, members.Instance);
+            }
+        }
+
         public class DeclaredMethod: ObjectExtensionsTest
         {
             [Fact]
@@ -73,7 +109,7 @@ namespace Inspector
             class TestType { }
         }
 
-        static void VerifyInstanceMembers(object instance, IMembers actual) {
+        internal static void VerifyInstanceMembers(object instance, IMembers actual) {
             var instanceMembers = Assert.IsType<InstanceMembers>(actual);
             Assert.Same(instance, instanceMembers.Instance);
         }

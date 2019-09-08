@@ -8,6 +8,15 @@ namespace Inspector
     /// </summary>
     public static class ObjectExtensions
     {
+        public static Constructor Constructor(this object instance) =>
+            instance.Declared().Constructor(); // Declared only because at least one constructor is always inherited from Object
+
+        public static Constructor Constructor(this object instance, Type delegateType) =>
+            new InstanceMembers(instance).Constructor(delegateType);
+
+        public static Constructor<TSignature> Constructor<TSignature>(this object instance) where TSignature : Delegate =>
+            new InstanceMembers(instance).Constructor<TSignature>();
+
         public static IMembers Declared(this object instance) =>
             new InstanceMembers(instance).DeclaredBy(instance.GetType());
 
