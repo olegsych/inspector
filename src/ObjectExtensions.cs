@@ -4,12 +4,10 @@ using Inspector.Implementation;
 namespace Inspector
 {
     /// <summary>
-    /// Extension methods for filtering type members based on their <see cref="Accessibility"/>.
+    /// Extension methods for <see cref="object"/>.
     /// </summary>
-    public static class AccessibiltyExtensions
+    public static class ObjectExtensions
     {
-        #region Object
-
         public static IMembers Internal(this object instance) =>
             new InstanceMembers(instance).Internal();
 
@@ -21,7 +19,5 @@ namespace Inspector
 
         public static IMembers Public(this object instance) =>
             new InstanceMembers(instance).Public();
-
-        #endregion
     }
 }

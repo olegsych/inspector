@@ -5,9 +5,9 @@ using Xunit;
 
 namespace Inspector
 {
-    public class AccessibilityExtensionsTest
+    public class ObjectExtensionsTest
     {
-        public class ObjectExtension: AccessibilityExtensionsTest
+        public class AccessibilityMethod: ObjectExtensionsTest
         {
             readonly object instance = new object();
 
