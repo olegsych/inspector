@@ -102,6 +102,27 @@ namespace Inspector
         public static IMembers Private(this IMembers members) =>
             new AccessibleMembers(members, Accessibility.Private);
 
+        public static Property Property(this IMembers members) =>
+            members.Properties().Single();
+
+        public static Property Property(this IMembers members, string propertyName) =>
+            new MemberNameFilter<Property, PropertyInfo>(members.Properties(), propertyName).Single();
+
+        public static Property Property(this IMembers members, Type propertyType) =>
+            new PropertyTypeFilter(members.Properties(), propertyType).Single();
+
+        public static Property Property(this IMembers members, Type propertyType, string propertyName) {
+            var typed = new PropertyTypeFilter(members.Properties(), propertyType);
+            var named = new MemberNameFilter<Property, PropertyInfo>(typed, propertyName);
+            return named.Single();
+        }
+
+        public static Property<T> Property<T>(this IMembers members) =>
+            new Property<T>(members.Property(typeof(T)));
+
+        public static Property<T> Property<T>(this IMembers members, string propertyName) =>
+            new Property<T>(members.Property(typeof(T), propertyName));
+
         public static IMembers Protected(this IMembers members) =>
             new AccessibleMembers(members, Accessibility.Protected);
 
