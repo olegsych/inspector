@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Inspector.Implementation;
-using NSubstitute;
 using Xunit;
 
 namespace Inspector
@@ -165,6 +163,65 @@ namespace Inspector
             static void VerifyInstanceEvents(IEnumerable<Event> filter, object instance) {
                 var events = Assert.IsType<Members<EventInfo, Event>>(filter);
                 Assert.Same(instance, events.Instance);
+            }
+        }
+
+        public class FieldMethod: FieldExtensionsTest
+        {
+            [Fact]
+            public void ReturnsSingleFieldInGivenType() {
+                Assert.Same(selected, instance.Field());
+
+                VerifyInstanceFields(selection, instance);
+            }
+
+            [Fact]
+            public void ReturnsFieldWithGivenType() {
+                Assert.Same(selected, instance.Field(fieldType));
+
+                FieldTypeFilter named = VerifyFilter(selection, fieldType);
+                VerifyInstanceFields(named.Source, instance);
+            }
+
+            [Fact]
+            public void ReturnsFieldWithGivenName() {
+                Assert.Same(selected, instance.Field(fieldName));
+
+                MemberNameFilter<Field, FieldInfo> named = VerifyFilter(selection, fieldName);
+                VerifyInstanceFields(named.Source, instance);
+            }
+
+            [Fact]
+            public void ReturnsFieldWithGivenTypeAndName() {
+                Assert.Same(selected, instance.Field(fieldType, fieldName));
+
+                MemberNameFilter<Field, FieldInfo> named = VerifyFilter(selection, fieldName);
+                FieldTypeFilter typed = VerifyFilter(named.Source, fieldType);
+                VerifyInstanceFields(typed.Source, instance);
+            }
+
+            [Fact]
+            public void ReturnsGenericFieldOfGivenType() {
+                Field<FieldValue> generic = instance.Field<FieldValue>();
+
+                VerifyGenericField(selected, generic);
+                FieldTypeFilter typed = VerifyFilter(selection, typeof(FieldValue));
+                VerifyInstanceFields(typed.Source, instance);
+            }
+
+            [Fact]
+            public void ReturnsGenericFieldWithGivenTypeAndName() {
+                Field<FieldValue> generic = instance.Field<FieldValue>(fieldName);
+
+                VerifyGenericField(selected, generic);
+                MemberNameFilter<Field, FieldInfo> named = VerifyFilter(selection, fieldName);
+                FieldTypeFilter typed = VerifyFilter(named.Source, typeof(FieldValue));
+                VerifyInstanceFields(typed.Source, instance);
+            }
+
+            static void VerifyInstanceFields(IEnumerable<Field> filter, object instance) {
+                var fields = Assert.IsType<Members<FieldInfo, Field>>(filter);
+                Assert.Same(instance, fields.Instance);
             }
         }
 
