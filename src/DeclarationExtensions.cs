@@ -8,16 +8,6 @@ namespace Inspector
     /// </summary>
     public static class DeclarationExtensions
     {
-        #region IMembers
-
-        public static IMembers DeclaredBy(this IMembers members, Type declaringType) =>
-            new DeclaredMembers(members, declaringType);
-
-        public static IMembers DeclaredBy<T>(this IMembers members) =>
-            new DeclaredMembers(members, typeof(T));
-
-        #endregion
-
         #region Object
 
         public static IMembers Declared(this object instance) =>

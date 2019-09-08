@@ -9,6 +9,12 @@ namespace Inspector
     /// </summary>
     public static class IMembersExtensions
     {
+        public static IMembers DeclaredBy(this IMembers members, Type declaringType) =>
+            new DeclaredMembers(members, declaringType);
+
+        public static IMembers DeclaredBy<T>(this IMembers members) =>
+            new DeclaredMembers(members, typeof(T));
+
         public static IMembers Internal(this IMembers members) =>
             new AccessibleMembers(members, Accessibility.Internal);
 

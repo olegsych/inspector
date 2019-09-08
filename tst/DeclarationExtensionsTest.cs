@@ -8,29 +8,6 @@ namespace Inspector
 {
     public class DeclarationExtensionsTest
     {
-        public class IMembersExtensions: DeclarationExtensionsTest
-        {
-            // Method parameters
-            readonly IMembers members = Substitute.For<IMembers>();
-
-            [Fact]
-            public void ReturnsMembersDeclaredByGivenType() {
-                IMembers actual = members.DeclaredBy(typeof(TestType));
-                VerifyDeclaredMembers<TestType>(members, actual);
-            }
-
-            [Fact]
-            public void ReturnsMembersDeclaredByGivenGenericType() {
-                IMembers actual = members.DeclaredBy<TestType>();
-                VerifyDeclaredMembers<TestType>(members, actual);
-            }
-
-            static void VerifyDeclaredMembers<TDeclaringType>(IMembers expected, IMembers actual) {
-                DeclaredMembers declaredMembers = VerifyDeclaredMembers(typeof(TDeclaringType), actual);
-                Assert.Same(expected, declaredMembers.Source);
-            }
-        }
-
         public class ObjectExtensions: DeclarationExtensionsTest
         {
             // Method parameters
