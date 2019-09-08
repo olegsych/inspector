@@ -15,6 +15,12 @@ namespace Inspector
         public static IMembers DeclaredBy<T>(this IMembers members) =>
             new DeclaredMembers(members, typeof(T));
 
+        public static IMembers InheritedFrom(this IMembers members, Type ancestorType) =>
+            new InheritedMembers(members, ancestorType);
+
+        public static IMembers InheritedFrom<T>(this IMembers members) =>
+            new InheritedMembers(members, typeof(T));
+
         public static IMembers Internal(this IMembers members) =>
             new AccessibleMembers(members, Accessibility.Internal);
 

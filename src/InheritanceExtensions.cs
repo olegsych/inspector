@@ -8,16 +8,6 @@ namespace Inspector
     /// </summary>
     public static class InheritanceExtensions
     {
-        #region IMembers
-
-        public static IMembers InheritedFrom(this IMembers members, Type ancestorType) =>
-            new InheritedMembers(members, ancestorType);
-
-        public static IMembers InheritedFrom<T>(this IMembers members) =>
-            new InheritedMembers(members, typeof(T));
-
-        #endregion
-
         #region Object
 
         public static IMembers Inherited(this object instance) =>

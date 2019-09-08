@@ -8,29 +8,6 @@ namespace Inspector
 {
     public class InheritanceExtensionsTest
     {
-        public class IMembersExtensions: InheritanceExtensionsTest
-        {
-            // Method parameters
-            readonly IMembers members = Substitute.For<IMembers>();
-
-            [Fact]
-            public void InheritedFromReturnsMembersInheritedFromGivenType() {
-                IMembers actual = members.InheritedFrom(typeof(TestType));
-                VerifyInheritedMembers<TestType>(members, actual);
-            }
-
-            [Fact]
-            public void GenericInheritedFromReturnsMembersInheritedFromGivenType() {
-                IMembers actual = members.InheritedFrom<TestType>();
-                VerifyInheritedMembers<TestType>(members, actual);
-            }
-
-            static void VerifyInheritedMembers<TAncestorType>(IMembers expected, IMembers actual) {
-                InheritedMembers inheritedMembers = VerifyInheritedMembers(typeof(TAncestorType), actual);
-                Assert.Same(expected, inheritedMembers.Source);
-            }
-        }
-
         public class ObjectExtensions: InheritanceExtensionsTest
         {
             // Method parameters

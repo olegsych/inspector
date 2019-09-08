@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Inspector.Implementation;
 using NSubstitute;
 using Xunit;
@@ -32,6 +31,20 @@ namespace Inspector
         }
 
         [Fact]
+        public void InheritedFromReturnsMembersInheritedFromGivenType() {
+            IMembers actual = members.InheritedFrom(typeof(TestType));
+
+            VerifyInheritedMembers<TestType>(members, actual);
+        }
+
+        [Fact]
+        public void InheritedFromGenericReturnsMembersInheritedFromGivenType() {
+            IMembers actual = members.InheritedFrom<TestType>();
+
+            VerifyInheritedMembers<TestType>(members, actual);
+        }
+
+        [Fact]
         public void PrivateReturnsPrivateMembers() {
             IMembers actual = members.Private();
 
@@ -56,9 +69,15 @@ namespace Inspector
         }
 
         static void VerifyDeclaredMembers<TDeclaringType>(IMembers source, IMembers actual) {
-            DeclaredMembers declaredMembers = Assert.IsType<DeclaredMembers>(actual);
+            var declaredMembers = Assert.IsType<DeclaredMembers>(actual);
             Assert.Equal(typeof(TDeclaringType), declaredMembers.DeclaringType);
             Assert.Same(source, declaredMembers.Source);
+        }
+
+        static void VerifyInheritedMembers<TAncestorType>(IMembers source, IMembers actual) {
+            var inheritedMembers = Assert.IsType<InheritedMembers>(actual);
+            Assert.Equal(typeof(TAncestorType), inheritedMembers.AncestorType);
+            Assert.Same(source, inheritedMembers.Source);
         }
 
         class TestType {}
