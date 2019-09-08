@@ -153,6 +153,68 @@ namespace Inspector
             }
         }
 
+        public class FieldMethod: FieldExtensionsTest
+        {
+            // Method parameters
+            readonly Type testType = typeof(TestType);
+
+            [Fact]
+            public void ReturnsSingleFieldInGivenType() {
+                Assert.Same(selected, testType.Field());
+
+                VerifyStaticFields(selection, testType);
+            }
+
+            [Fact]
+            public void ReturnsFieldWithGivenType() {
+                Assert.Same(selected, testType.Field(fieldType));
+
+                FieldTypeFilter typed = VerifyFilter(selection, fieldType);
+                VerifyStaticFields(typed.Source, testType);
+            }
+
+            [Fact]
+            public void ReturnsFieldWithGivenName() {
+                Assert.Same(selected, testType.Field(fieldName));
+
+                MemberNameFilter<Field, FieldInfo> named = VerifyFilter(selection, fieldName);
+                VerifyStaticFields(named.Source, testType);
+            }
+
+            [Fact]
+            public void ReturnsFieldWithGivenTypeAndName() {
+                Assert.Same(selected, testType.Field(fieldType, fieldName));
+
+                MemberNameFilter<Field, FieldInfo> named = VerifyFilter(selection, fieldName);
+                FieldTypeFilter typed = VerifyFilter(named.Source, fieldType);
+                VerifyStaticFields(typed.Source, testType);
+            }
+
+            [Fact]
+            public void ReturnsGenericFieldOfGivenType() {
+                Field<FieldValue> generic = testType.Field<FieldValue>();
+
+                VerifyGenericField(selected, generic);
+                FieldTypeFilter typed = VerifyFilter(selection, typeof(FieldValue));
+                VerifyStaticFields(typed.Source, testType);
+            }
+
+            [Fact]
+            public void ReturnsGenericFieldWithGivenTypeAndName() {
+                Field<FieldValue> generic = testType.Field<FieldValue>(fieldName);
+
+                VerifyGenericField(selected, generic);
+                MemberNameFilter<Field, FieldInfo> named = VerifyFilter(selection, fieldName);
+                FieldTypeFilter typed = VerifyFilter(named.Source, typeof(FieldValue));
+                VerifyStaticFields(typed.Source, testType);
+            }
+
+            static void VerifyStaticFields(IEnumerable<Field> selection, Type expected) {
+                var fields = Assert.IsType<Members<FieldInfo, Field>>(selection);
+                Assert.Same(expected, fields.Type);
+            }
+        }
+
         public class New: TypeExtensionsTest
         {
             class PropertyType { }

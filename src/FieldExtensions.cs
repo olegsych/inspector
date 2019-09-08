@@ -30,27 +30,5 @@ namespace Inspector
             new InstanceMembers(instance).Field<T>(fieldName);
 
         #endregion
-
-        #region Type
-
-        public static Field Field(this Type type) =>
-            new StaticMembers(type).Field();
-
-        public static Field Field(this Type type, Type fieldType) =>
-            new StaticMembers(type).Field(fieldType);
-
-        public static Field Field(this Type type, string fieldName) =>
-            new StaticMembers(type).Field(fieldName);
-
-        public static Field Field(this Type type, Type fieldType, string fieldName) =>
-            new StaticMembers(type).Field(fieldType, fieldName);
-
-        public static Field<T> Field<T>(this Type type) =>
-            new StaticMembers(type).Field<T>();
-
-        public static Field<T> Field<T>(this Type type, string fieldName) =>
-            new StaticMembers(type).Field<T>(fieldName);
-
-        #endregion
     }
 }
