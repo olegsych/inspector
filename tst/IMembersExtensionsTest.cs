@@ -117,6 +117,62 @@ namespace Inspector
             }
         }
 
+        public class FieldMethod: FieldExtensionsTest
+        {
+            readonly IMembers members = Substitute.For<IMembers>();
+
+            // Arrange
+            readonly IEnumerable<Field> fields = Substitute.For<IEnumerable<Field>>();
+
+            public FieldMethod() =>
+                members.Fields().Returns(fields);
+
+            [Fact]
+            public void ReturnsSingleField() {
+                Assert.Same(selected, members.Field());
+                Assert.Same(fields, selection);
+            }
+
+            [Fact]
+            public void ReturnsFieldWithGivenName() {
+                Assert.Same(selected, members.Field(fieldName));
+                MemberNameFilter<Field, FieldInfo> filter = VerifyFilter(selection, fieldName);
+                Assert.Same(fields, filter.Source);
+            }
+
+            [Fact]
+            public void ReturnsFieldWithGivenType() {
+                Assert.Same(selected, members.Field(fieldType));
+                FieldTypeFilter filter = VerifyFilter(selection, fieldType);
+                Assert.Same(fields, filter.Source);
+            }
+
+            [Fact]
+            public void ReturnsFieldWithGivenTypeAndName() {
+                Assert.Same(selected, members.Field(fieldType, fieldName));
+                MemberNameFilter<Field, FieldInfo> nameFilter = VerifyFilter(selection, fieldName);
+                FieldTypeFilter typeFilter = VerifyFilter(nameFilter.Source, fieldType);
+                Assert.Same(fields, typeFilter.Source);
+            }
+
+            [Fact]
+            public void ReturnsGenericFieldWithGivenType() {
+                Field<FieldValue> generic = members.Field<FieldValue>();
+                VerifyGenericField(selected, generic);
+                FieldTypeFilter typeFilter = VerifyFilter(selection, typeof(FieldValue));
+                Assert.Same(fields, typeFilter.Source);
+            }
+
+            [Fact]
+            public void ReturnsGenericFieldWithGivenTypeAndName() {
+                Field<FieldValue> generic = members.Field<FieldValue>(fieldName);
+                VerifyGenericField(selected, generic);
+                MemberNameFilter<Field, FieldInfo> nameFilter = VerifyFilter(selection, fieldName);
+                FieldTypeFilter typeFilter = VerifyFilter(nameFilter.Source, fieldType);
+                Assert.Same(fields, typeFilter.Source);
+            }
+        }
+
         [Fact]
         public void InternalReturnsInternalMembers() {
             IMembers actual = members.Internal();

@@ -9,31 +9,6 @@ namespace Inspector
     /// </summary>
     public static class FieldExtensions
     {
-        #region IMembers
-
-        public static Field Field(this IMembers members) =>
-            members.Fields().Single();
-
-        public static Field Field(this IMembers members, string fieldName) =>
-            new MemberNameFilter<Field, FieldInfo>(members.Fields(), fieldName).Single();
-
-        public static Field Field(this IMembers members, Type fieldType) =>
-            new FieldTypeFilter(members.Fields(), fieldType).Single();
-
-        public static Field Field(this IMembers members, Type fieldType, string fieldName) {
-            var typed = new FieldTypeFilter(members.Fields(), fieldType);
-            var named = new MemberNameFilter<Field, FieldInfo>(typed, fieldName);
-            return named.Single();
-        }
-
-        public static Field<T> Field<T>(this IMembers members) =>
-            new Field<T>(members.Field(typeof(T)));
-
-        public static Field<T> Field<T>(this IMembers members, string fieldName) =>
-            new Field<T>(members.Field(typeof(T), fieldName));
-
-        #endregion
-
         #region Object
 
         public static Field Field(this object instance) =>
