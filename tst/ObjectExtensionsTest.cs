@@ -317,6 +317,65 @@ namespace Inspector
             }
         }
 
+        public class ObjectExtension: PropertyExtensionsTest
+        {
+            [Fact]
+            public void ReturnsSinglePropertyInGivenType() {
+                Assert.Same(selected, instance.Property());
+
+                VerifyInstanceProperties(selection, instance);
+            }
+
+            [Fact]
+            public void ReturnsPropertyWithGivenName() {
+                Assert.Same(selected, instance.Property(propertyName));
+
+                MemberNameFilter<Property, PropertyInfo> named = VerifyFilter(selection, propertyName);
+                VerifyInstanceProperties(named.Source, instance);
+            }
+
+            [Fact]
+            public void ReturnsPropertyWithGivenType() {
+                Assert.Same(selected, instance.Property(propertyType));
+
+                PropertyTypeFilter named = VerifyFilter(selection, propertyType);
+                VerifyInstanceProperties(named.Source, instance);
+            }
+
+            [Fact]
+            public void ReturnsPropertyWithGivenTypeAndName() {
+                Assert.Same(selected, instance.Property(propertyType, propertyName));
+
+                MemberNameFilter<Property, PropertyInfo> named = VerifyFilter(selection, propertyName);
+                PropertyTypeFilter typed = VerifyFilter(named.Source, propertyType);
+                VerifyInstanceProperties(typed.Source, instance);
+            }
+
+            [Fact]
+            public void ReturnsGenericPropertyOfGivenType() {
+                Property<PropertyValue> generic = instance.Property<PropertyValue>();
+
+                VerifyGenericProperty(selected, generic);
+                PropertyTypeFilter typed = VerifyFilter(selection, typeof(PropertyValue));
+                VerifyInstanceProperties(typed.Source, instance);
+            }
+
+            [Fact]
+            public void ReturnsGenericPropertyWithGivenTypeAndName() {
+                Property<PropertyValue> generic = instance.Property<PropertyValue>(propertyName);
+
+                VerifyGenericProperty(selected, generic);
+                MemberNameFilter<Property, PropertyInfo> named = VerifyFilter(selection, propertyName);
+                PropertyTypeFilter typed = VerifyFilter(named.Source, typeof(PropertyValue));
+                VerifyInstanceProperties(typed.Source, instance);
+            }
+
+            static void VerifyInstanceProperties(IEnumerable<Property> filter, object instance) {
+                var properties = Assert.IsType<Members<PropertyInfo, Property>>(filter);
+                Assert.Same(instance, properties.Instance);
+            }
+        }
+
         internal static void VerifyInstanceMembers(object instance, IMembers actual) {
             var instanceMembers = Assert.IsType<InstanceMembers>(actual);
             Assert.Same(instance, instanceMembers.Instance);

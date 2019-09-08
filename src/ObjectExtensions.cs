@@ -95,6 +95,24 @@ namespace Inspector
         public static IMembers Private(this object instance) =>
             new InstanceMembers(instance).Private();
 
+        public static Property Property(this object instance) =>
+            new InstanceMembers(instance).Property();
+
+        public static Property Property(this object instance, string propertyName) =>
+            new InstanceMembers(instance).Property(propertyName);
+
+        public static Property Property(this object instance, Type propertyType) =>
+            new InstanceMembers(instance).Property(propertyType);
+
+        public static Property Property(this object instance, Type propertyType, string propertyName) =>
+            new InstanceMembers(instance).Property(propertyType, propertyName);
+
+        public static Property<T> Property<T>(this object instance) =>
+            new InstanceMembers(instance).Property<T>();
+
+        public static Property<T> Property<T>(this object instance, string propertyName) =>
+            new InstanceMembers(instance).Property<T>(propertyName);
+
         public static IMembers Protected(this object instance) =>
             new InstanceMembers(instance).Protected();
 
