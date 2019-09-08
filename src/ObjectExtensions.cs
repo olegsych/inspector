@@ -8,6 +8,15 @@ namespace Inspector
     /// </summary>
     public static class ObjectExtensions
     {
+        public static IMembers Declared(this object instance) =>
+            new InstanceMembers(instance).DeclaredBy(instance.GetType());
+
+        public static IMembers DeclaredBy(this object instance, Type declaringType) =>
+            new InstanceMembers(instance).DeclaredBy(declaringType);
+
+        public static IMembers DeclaredBy<T>(this object instance) =>
+            new InstanceMembers(instance).DeclaredBy<T>();
+
         public static IMembers Internal(this object instance) =>
             new InstanceMembers(instance).Internal();
 

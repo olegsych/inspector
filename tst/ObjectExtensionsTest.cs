@@ -7,41 +7,75 @@ namespace Inspector
 {
     public class ObjectExtensionsTest
     {
+        readonly object instance = new object();
+
         public class AccessibilityMethod: ObjectExtensionsTest
         {
-            readonly object instance = new object();
-
             [Fact]
             public void InternalReturnsInternalMembersOfGivenInstance() {
                 IMembers actual = instance.Internal();
-                VerifyMembers(actual, instance, Accessibility.Internal);
+                VerifyAccessibleMembers(instance, Accessibility.Internal, actual);
             }
 
             [Fact]
             public void PrivateReturnsPrivateMembersOfGivenInstance() {
                 IMembers actual = instance.Private();
-                VerifyMembers(actual, instance, Accessibility.Private);
+                VerifyAccessibleMembers(instance, Accessibility.Private, actual);
             }
 
             [Fact]
             public void ProtectedReturnsProtectedMembersOfGivenInstance() {
                 IMembers actual = instance.Protected();
-                VerifyMembers(actual, instance, Accessibility.Protected);
+                VerifyAccessibleMembers(instance, Accessibility.Protected, actual);
             }
 
             [Fact]
             public void PublicReturnsPublicMembersOfGivenInstance() {
                 IMembers actual = instance.Public();
-                VerifyMembers(actual, instance, Accessibility.Public);
+                VerifyAccessibleMembers(instance, Accessibility.Public, actual);
             }
 
-            static void VerifyMembers(IMembers actual, object instance, Accessibility accessibility) {
+            static void VerifyAccessibleMembers(object instance, Accessibility accessibility, IMembers actual)
+            {
                 var accessibleMembers = Assert.IsType<AccessibleMembers>(actual);
                 Assert.Equal(accessibility, accessibleMembers.Accessibility);
-
-                var instanceMembers = Assert.IsType<InstanceMembers>(accessibleMembers.Source);
-                Assert.Same(instance, instanceMembers.Instance);
+                VerifyInstanceMembers(instance, accessibleMembers.Source);
             }
+        }
+
+        public class DeclaredMethod: ObjectExtensionsTest
+        {
+            [Fact]
+            public void ReturnsInstanceMembersDeclaredByGivenType() {
+                IMembers actual = instance.DeclaredBy(typeof(TestType));
+                VerifyDeclaredMembers<TestType>(instance, actual);
+            }
+
+            [Fact]
+            public void ReturnsInstanceMembersDeclaredByGivenGenericType() {
+                IMembers actual = instance.DeclaredBy<TestType>();
+                VerifyDeclaredMembers<TestType>(instance, actual);
+            }
+
+            [Fact]
+            public void ReturnsInstanceMembersDeclaredByInstanceType() {
+                var instance = new TestType();
+                IMembers actual = instance.Declared();
+                VerifyDeclaredMembers<TestType>(instance, actual);
+            }
+
+            static void VerifyDeclaredMembers<TDeclaringType>(object instance, IMembers actual) {
+                var declaredMembers = Assert.IsType<DeclaredMembers>(actual);
+                Assert.Equal(typeof(TDeclaringType), declaredMembers.DeclaringType);
+                VerifyInstanceMembers(instance, declaredMembers.Source);
+            }
+
+            class TestType { }
+        }
+
+        static void VerifyInstanceMembers(object instance, IMembers actual) {
+            var instanceMembers = Assert.IsType<InstanceMembers>(actual);
+            Assert.Same(instance, instanceMembers.Instance);
         }
     }
 }
