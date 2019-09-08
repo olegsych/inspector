@@ -43,44 +43,5 @@ namespace Inspector
                 Assert.Same(instance, instanceMembers.Instance);
             }
         }
-
-        public class TypeExtension: AccessibilityExtensionsTest
-        {
-            readonly Type type = typeof(TestClass);
-
-            [Fact]
-            public void InternalReturnsInternalMembersOfGivenType() {
-                IMembers actual = type.Internal();
-                VerifyMembers(actual, type, Accessibility.Internal);
-            }
-
-            [Fact]
-            public void PrivateReturnsPrivateMembersOfGivenType() {
-                IMembers actual = type.Private();
-                VerifyMembers(actual, type, Accessibility.Private);
-            }
-
-            [Fact]
-            public void ProtectedReturnsProtectedMembersOfGivenType() {
-                IMembers actual = type.Protected();
-                VerifyMembers(actual, type, Accessibility.Protected);
-            }
-
-            [Fact]
-            public void PublicReturnsPublicMembersOfGivenType() {
-                IMembers actual = type.Public();
-                VerifyMembers(actual, type, Accessibility.Public);
-            }
-
-            static void VerifyMembers(IMembers actual, Type type, Accessibility accessibility) {
-                var accessibleMembers = Assert.IsType<AccessibleMembers>(actual);
-                Assert.Equal(accessibility, accessibleMembers.Accessibility);
-
-                var staticMembers = Assert.IsType<StaticMembers>(accessibleMembers.Source);
-                Assert.Same(type, staticMembers.Type);
-            }
-
-            class TestClass { }
-        }
     }
 }
