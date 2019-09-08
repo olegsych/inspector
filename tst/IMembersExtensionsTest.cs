@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Reflection;
 using Inspector.Implementation;
 using NSubstitute;
 using Xunit;
@@ -9,14 +10,14 @@ namespace Inspector
     {
         readonly IMembers members = Substitute.For<IMembers>();
 
-        public class ConstructorTest: ConstructorExtensionsTest
+        public class ConstructorMethod: ConstructorExtensionsTest
         {
             readonly IMembers members = Substitute.For<IMembers>();
 
             // Test fixture
             readonly IEnumerable<Constructor> constructors = Substitute.For<IEnumerable<Constructor>>();
 
-            public ConstructorTest() =>
+            public ConstructorMethod() =>
                 members.Constructors().Returns(constructors);
 
             [Fact]
@@ -58,6 +59,62 @@ namespace Inspector
             IMembers actual = members.DeclaredBy<TestType>();
 
             VerifyDeclaredMembers<TestType>(members, actual);
+        }
+
+        public class EventMethod: EventExtensionsTest
+        {
+            readonly IMembers members = Substitute.For<IMembers>();
+
+            // Test fixture
+            readonly IEnumerable<Event> events = Substitute.For<IEnumerable<Event>>();
+
+            public EventMethod() =>
+                members.Events().Returns(events);
+
+            [Fact]
+            public void ReturnsSingleEvent() {
+                Assert.Same(selected, members.Event());
+                Assert.Same(events, selection);
+            }
+
+            [Fact]
+            public void ReturnsEventWithGivenName() {
+                Assert.Same(selected, members.Event(eventName));
+                MemberNameFilter<Event, EventInfo> filter = VerifyFilter(selection, eventName);
+                Assert.Same(events, filter.Source);
+            }
+
+            [Fact]
+            public void ReturnsEventWithGivenHandlerType() {
+                Assert.Same(selected, members.Event(handlerType));
+                EventTypeFilter filter = VerifyFilter(selection, handlerType);
+                Assert.Same(events, filter.Source);
+            }
+
+            [Fact]
+            public void ReturnsEventWithGivenHandlerTypeAndName() {
+                Assert.Same(selected, members.Event(handlerType, eventName));
+                MemberNameFilter<Event, EventInfo> named = VerifyFilter(selection, eventName);
+                EventTypeFilter typed = VerifyFilter(named.Source, handlerType);
+                Assert.Same(events, typed.Source);
+            }
+
+            [Fact]
+            public void ReturnsGenericEventWithGivenHandlerType() {
+                Event<TestHandler> generic = members.Event<TestHandler>();
+                VerifyGenericEvent(selected, generic);
+                EventTypeFilter typed = VerifyFilter(selection, handlerType);
+                Assert.Same(events, typed.Source);
+            }
+
+            [Fact]
+            public void ReturnsGenericEventWithGivenHandlerTypeAndName() {
+                Event<TestHandler> generic = members.Event<TestHandler>(eventName);
+                VerifyGenericEvent(selected, generic);
+                MemberNameFilter<Event, EventInfo> named = VerifyFilter(selection, eventName);
+                EventTypeFilter typed = VerifyFilter(named.Source, handlerType);
+                Assert.Same(events, typed.Source);
+            }
         }
 
         [Fact]

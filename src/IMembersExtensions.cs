@@ -26,6 +26,27 @@ namespace Inspector
         public static IMembers DeclaredBy<T>(this IMembers members) =>
             new DeclaredMembers(members, typeof(T));
 
+        public static Event Event(this IMembers members) =>
+            members.Events().Single();
+
+        public static Event Event(this IMembers members, string eventName) =>
+            new MemberNameFilter<Event, EventInfo>(members.Events(), eventName).Single();
+
+        public static Event Event(this IMembers members, Type handlerType) =>
+            new EventTypeFilter(members.Events(), handlerType).Single();
+
+        public static Event Event(this IMembers members, Type handlerType, string eventName) {
+            var typed = new EventTypeFilter(members.Events(), handlerType);
+            var named = new MemberNameFilter<Event, EventInfo>(typed, eventName);
+            return named.Single();
+        }
+
+        public static Event<T> Event<T>(this IMembers members) where T : Delegate =>
+            new Event<T>(members.Event(typeof(T)));
+
+        public static Event<T> Event<T>(this IMembers members, string eventName) where T : Delegate =>
+            new Event<T>(members.Event(typeof(T), eventName));
+
         public static IMembers InheritedFrom(this IMembers members, Type ancestorType) =>
             new InheritedMembers(members, ancestorType);
 
