@@ -6,7 +6,7 @@ using Inspector.Implementation;
 namespace Inspector
 {
     /// <summary>
-    /// <see cref="Type"/> extension methods for creating instances dynamically.
+    /// Extension methods for <see cref="Type"/>.
     /// </summary>
     public static class TypeExtensions
     {
@@ -21,6 +21,24 @@ namespace Inspector
 
         public static IMembers DeclaredBy<T>(this Type type) =>
             new StaticMembers(type).DeclaredBy<T>();
+
+        public static Event Event(this Type type) =>
+            new StaticMembers(type).Event();
+
+        public static Event Event(this Type type, string eventName) =>
+            new StaticMembers(type).Event(eventName);
+
+        public static Event Event(this Type type, Type handlerType) =>
+            new StaticMembers(type).Event(handlerType);
+
+        public static Event Event(this Type type, Type handlerType, string eventName) =>
+            new StaticMembers(type).Event(handlerType, eventName);
+
+        public static Event<T> Event<T>(this Type type) where T : Delegate =>
+            new StaticMembers(type).Event<T>();
+
+        public static Event<T> Event<T>(this Type type, string eventName) where T : Delegate =>
+            new StaticMembers(type).Event<T>(eventName);
 
         public static IMembers Internal(this Type type) =>
             new StaticMembers(type).Internal();

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Inspector.Implementation;
 using Xunit;
@@ -59,7 +60,7 @@ namespace Inspector
             }
         }
 
-        public class TypeExtensions: TypeExtensionsTest
+        public class DeclaredMethod: TypeExtensionsTest
         {
             // Method parameters
             readonly Type type = Type();
@@ -67,26 +68,88 @@ namespace Inspector
             [Fact]
             public void ReturnsStaticMembersDeclaredByGivenType() {
                 IMembers actual = type.DeclaredBy(typeof(TestClass));
-                VerifyStaticMembers<TestClass>(type, actual);
+                VerifyDeclaredMembers<TestClass>(type, actual);
             }
 
             [Fact]
             public void ReturnsStaticMembersDeclaredByGivenGenericType() {
                 IMembers actual = type.DeclaredBy<TestClass>();
-                VerifyStaticMembers<TestClass>(type, actual);
+                VerifyDeclaredMembers<TestClass>(type, actual);
             }
 
             [Fact]
             public void ReturnsStaticMembersDeclaredByTypeItself() {
                 IMembers actual = typeof(TestClass).Declared();
-                VerifyStaticMembers<TestClass>(typeof(TestClass), actual);
+                VerifyDeclaredMembers<TestClass>(typeof(TestClass), actual);
             }
 
-            static void VerifyStaticMembers<TDeclaringType>(Type staticType, IMembers actual) {
+            static void VerifyDeclaredMembers<TDeclaringType>(Type staticType, IMembers actual) {
                 var declaredMembers = Assert.IsType<DeclaredMembers>(actual);
                 Assert.Equal(typeof(TDeclaringType), declaredMembers.DeclaringType);
                 var staticMembers = Assert.IsType<StaticMembers>(declaredMembers.Source);
                 Assert.Equal(staticType, staticMembers.Type);
+            }
+        }
+
+        public class EventMethod: EventExtensionsTest
+        {
+            // Method parameters
+            readonly Type testType = typeof(TestType);
+
+            [Fact]
+            public void ReturnsSingleEventInGivenType() {
+                Assert.Same(selected, testType.Event());
+
+                VerifyStaticEvents(selection, testType);
+            }
+
+            [Fact]
+            public void ReturnsEventWithGivenName() {
+                Assert.Same(selected, testType.Event(eventName));
+
+                MemberNameFilter<Event, EventInfo> named = VerifyFilter(selection, eventName);
+                VerifyStaticEvents(named.Source, testType);
+            }
+
+            [Fact]
+            public void ReturnsEventWithGivenHandlerType() {
+                Assert.Same(selected, testType.Event(handlerType));
+
+                EventTypeFilter typed = VerifyFilter(selection, handlerType);
+                VerifyStaticEvents(typed.Source, testType);
+            }
+
+            [Fact]
+            public void ReturnsEventWithGivenHandlerTypeAndName() {
+                Assert.Same(selected, testType.Event(handlerType, eventName));
+
+                MemberNameFilter<Event, EventInfo> named = VerifyFilter(selection, eventName);
+                EventTypeFilter typed = VerifyFilter(named.Source, handlerType);
+                VerifyStaticEvents(typed.Source, testType);
+            }
+
+            [Fact]
+            public void ReturnsGenericEventWithGivenHandlerType() {
+                Event<TestHandler> generic = testType.Event<TestHandler>();
+
+                VerifyGenericEvent(selected, generic);
+                EventTypeFilter typed = VerifyFilter(selection, handlerType);
+                VerifyStaticEvents(typed.Source, testType);
+            }
+
+            [Fact]
+            public void ReturnsGenericEventWithGivenHandlerTypeAndName() {
+                Event<TestHandler> generic = testType.Event<TestHandler>(eventName);
+
+                VerifyGenericEvent(selected, generic);
+                MemberNameFilter<Event, EventInfo> named = VerifyFilter(selection, eventName);
+                EventTypeFilter typed = VerifyFilter(named.Source, handlerType);
+                VerifyStaticEvents(typed.Source, testType);
+            }
+
+            static void VerifyStaticEvents(IEnumerable<Event> selection, Type type) {
+                var events = Assert.IsType<Members<EventInfo, Event>>(selection);
+                Assert.Same(type, events.Type);
             }
         }
 

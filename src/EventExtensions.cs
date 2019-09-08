@@ -30,27 +30,5 @@ namespace Inspector
             new InstanceMembers(instance).Event<T>(eventName);
 
         #endregion
-
-        #region Type
-
-        public static Event Event(this Type type) =>
-            new StaticMembers(type).Event();
-
-        public static Event Event(this Type type, string eventName) =>
-            new StaticMembers(type).Event(eventName);
-
-        public static Event Event(this Type type, Type handlerType) =>
-            new StaticMembers(type).Event(handlerType);
-
-        public static Event Event(this Type type, Type handlerType, string eventName) =>
-            new StaticMembers(type).Event(handlerType, eventName);
-
-        public static Event<T> Event<T>(this Type type) where T : Delegate =>
-            new StaticMembers(type).Event<T>();
-
-        public static Event<T> Event<T>(this Type type, string eventName) where T : Delegate =>
-            new StaticMembers(type).Event<T>(eventName);
-
-        #endregion
     }
 }
