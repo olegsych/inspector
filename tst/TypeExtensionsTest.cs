@@ -312,6 +312,68 @@ namespace Inspector
             }
         }
 
+        public class PropertyMethod: PropertyExtensionsTest
+        {
+            // Method parameters
+            readonly Type testType = typeof(TestType);
+
+            [Fact]
+            public void ReturnsSinglePropertyInGivenType() {
+                Assert.Same(selected, testType.Property());
+
+                VerifyStaticProperties(selection, testType);
+            }
+
+            [Fact]
+            public void ReturnsPropertyWithGivenName() {
+                Assert.Same(selected, testType.Property(propertyName));
+
+                MemberNameFilter<Property, PropertyInfo> named = VerifyFilter(selection, propertyName);
+                VerifyStaticProperties(named.Source, testType);
+            }
+
+            [Fact]
+            public void ReturnsPropertyWithGivenType() {
+                Assert.Same(selected, testType.Property(propertyType));
+
+                PropertyTypeFilter typed = VerifyFilter(selection, propertyType);
+                VerifyStaticProperties(typed.Source, testType);
+            }
+
+            [Fact]
+            public void ReturnsPropertyWithGivenTypeAndName() {
+                Assert.Same(selected, testType.Property(propertyType, propertyName));
+
+                MemberNameFilter<Property, PropertyInfo> named = VerifyFilter(selection, propertyName);
+                PropertyTypeFilter typed = VerifyFilter(named.Source, propertyType);
+                VerifyStaticProperties(typed.Source, testType);
+            }
+
+            [Fact]
+            public void ReturnsGenericPropertyOfGivenType() {
+                Property<PropertyValue> generic = testType.Property<PropertyValue>();
+
+                VerifyGenericProperty(selected, generic);
+                PropertyTypeFilter typed = VerifyFilter(selection, typeof(PropertyValue));
+                VerifyStaticProperties(typed.Source, testType);
+            }
+
+            [Fact]
+            public void ReturnsGenericPropertyWithGivenTypeAndName() {
+                Property<PropertyValue> generic = testType.Property<PropertyValue>(propertyName);
+
+                VerifyGenericProperty(selected, generic);
+                MemberNameFilter<Property, PropertyInfo> named = VerifyFilter(selection, propertyName);
+                PropertyTypeFilter typed = VerifyFilter(named.Source, typeof(PropertyValue));
+                VerifyStaticProperties(typed.Source, testType);
+            }
+
+            static void VerifyStaticProperties(IEnumerable<Property> selection, Type expected) {
+                var properties = Assert.IsType<Members<PropertyInfo, Property>>(selection);
+                Assert.Same(expected, properties.Type);
+            }
+        }
+
         public class Uninitialized: TypeExtensionsTest
         {
             class TestType
