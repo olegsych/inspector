@@ -257,6 +257,66 @@ namespace Inspector
             }
         }
 
+        public class MethodMethod: MethodExtensionsTest
+        {
+            [Fact]
+            public void ReturnsSingleMethodDeclaredByTypeOfGivenInstance() {
+                Assert.Same(selected, instance.Method());
+                var declared = Assert.IsType<DeclarationFilter<Method, MethodInfo>>(selection);
+                Assert.Equal(instance.GetType(), declared.DeclaringType);
+                VerifyInstanceMethods(declared.Source, instance);
+            }
+
+            [Fact]
+            public void ReturnsMethodWithGivenType() {
+                Assert.Same(selected, instance.Method(methodType));
+
+                MethodTypeFilter named = VerifyFilter(selection, methodType);
+                VerifyInstanceMethods(named.Source, instance);
+            }
+
+            [Fact]
+            public void ReturnsMethodWithGivenName() {
+                Assert.Same(selected, instance.Method(methodName));
+
+                MemberNameFilter<Method, MethodInfo> named = VerifyFilter(selection, methodName);
+                VerifyInstanceMethods(named.Source, instance);
+            }
+
+            [Fact]
+            public void ReturnsMethodWithGivenTypeAndName() {
+                Assert.Same(selected, instance.Method(methodType, methodName));
+
+                MemberNameFilter<Method, MethodInfo> named = VerifyFilter(selection, methodName);
+                MethodTypeFilter typed = VerifyFilter(named.Source, methodType);
+                VerifyInstanceMethods(typed.Source, instance);
+            }
+
+            [Fact]
+            public void ReturnsGenericMethodOfGivenType() {
+                Method<MethodType> generic = instance.Method<MethodType>();
+
+                VerifyGenericMethod(selected, generic);
+                MethodTypeFilter typed = VerifyFilter(selection, typeof(MethodType));
+                VerifyInstanceMethods(typed.Source, instance);
+            }
+
+            [Fact]
+            public void ReturnsGenericMethodWithGivenTypeAndName() {
+                Method<MethodType> generic = instance.Method<MethodType>(methodName);
+
+                VerifyGenericMethod(selected, generic);
+                MemberNameFilter<Method, MethodInfo> named = VerifyFilter(selection, methodName);
+                MethodTypeFilter typed = VerifyFilter(named.Source, typeof(MethodType));
+                VerifyInstanceMethods(typed.Source, instance);
+            }
+
+            static void VerifyInstanceMethods(IEnumerable<Method> source, object instance) {
+                var members = Assert.IsType<Members<MethodInfo, Method>>(source);
+                Assert.Same(instance, members.Instance);
+            }
+        }
+
         internal static void VerifyInstanceMembers(object instance, IMembers actual) {
             var instanceMembers = Assert.IsType<InstanceMembers>(actual);
             Assert.Same(instance, instanceMembers.Instance);
