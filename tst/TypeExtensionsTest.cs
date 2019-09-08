@@ -215,6 +215,68 @@ namespace Inspector
             }
         }
 
+        public class MethodMethod: MethodExtensionsTest
+        {
+            // Method parameters
+            readonly Type testType = typeof(TestType);
+
+            [Fact]
+            public void ReturnsSingleMethodInGivenType() {
+                Assert.Same(selected, testType.Method());
+
+                VerifyStaticMethods(selection, testType);
+            }
+
+            [Fact]
+            public void ReturnsMethodWithGivenType() {
+                Assert.Same(selected, testType.Method(methodType));
+
+                MethodTypeFilter typed = VerifyFilter(selection, methodType);
+                VerifyStaticMethods(typed.Source, testType);
+            }
+
+            [Fact]
+            public void ReturnsMethodWithGivenName() {
+                Assert.Same(selected, testType.Method(methodName));
+
+                MemberNameFilter<Method, MethodInfo> named = VerifyFilter(selection, methodName);
+                VerifyStaticMethods(named.Source, testType);
+            }
+
+            [Fact]
+            public void ReturnsMethodWithGivenTypeAndName() {
+                Assert.Same(selected, testType.Method(methodType, methodName));
+
+                MemberNameFilter<Method, MethodInfo> named = VerifyFilter(selection, methodName);
+                MethodTypeFilter typed = VerifyFilter(named.Source, methodType);
+                VerifyStaticMethods(typed.Source, testType);
+            }
+
+            [Fact]
+            public void ReturnsGenericMethodOfGivenType() {
+                Method<MethodType> generic = testType.Method<MethodType>();
+
+                VerifyGenericMethod(selected, generic);
+                MethodTypeFilter typed = VerifyFilter(selection, typeof(MethodType));
+                VerifyStaticMethods(typed.Source, testType);
+            }
+
+            [Fact]
+            public void ReturnsGenericMethodWithGivenTypeAndName() {
+                Method<MethodType> generic = testType.Method<MethodType>(methodName);
+
+                VerifyGenericMethod(selected, generic);
+                MemberNameFilter<Method, MethodInfo> named = VerifyFilter(selection, methodName);
+                MethodTypeFilter typed = VerifyFilter(named.Source, typeof(MethodType));
+                VerifyStaticMethods(typed.Source, testType);
+            }
+
+            static void VerifyStaticMethods(IEnumerable<Method> selection, Type expected) {
+                var methods = Assert.IsType<Members<MethodInfo, Method>>(selection);
+                Assert.Same(expected, methods.Type);
+            }
+        }
+
         public class New: TypeExtensionsTest
         {
             class PropertyType { }

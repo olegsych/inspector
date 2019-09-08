@@ -30,27 +30,5 @@ namespace Inspector
             new InstanceMembers(instance).Method<T>(methodName);
 
         #endregion
-
-        #region Type
-
-        public static Method Method(this Type type) =>
-            new StaticMembers(type).Method();
-
-        public static Method Method(this Type type, Type methodType) =>
-            new StaticMembers(type).Method(methodType);
-
-        public static Method Method(this Type type, string methodName) =>
-            new StaticMembers(type).Method(methodName);
-
-        public static Method Method(this Type type, Type methodType, string methodName) =>
-            new StaticMembers(type).Method(methodType, methodName);
-
-        public static Method<T> Method<T>(this Type type) where T : Delegate =>
-            new StaticMembers(type).Method<T>();
-
-        public static Method<T> Method<T>(this Type type, string methodName) where T : Delegate =>
-            new StaticMembers(type).Method<T>(methodName);
-
-        #endregion
     }
 }
