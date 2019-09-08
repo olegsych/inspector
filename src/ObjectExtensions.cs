@@ -26,6 +26,24 @@ namespace Inspector
         public static IMembers DeclaredBy<T>(this object instance) =>
             new InstanceMembers(instance).DeclaredBy<T>();
 
+        public static Event Event(this object instance) =>
+            new InstanceMembers(instance).Event();
+
+        public static Event Event(this object instance, string eventName) =>
+            new InstanceMembers(instance).Event(eventName);
+
+        public static Event Event(this object instance, Type handlerType) =>
+            new InstanceMembers(instance).Event(handlerType);
+
+        public static Event Event(this object instance, Type handlerType, string eventName) =>
+            new InstanceMembers(instance).Event(handlerType, eventName);
+
+        public static Event<T> Event<T>(this object instance) where T : Delegate =>
+            new InstanceMembers(instance).Event<T>();
+
+        public static Event<T> Event<T>(this object instance, string eventName) where T : Delegate =>
+            new InstanceMembers(instance).Event<T>(eventName);
+
         public static IMembers Internal(this object instance) =>
             new InstanceMembers(instance).Internal();
 

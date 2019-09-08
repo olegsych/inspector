@@ -109,6 +109,65 @@ namespace Inspector
             class TestType { }
         }
 
+        public class EventMethod: EventExtensionsTest
+        {
+            [Fact]
+            public void ReturnsSingleEventOfGivenInstance() {
+                Assert.Same(selected, instance.Event());
+
+                VerifyInstanceEvents(selection, instance);
+            }
+
+            [Fact]
+            public void ReturnsEventWithGivenName() {
+                Assert.Same(selected, instance.Event(eventName));
+
+                MemberNameFilter<Event, EventInfo> named = VerifyFilter(selection, eventName);
+                VerifyInstanceEvents(named.Source, instance);
+            }
+
+            [Fact]
+            public void ReturnsEventWithGivenHandlerType() {
+                Assert.Same(selected, instance.Event(handlerType));
+
+                EventTypeFilter named = VerifyFilter(selection, handlerType);
+                VerifyInstanceEvents(named.Source, instance);
+            }
+
+            [Fact]
+            public void ReturnsEventWithGivenHandlerTypeAndName() {
+                Assert.Same(selected, instance.Event(handlerType, eventName));
+
+                MemberNameFilter<Event, EventInfo> named = VerifyFilter(selection, eventName);
+                EventTypeFilter typed = VerifyFilter(named.Source, handlerType);
+                VerifyInstanceEvents(typed.Source, instance);
+            }
+
+            [Fact]
+            public void ReturnsGenericEventWithGivenHandlerType() {
+                Event<TestHandler> generic = instance.Event<TestHandler>();
+
+                VerifyGenericEvent(selected, generic);
+                EventTypeFilter typed = VerifyFilter(selection, handlerType);
+                VerifyInstanceEvents(typed.Source, instance);
+            }
+
+            [Fact]
+            public void ReturnsGenericEventWithGivenHandlerTypeAndName() {
+                Event<TestHandler> generic = instance.Event<TestHandler>(eventName);
+
+                VerifyGenericEvent(selected, generic);
+                MemberNameFilter<Event, EventInfo> named = VerifyFilter(selection, eventName);
+                EventTypeFilter typed = VerifyFilter(named.Source, handlerType);
+                VerifyInstanceEvents(typed.Source, instance);
+            }
+
+            static void VerifyInstanceEvents(IEnumerable<Event> filter, object instance) {
+                var events = Assert.IsType<Members<EventInfo, Event>>(filter);
+                Assert.Same(instance, events.Instance);
+            }
+        }
+
         internal static void VerifyInstanceMembers(object instance, IMembers actual) {
             var instanceMembers = Assert.IsType<InstanceMembers>(actual);
             Assert.Same(instance, instanceMembers.Instance);
