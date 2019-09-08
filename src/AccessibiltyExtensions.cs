@@ -8,22 +8,6 @@ namespace Inspector
     /// </summary>
     public static class AccessibiltyExtensions
     {
-        #region IMembers
-
-        public static IMembers Internal(this IMembers members) =>
-            new AccessibleMembers(members, Accessibility.Internal);
-
-        public static IMembers Private(this IMembers members) =>
-            new AccessibleMembers(members, Accessibility.Private);
-
-        public static IMembers Protected(this IMembers members) =>
-            new AccessibleMembers(members, Accessibility.Protected);
-
-        public static IMembers Public(this IMembers members) =>
-            new AccessibleMembers(members, Accessibility.Public);
-
-        #endregion
-
         #region Object
 
         public static IMembers Internal(this object instance) =>
