@@ -62,6 +62,15 @@ namespace Inspector
         public static Field<T> Field<T>(this object instance, string fieldName) =>
             new InstanceMembers(instance).Field<T>(fieldName);
 
+        public static IMembers Inherited(this object instance) =>
+            new InstanceMembers(instance).InheritedFrom(instance.GetType().BaseType);
+
+        public static IMembers InheritedFrom(this object instance, Type ancestorType) =>
+            new InstanceMembers(instance).InheritedFrom(ancestorType);
+
+        public static IMembers InheritedFrom<T>(this object instance) =>
+            new InstanceMembers(instance).InheritedFrom<T>();
+
         public static IMembers Internal(this object instance) =>
             new InstanceMembers(instance).Internal();
 

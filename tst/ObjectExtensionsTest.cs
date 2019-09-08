@@ -225,6 +225,38 @@ namespace Inspector
             }
         }
 
+        public class InheritanceMethod: ObjectExtensionsTest
+        {
+            class BaseType { }
+            class TestType: BaseType { }
+
+            new readonly object instance = new TestType();
+
+            [Fact]
+            public void InheritedReturnsInstanceMembersInheritedFromBaseType() {
+                IMembers actual = instance.Inherited();
+                VerifyInheritedMembers<BaseType>(instance, actual);
+            }
+
+            [Fact]
+            public void InheritedFromReturnsInstanceMembersInheritedFromGivenType() {
+                IMembers actual = instance.InheritedFrom(typeof(BaseType));
+                VerifyInheritedMembers<BaseType>(instance, actual);
+            }
+
+            [Fact]
+            public void GenericInheritedFromReturnsInstanceMembersInheritedFromGivenType() {
+                IMembers actual = instance.InheritedFrom<BaseType>();
+                VerifyInheritedMembers<BaseType>(instance, actual);
+            }
+
+            static void VerifyInheritedMembers<TAncestorType>(object instance, IMembers actual) {
+                var inheritedMembers = Assert.IsType<InheritedMembers>(actual);
+                Assert.Equal(typeof(TAncestorType), inheritedMembers.AncestorType);
+                VerifyInstanceMembers(instance, inheritedMembers.Source);
+            }
+        }
+
         internal static void VerifyInstanceMembers(object instance, IMembers actual) {
             var instanceMembers = Assert.IsType<InstanceMembers>(actual);
             Assert.Same(instance, instanceMembers.Instance);

@@ -215,6 +215,39 @@ namespace Inspector
             }
         }
 
+        public class InheritanceMethod: TypeExtensionsTest
+        {
+            class DerivedClass: TestClass { }
+
+            // Method parameters
+            readonly Type type = typeof(DerivedClass);
+
+            [Fact]
+            public void InheritedReturnsStaticMembersInheritedFromBaseType() {
+                IMembers actual = typeof(DerivedClass).Inherited();
+                VerifyInheritedMembers<TestClass>(typeof(DerivedClass), actual);
+            }
+
+            [Fact]
+            public void InheritedFromReturnsStaticMembersInheritedFromGivenType() {
+                IMembers actual = type.InheritedFrom(typeof(TestClass));
+                VerifyInheritedMembers<TestClass>(type, actual);
+            }
+
+            [Fact]
+            public void GenericInheritedFromReturnsStaticMembersInheritedFromGivenType() {
+                IMembers actual = type.InheritedFrom<TestClass>();
+                VerifyInheritedMembers<TestClass>(type, actual);
+            }
+
+            static void VerifyInheritedMembers<TAncestorType>(Type staticType, IMembers actual) {
+                InheritedMembers inheritedMembers = Assert.IsType<InheritedMembers>(actual);
+                Assert.Equal(typeof(TAncestorType), inheritedMembers.AncestorType);
+                var staticMembers = Assert.IsType<StaticMembers>(inheritedMembers.Source);
+                Assert.Equal(staticType, staticMembers.Type);
+            }
+        }
+
         public class MethodMethod: MethodExtensionsTest
         {
             // Method parameters
