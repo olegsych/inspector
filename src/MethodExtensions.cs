@@ -17,10 +17,10 @@ namespace Inspector
             scope.Methods().Single();
 
         public static Method Method(this IScope scope, string methodName) =>
-            new MemberNameFilter<Method, MethodInfo>(scope.Methods(), methodName).Single<Method>();
+            new MemberNameFilter<Method, MethodInfo>(scope.Methods(), methodName).Single();
 
         public static Method Method(this IScope scope, Type methodType) =>
-            new MethodTypeFilter(scope.Methods(), methodType, delegateFactory).Single<Method>();
+            new MethodTypeFilter(scope.Methods(), methodType, delegateFactory).Single();
 
         public static Method Method(this IScope scope, Type methodType, string methodName) {
             var typed = new MethodTypeFilter(scope.Methods(), methodType, delegateFactory);
