@@ -13,7 +13,7 @@ or resorting to integration testing.
 # install
 
 Add the [inspector](https://www.nuget.org/packages/inspector) package to your .NET project.
-```
+```PowerShell
 dotnet add package inspector
 ```
 
@@ -21,7 +21,7 @@ dotnet add package inspector
 
 Import the `Inspector` namespace in your .NET source file.
 Most of the Inspector APIs are extension methods of the .NET `Object` and `Type`.
-```
+```C#
 using Inspector;
 ```
 
