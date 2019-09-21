@@ -6,6 +6,7 @@
     <Version Condition="'$(APPVEYOR)' == 'True'">$(APPVEYOR_BUILD_VERSION)</Version>
     <Version Condition="'$(APPVEYOR)' != 'True'">0.0.0</Version>
     <Authors>Oleg Sych</Authors>
+    <Description>A simple .NET Reflection API for white-box unit testing.</Description>
     <LangVersion>latest</LangVersion>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
