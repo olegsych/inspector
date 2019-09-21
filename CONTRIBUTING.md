@@ -1,18 +1,18 @@
 # clone
 This repository contains submodules and symlinks.
-```
+```PowerShell
 git clone --recurse-submodules -c core.symlinks=true https://github.com/olegsych/inspector.git
 ```
 
 # build
 Use [Visual Studio](https://visualstudio.microsoft.com/downloads) or command line.
-```
+```PowerShell
 dotnet build .\Inspector.sln
 ```
 
 # test
 Use Visual Studio or command line.
-```
+```PowerShell
 dotnet test .\tst\Inspector.Tests.csproj
 ```
 
