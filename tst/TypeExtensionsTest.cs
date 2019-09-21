@@ -343,6 +343,17 @@ namespace Inspector
                 var instance = Assert.IsType<TypeWithPrivateConstructor>(typeof(TypeWithPrivateConstructor).New(value));
                 Assert.Same(value, instance.Property);
             }
+
+            class TestException: Exception { }
+
+            class TypeWithThrowingConstructor
+            {
+                TypeWithThrowingConstructor() => throw new TestException();
+            }
+
+            [Fact]
+            public void UnwrapsOriginalExceptionThrownByConstructor() =>
+                Assert.Throws<TestException>(() => typeof(TypeWithThrowingConstructor).New());
         }
 
         public class PropertyMethod: PropertyExtensionsTest

@@ -1,3 +1,4 @@
+using System;
 using Xunit;
 
 namespace Inspector
@@ -31,12 +32,23 @@ namespace Inspector
                 public PropertyType Property { get; }
             }
 
+            class TestException: Exception { }
+
             [Fact]
             public void ReturnsNewInstanceCreatedByPrivateConstructor() {
                 var value = new PropertyType();
                 var instance = Type<TypeWithPrivateConstructor>.New(value);
                 Assert.Same(value, instance.Property);
             }
+
+            class TypeWithThrowingConstructor
+            {
+                TypeWithThrowingConstructor() => throw new TestException();
+            }
+
+            [Fact]
+            public void UnwrapsOriginalExceptionThrownByConstructor() =>
+                Assert.Throws<TestException>(() => Type<TypeWithThrowingConstructor>.New());
         }
 
         public class Uninitialized: TypeTest

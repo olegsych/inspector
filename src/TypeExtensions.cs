@@ -91,8 +91,14 @@ namespace Inspector
         /// <summary>
         /// Creates an instance of given <see cref="Type"/> using the constructor that best matches given <paramref name="args"/>.
         /// </summary>
-        public static object New(this Type type, params object[] args) =>
-            Activator.CreateInstance(type, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance, default, args, default);
+        public static object New(this Type type, params object[] args) {
+            try {
+                return Activator.CreateInstance(type, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance, default, args, default);
+            }
+            catch(TargetInvocationException e) {
+                throw e.InnerException;
+            }
+        }
 
         public static IMembers Private(this Type type) =>
             new StaticMembers(type).Private();
