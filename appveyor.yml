@@ -23,7 +23,7 @@ test_script:
 - cmd: dotnet test .\tst\Inspector.Tests.csproj
 
 after_test:
-- cmd: dotnet pack .\src\Inspector.csproj --include-symbols
+- cmd: dotnet pack .\src\Inspector.csproj --configuration Release --include-symbols
 
 artifacts:
 - path: bin\debug\*.*nupkg
