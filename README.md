@@ -2,8 +2,6 @@
 [![Tests](https://img.shields.io/appveyor/tests/olegsych/inspector/master)](https://ci.appveyor.com/project/olegsych/inspector/branch/master/tests)
 [![Nuget](https://img.shields.io/nuget/v/inspector.svg)](https://www.nuget.org/packages/inspector)
 
-# what and why
-
 Inspector is a simple .NET Reflection API for white-box unit testing.
 
 Why use white-box testing? Because building fully-tested .NET code shouldn't require breaking of encapsulation
