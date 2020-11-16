@@ -1,1 +1,1 @@
-dotnet test .\tst\Inspector.Tests.csproj
+dotnet test .\tst\Tests.csproj

@@ -21,7 +21,7 @@
             "type": "process",
             "args": [
                 "test",
-                "${workspaceFolder}/tst/Inspector.Tests.csproj"
+                "${workspaceFolder}/tst/Tests.csproj"
             ],
             "problemMatcher": "$msCompile",
             "group": {

@@ -13,7 +13,7 @@ dotnet build .\Inspector.sln
 # test
 Use Visual Studio or command line.
 ```PowerShell
-dotnet test .\tst\Inspector.Tests.csproj
+dotnet test .\tst\Tests.csproj
 ```
 
 # continuous integration and release

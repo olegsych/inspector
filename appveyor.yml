@@ -20,7 +20,7 @@ build_script:
 - cmd: dotnet build .\Inspector.sln -nologo -logger:"C:\Program Files\AppVeyor\BuildAgent\dotnetcore\Appveyor.MSBuildLogger.dll"
 
 test_script:
-- cmd: dotnet test .\tst\Inspector.Tests.csproj
+- cmd: dotnet test .\tst\Tests.csproj
 
 after_test:
 - cmd: dotnet pack .\src\Inspector.csproj --configuration Release --include-symbols
