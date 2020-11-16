@@ -46,13 +46,14 @@ namespace Inspector
             }
 
             [Fact]
-            public void InvokesStaticConstructor() {
+            public void DoesNotInvokeStaticConstructor() {
                 StaticType.field = new FieldType();
                 var sut = new Constructor(typeof(StaticType).TypeInitializer);
 
                 sut.Invoke();
 
-                Assert.Same(StaticType.expected, StaticType.field);
+                // Reinitialization of static fields stopped working in .NET 5
+                Assert.NotSame(StaticType.expected, StaticType.field);
             }
         }
 
