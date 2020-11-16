@@ -16,11 +16,14 @@ Use Visual Studio or command line.
 dotnet test .\tst\Tests.csproj
 ```
 
-# continuous integration and release
-[AppVeyor](https://ci.appveyor.com/project/olegsych/inspector) builds are automatically triggered for the master branch.
-Nuget and symbol packages are automatically published to [nuget.org](https://www.nuget.org/packages/inspector).
-Build settings are defined in [appveyor.yml](.\appveyor.yml).
-
 # pull requests
 Pull requests are automatically validated by [AppVeyor](https://ci.appveyor.com/project/olegsych/inspector).
-Note to self: All changes must be merged into master through pull requests to avoid unnecessary churn of NuGet package versions.
+
+# continuous integration
+The [AppVeyor build](https://ci.appveyor.com/project/olegsych/inspector) is automatically triggered for the master branch.
+Build settings are defined in [appveyor.yml](./appveyor.yml).
+NuGet and symbol packages produced by builds are immediately available from the [AppVeyor package feed](https://ci.appveyor.com/nuget/inspector).
+
+# release
+Builds are [published](https://ci.appveyor.com/project/olegsych/inspector/deployments) to the
+[NuGet package feed](https://www.nuget.org/packages/inspector) when changes are ready for public consumption.

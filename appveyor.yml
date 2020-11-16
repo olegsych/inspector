@@ -27,8 +27,3 @@ after_test:
 
 artifacts:
 - path: bin\debug\*.*nupkg
-
-deploy:
-- provider: NuGet
-  api_key:
-    secure: O4dRVPV5hv283cF20s1Ab8Ba+RAaNeaDTxjgPMURfX1/f8riqFMO8f5gaCJkgCPH
