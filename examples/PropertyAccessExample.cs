@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Inspector
 {
-    public class PropertyAccessScenario
+    public class PropertyAccessExample
     {
         class Foo
         {

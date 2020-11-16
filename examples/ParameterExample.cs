@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Inspector
 {
-    public class ParameterScenario
+    public class ParameterExample
     {
         class TestType
         {
@@ -19,7 +19,7 @@ namespace Inspector
         readonly TestType instance = Type<TestType>.Uninitialized();
         readonly Type runtimeType = typeof(TestType).GetNestedType("Baz", BindingFlags.NonPublic);
 
-        public class ConstructorParameter: ParameterScenario
+        public class ConstructorParameter: ParameterExample
         {
             [Fact]
             public void CanBeAccessedByRuntimeType() {
@@ -40,7 +40,7 @@ namespace Inspector
             }
         }
 
-        public class ConstructorInfoParameter: ParameterScenario
+        public class ConstructorInfoParameter: ParameterExample
         {
             [Fact]
             public void CanBeAccessedByRuntimeType() {
@@ -64,7 +64,7 @@ namespace Inspector
             }
         }
 
-        public class MethodParameter: ParameterScenario
+        public class MethodParameter: ParameterExample
         {
             [Fact]
             public void CanBeAccessedByRuntimeType() {
@@ -85,7 +85,7 @@ namespace Inspector
             }
         }
 
-        public class MethodInfoParameter: ParameterScenario
+        public class MethodInfoParameter: ParameterExample
         {
             [Fact]
             public void CanBeAccessedByRuntimeType() {

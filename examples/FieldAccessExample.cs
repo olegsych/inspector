@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Inspector
 {
-    public class FieldAccessScenario
+    public class FieldAccessExample
     {
         class Foo
         {
@@ -18,9 +18,9 @@ namespace Inspector
         // Shared test fixture
         readonly Foo foo;
         readonly Bar bar = new Bar();
-        public FieldAccessScenario() => foo = new Foo(bar);
+        public FieldAccessExample() => foo = new Foo(bar);
 
-        public class FieldValue : FieldAccessScenario
+        public class FieldValue : FieldAccessExample
         {
             [Fact]
             public void GetWithMethod() {
@@ -63,7 +63,7 @@ namespace Inspector
             //}
         }
 
-        public class FieldInfoScenario : FieldAccessScenario
+        public class FieldInfoScenario : FieldAccessExample
         {
             [Fact]
             public void GetWithProperty() {

@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Inspector
 {
-    public class TypeAccessScenario
+    public class TypeAccessExample
     {
         static class Foo
         {
@@ -30,7 +30,7 @@ namespace Inspector
 
         class Baz { }
 
-        public class Field : TypeAccessScenario
+        public class Field : TypeAccessExample
         {
             [Fact]
             public void GetByType() {
@@ -45,7 +45,7 @@ namespace Inspector
             }
         }
 
-        public class Property : TypeAccessScenario
+        public class Property : TypeAccessExample
         {
             [Fact]
             public void GetByType() {

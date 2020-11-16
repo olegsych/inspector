@@ -5,9 +5,9 @@ using Xunit;
 
 namespace Inspector
 {
-    public class ObjectAccessScenario
+    public class ObjectAccessExample
     {
-        public class AccessibleTypes : ObjectAccessScenario
+        public class AccessibleTypes : ObjectAccessExample
         {
             class Bar { }
             class Baz { }
@@ -55,7 +55,7 @@ namespace Inspector
                 }
             }
 
-            public class AccessFields : ObjectAccessScenario
+            public class AccessFields : ObjectAccessExample
             {
                 class Foo
                 {
@@ -118,7 +118,7 @@ namespace Inspector
             }
         }
 
-        public class InaccessibleTypes : ObjectAccessScenario
+        public class InaccessibleTypes : ObjectAccessExample
         {
             class Inaccessible
             {
