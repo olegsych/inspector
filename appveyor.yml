@@ -26,4 +26,4 @@ after_test:
 - cmd: dotnet pack .\src\Inspector.csproj --configuration Release --include-symbols
 
 artifacts:
-- path: bin\debug\*.*nupkg
+- path: bin\release\*.*nupkg
