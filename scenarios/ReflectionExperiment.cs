@@ -43,14 +43,15 @@ namespace Inspector
             }
 
             [Fact]
-            public void StaticConstructorReinitializesType() {
+            public void StaticConstructorDoesNotReinitializesType() {
                 ConstructorInfo constructor = typeof(Foo).TypeInitializer;
                 Assert.True(constructor.IsStatic);
                 Foo.staticBar = 42;
 
                 constructor.Invoke(null, null);
 
-                Assert.Equal(0, Foo.staticBar);
+                // This behavior changed in .NET 5, reinitialization stopped working.
+                Assert.Equal(42, Foo.staticBar);
             }
         }
 
