@@ -1,3 +1,3 @@
 [submodule "modules/csharp.editorconfig"]
-	path = modules/csharp.editorconfig
+	path = modules/csharp.common
 	url = https://github.com/olegsych/csharp.editorconfig.git
