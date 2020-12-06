@@ -7,13 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Inspector", "src\Inspector.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5A879906-38C3-47E1-BBBD-6B2729FDA292}"
 	ProjectSection(SolutionItems) = preProject
-		modules\csharp.editorconfig\.editorconfig = modules\csharp.editorconfig\.editorconfig
+		.editorconfig = .editorconfig
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		appveyor.yml = appveyor.yml
 		build.ps1 = build.ps1
 		CONTRIBUTING.md = CONTRIBUTING.md
-		modules\csharp.editorconfig\directory.build.props = modules\csharp.editorconfig\directory.build.props
+		directory.build.props = directory.build.props
 		Inspector.snk = Inspector.snk
 		LICENSE = LICENSE
 		README.md = README.md
