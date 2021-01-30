@@ -105,15 +105,15 @@ namespace Inspector
             class Foo
             {
 #pragma warning disable 169
-                Bar privateField;
+                Bar? privateField;
 #pragma warning disable 169
 
 #pragma warning disable 649
-                protected Bar protectedField;
-                internal Bar internalField;
-                public readonly Bar publicField;
-                protected internal Bar protectedInternalField;
-                private protected Bar privateProtectedField;
+                protected Bar? protectedField;
+                internal Bar? internalField;
+                public readonly Bar? publicField;
+                protected internal Bar? protectedInternalField;
+                private protected Bar? privateProtectedField;
 #pragma warning restore 649
             }
 
@@ -169,12 +169,12 @@ namespace Inspector
 
             class Foo
             {
-                public Baz fooField;
+                public Baz? fooField;
             }
 
             class Bar : Foo
             {
-                public Baz barField;
+                public Baz? barField;
             }
 
 #pragma warning restore 649
@@ -222,20 +222,20 @@ namespace Inspector
 
             class Foo
             {
-                public Qux field1;
-                public Qux field2;
+                public Qux? field1;
+                public Qux? field2;
             }
 
             class Bar : Foo
             {
-                public new Qux field1;
-                public new Qux field2;
+                public new Qux? field1;
+                public new Qux? field2;
             }
 
             class Baz : Bar
             {
-                public new Qux field1;
-                public new Qux field2;
+                public new Qux? field1;
+                public new Qux? field2;
             }
 
 #pragma warning restore 649
