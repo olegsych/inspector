@@ -11,10 +11,10 @@ namespace Inspector.Implementation
     {
         readonly BindingFlags declaredMembers;
 
-        public delegate TMember Factory(TInfo memberInfo, object instance);
+        public delegate TMember Factory(TInfo memberInfo, object? instance);
         public delegate Func<BindingFlags, IEnumerable<TInfo>> InfoProvider(TypeInfo typeInfo);
 
-        public Members(Type type, object instance, InfoProvider getMemberInfo, Factory createMember, Lifetime lifetime = default) {
+        public Members(Type type, object? instance, InfoProvider getMemberInfo, Factory createMember, Lifetime lifetime = default) {
             Type = type ?? throw new ArgumentNullException(nameof(type));
             Instance = instance;
             GetMemberInfo = getMemberInfo ?? throw new ArgumentNullException(nameof(getMemberInfo));
@@ -29,7 +29,7 @@ namespace Inspector.Implementation
         public InfoProvider GetMemberInfo { get; }
         public Factory CreateMember { get; }
         public Type Type { get; }
-        public object Instance { get; }
+        public object? Instance { get; }
         public Lifetime Lifetime { get; }
 
         public IEnumerator<TMember> GetEnumerator() {
