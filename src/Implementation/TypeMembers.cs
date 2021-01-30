@@ -14,7 +14,7 @@ namespace Inspector.Implementation
             Type = instance.GetType();
         }
 
-        public object Instance { get; }
+        public object? Instance { get; }
 
         public Type Type { get; }
 
