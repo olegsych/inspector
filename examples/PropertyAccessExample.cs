@@ -9,8 +9,8 @@ namespace Inspector
     {
         class Foo
         {
-            Bar Bar { get; set; }
-            public Foo(Bar bar) => Bar = bar;
+            Bar? Bar { get; set; }
+            public Foo(Bar? bar) => Bar = bar;
         }
 
         class Bar { }
@@ -71,8 +71,8 @@ namespace Inspector
 
             class Bar
             {
-                Foo Foo { get; }
-                public Bar(Foo foo) => Foo = foo;
+                Foo? Foo { get; }
+                public Bar(Foo? foo) => Foo = foo;
             }
 
             [Fact]
