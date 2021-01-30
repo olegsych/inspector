@@ -11,7 +11,7 @@ namespace Inspector
         /// <summary>
         /// Initializes a new instance of the <see cref="Method"/> class.
         /// </summary>
-        public Method(MethodInfo info, object instance = null) :
+        public Method(MethodInfo info, object? instance = null) :
             base(info, instance) { }
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace Inspector
         public override bool IsStatic =>
             Info.IsStatic;
 
-        internal static Method Create(MethodInfo info, object instance) =>
+        internal static Method Create(MethodInfo info, object? instance) =>
             new Method(info, instance);
 
         /// <summary>
