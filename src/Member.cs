@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace Inspector
@@ -15,7 +16,7 @@ namespace Inspector
         /// <summary>
         /// Initializes a new instance of the <see cref="Member{TMemberInfo}"/> class.
         /// </summary>
-        protected Member(TMemberInfo info, object instance) {
+        protected Member(TMemberInfo info, object? instance) {
             Info = info ?? throw new ArgumentNullException(nameof(info));
 
             if(IsStatic) {
@@ -43,7 +44,7 @@ namespace Inspector
         /// <summary>
         /// Gets the object of the member or <c>null</c> if the member is static.
         /// </summary>
-        public object Instance { get; }
+        public object? Instance { get; }
 
         /// <summary>
         /// Returns <c>true</c> when <see cref="Info"/> represents a static member.
@@ -53,7 +54,10 @@ namespace Inspector
         /// <summary>
         /// Implicitly converts a given member to its <see cref="MemberInfo"/> for convenient access to Reflection APIs.
         /// </summary>
-        public static implicit operator TMemberInfo(Member<TMemberInfo> member) =>
+        #if NETSTANDARD2_1
+        [return: NotNullIfNotNull("member")]
+        #endif
+        public static implicit operator TMemberInfo?(Member<TMemberInfo>? member) =>
             member?.Info;
     }
 }
