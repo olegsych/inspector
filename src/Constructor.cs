@@ -11,7 +11,7 @@ namespace Inspector
         /// <summary>
         /// Initializes a new method of the <see cref="Constructor"/> class.
         /// </summary>
-        public Constructor(ConstructorInfo info, object instance = null) :
+        public Constructor(ConstructorInfo info, object? instance = null) :
             base(info, instance) { }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Inspector
         public void Invoke(params object[] parameters) =>
             Info.Invoke(Instance, parameters);
 
-        internal static Constructor Create(ConstructorInfo info, object instance) =>
+        internal static Constructor Create(ConstructorInfo info, object? instance) =>
             new Constructor(info, instance);
     }
 }

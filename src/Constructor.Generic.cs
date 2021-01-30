@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Inspector.Implementation;
 
@@ -15,7 +16,7 @@ namespace Inspector
         internal Constructor(Constructor constructor, IDelegateFactory<ConstructorInfo> delegateFactory) :
             base(NotNull(constructor).Info, constructor.Instance) {
 
-            if(!delegateFactory.TryCreate(Instance, Info, out @delegate)) {
+            if(!delegateFactory.TryCreate(Instance, Info, out @delegate!)) {
                 string error = $"Constructor {constructor.Info} doesn't match expected signature.";
                 throw new ArgumentException(error, nameof(constructor));
             }
@@ -29,7 +30,10 @@ namespace Inspector
         /// <summary>
         /// Implicitly converts the constructor to its <typeparamref name="TSignature"/> delegate.
         /// </summary>
-        public static implicit operator TSignature(Constructor<TSignature> constructor) =>
+        #if NETSTANDARD2_1
+        [return:NotNullIfNotNull("constructor")]
+        #endif
+        public static implicit operator TSignature?(Constructor<TSignature>? constructor) =>
             constructor?.Invoke;
 
         static Constructor NotNull(Constructor constructor) =>
