@@ -139,9 +139,9 @@ namespace Inspector
                 class Baz { }
             }
 
-            static readonly Type typeOfFoo = typeof(Inaccessible).GetNestedType("Foo", BindingFlags.NonPublic);
-            static readonly Type typeOfBar = typeof(Inaccessible).GetNestedType("Bar", BindingFlags.NonPublic);
-            static readonly Type typeOfBaz = typeof(Inaccessible).GetNestedType("Baz", BindingFlags.NonPublic);
+            static readonly Type typeOfFoo = typeof(Inaccessible).GetNestedType("Foo", BindingFlags.NonPublic)!;
+            static readonly Type typeOfBar = typeof(Inaccessible).GetNestedType("Bar", BindingFlags.NonPublic)!;
+            static readonly Type typeOfBaz = typeof(Inaccessible).GetNestedType("Baz", BindingFlags.NonPublic)!;
 
             public class Create : InaccessibleTypes
             {
@@ -175,7 +175,7 @@ namespace Inspector
 
             public class AccessFields : InaccessibleTypes
             {
-                readonly object foo = Activator.CreateInstance(typeOfFoo, true);
+                readonly object foo = Activator.CreateInstance(typeOfFoo, true)!;
 
                 [Fact]
                 public void ByType() {
