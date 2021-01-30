@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Inspector
 {
@@ -36,7 +37,10 @@ namespace Inspector
         /// <summary>
         /// Implicitly converts the property to it's value for convenient use in assertions.
         /// </summary>
-        public static implicit operator T(Property<T> property) =>
+        #if NETSTANDARD2_1
+        [return: NotNullIfNotNull("property")]
+        #endif
+        public static implicit operator T?(Property<T>? property) =>
             property != null ? property.Get() : default;
 
         static Property NotNull(Property property) =>
