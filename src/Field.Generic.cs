@@ -1,5 +1,5 @@
 using System;
-using System.Reflection;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Inspector
 {
@@ -40,7 +40,10 @@ namespace Inspector
         /// <summary>
         /// Implicitly converts the field to it's value for convenient use in assertions.
         /// </summary>
-        public static implicit operator T(Field<T> field) =>
+        #if NETSTANDARD2_1
+        [return:NotNullIfNotNull("field")]
+        #endif
+        public static implicit operator T?(Field<T>? field) =>
             field != null ? field.Get() : default;
 
         static Field NotNull(Field field) =>

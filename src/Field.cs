@@ -11,10 +11,10 @@ namespace Inspector
         /// <summary>
         /// Initializes a new instance of the <see cref="Field"/> class.
         /// </summary>
-        public Field(FieldInfo info, object instance = null) :
+        public Field(FieldInfo info, object? instance = null) :
             base(info, instance) { }
 
-        internal static Field Create(FieldInfo info, object instance) =>
+        internal static Field Create(FieldInfo info, object? instance) =>
             new Field(info, instance);
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Inspector
         /// <summary>
         /// Sets the field value.
         /// </summary>
-        public void Set(object value) =>
+        public void Set(object? value) =>
             Info.SetValue(Instance, value);
     }
 }
