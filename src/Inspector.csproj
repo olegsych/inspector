@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.1;netstandard2.0</TargetFrameworks>
     <AssemblyName>Inspector</AssemblyName>
     <RootNamespace>Inspector</RootNamespace>
     <Description>A simple .NET Reflection API for white-box unit testing.</Description>
