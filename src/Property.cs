@@ -11,10 +11,10 @@ namespace Inspector
         /// <summary>
         /// Initializes a new instance of the <see cref="Property"/> class.
         /// </summary>
-        public Property(PropertyInfo info, object instance = default) :
+        public Property(PropertyInfo info, object? instance = default) :
             base(info, instance) { }
 
-        internal static Property Create(PropertyInfo property, object instance) =>
+        internal static Property Create(PropertyInfo property, object? instance) =>
             new Property(property, instance);
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Inspector
         /// <summary>
         /// Sets the property value.
         /// </summary>
-        public void Set(object value) =>
+        public void Set(object? value) =>
             Info.SetValue(Instance, value);
     }
 }
