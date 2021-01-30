@@ -11,10 +11,10 @@ namespace Inspector
         /// <summary>
         /// Initializes a new instance of the <see cref="Event"/> class.
         /// </summary>
-        public Event(EventInfo info, object instance = null) :
+        public Event(EventInfo info, object? instance = null) :
             base(info, instance) { }
 
-        internal static Event Create(EventInfo info, object instance) =>
+        internal static Event Create(EventInfo info, object? instance) =>
             new Event(info, instance);
 
         /// <summary>
