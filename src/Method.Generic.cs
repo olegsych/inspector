@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Inspector.Implementation;
 
@@ -16,7 +17,7 @@ namespace Inspector
         /// Initializes a new instance of the <see cref="Method{TSignature}"/> class.
         /// </summary>
         internal Method(Method method, IDelegateFactory<MethodInfo> delegateFactory) : base(NotNull(method).Info, method.Instance) {
-            if(!delegateFactory.TryCreate(Instance, Info, out @delegate)) {
+            if(!delegateFactory.TryCreate(Instance, Info, out @delegate!)) {
                 string error = $"Method {method.Info} doesn't match expected signature.";
                 throw new ArgumentException(error, nameof(method));
             }
@@ -30,7 +31,10 @@ namespace Inspector
         /// <summary>
         /// Implicitly converts the method to its <typeparamref name="TSignature"/> delegate.
         /// </summary>
-        public static implicit operator TSignature(Method<TSignature> method) =>
+        #if NETSTANDARD2_1
+        [return: NotNullIfNotNull("method")]
+        #endif
+        public static implicit operator TSignature?(Method<TSignature>? method) =>
             (method != null) ? method.Invoke : default;
 
         static Method NotNull(Method method) =>
