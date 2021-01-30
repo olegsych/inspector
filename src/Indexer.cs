@@ -8,7 +8,7 @@ namespace Inspector
     /// </summary>
     public class Indexer: Member<PropertyInfo>
     {
-        public Indexer(PropertyInfo info, object instance) : base(null, null) =>
+        public Indexer(PropertyInfo info, object instance) : base(null!, null) =>
             throw new NotImplementedException();
 
         public override bool IsStatic =>
