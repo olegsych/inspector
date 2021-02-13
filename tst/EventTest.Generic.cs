@@ -16,7 +16,7 @@ namespace Inspector
         readonly TestType instance = new TestType();
 
         public GenericEventTest() {
-            EventInfo info = typeof(TestType).GetEvent(nameof(TestType.Event));
+            EventInfo info = typeof(TestType).GetEvent(nameof(TestType.Event))!;
             @event = new Event(info, instance);
             sut = new Event<TestHandler>(@event);
         }
@@ -31,7 +31,7 @@ namespace Inspector
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenGivenEventIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new Event<TestHandler>(null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new Event<TestHandler>(null!));
                 Assert.Equal("event", thrown.ParamName);
             }
 
