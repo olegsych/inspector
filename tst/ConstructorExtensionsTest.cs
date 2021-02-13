@@ -22,8 +22,9 @@ namespace Inspector
             object arrange = select.Invoke(Arg.Do<IEnumerable<Constructor>>(_ => selection = _)).Returns(selected);
         }
 
-        internal static ConstructorTypeFilter VerifyFilter(IEnumerable<Constructor> selection, Type expectedDelegateType) {
-            var filter = (ConstructorTypeFilter)selection;
+        internal static ConstructorTypeFilter VerifyFilter(IEnumerable<Constructor>? selection, Type expectedDelegateType) {
+            Assert.NotNull(selection);
+            var filter = (ConstructorTypeFilter)selection!;
             var assert = (ConstructorDelegateFactory)filter.DelegateFactory;
             Assert.Equal(expectedDelegateType, filter.DelegateType);
             return filter;

@@ -27,14 +27,16 @@ namespace Inspector
             object arrange = select.Invoke(Arg.Do<IEnumerable<Event>>(e => selection = e)).Returns(selected);
         }
 
-        internal static MemberNameFilter<Event, EventInfo> VerifyFilter(IEnumerable<Event> selection, string eventName) {
-            var filter = (MemberNameFilter<Event, EventInfo>)selection;
+        internal static MemberNameFilter<Event, EventInfo> VerifyFilter(IEnumerable<Event>? selection, string eventName) {
+            Assert.NotNull(selection);
+            var filter = (MemberNameFilter<Event, EventInfo>)selection!;
             Assert.Equal(eventName, filter.MemberName);
             return filter;
         }
 
-        internal static EventTypeFilter VerifyFilter(IEnumerable<Event> selection, Type expectedHandlerType) {
-            var filter = (EventTypeFilter)selection;
+        internal static EventTypeFilter VerifyFilter(IEnumerable<Event>? selection, Type expectedHandlerType) {
+            Assert.NotNull(selection);
+            var filter = (EventTypeFilter)selection!;
             Assert.Equal(expectedHandlerType, filter.HandlerType);
             return filter;
         }
