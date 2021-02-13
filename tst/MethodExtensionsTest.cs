@@ -20,11 +20,11 @@ namespace Inspector
         // Shared test fixture
         protected readonly object instance = new TestType();
         protected readonly Method selected;
-        protected IEnumerable<Method> selection;
+        protected IEnumerable<Method>? selection;
 
         public MethodExtensionsTest() {
-            selected = new Method(typeof(TestType).GetMethod(nameof(TestType.Method)), instance);
-            select.Invoke(Arg.Do<IEnumerable<Method>>(f => selection = f)).Returns(selected);
+            selected = new Method(typeof(TestType).GetMethod(nameof(TestType.Method))!, instance);
+            object arrange = select.Invoke(Arg.Do<IEnumerable<Method>>(f => selection = f)).Returns(selected);
         }
 
         protected static void VerifyGenericMethod<T>(Method selected, Method<T> generic) where T : Delegate {
@@ -33,15 +33,17 @@ namespace Inspector
             Assert.NotNull(generic.Invoke);
         }
 
-        internal static MemberNameFilter<Method, MethodInfo> VerifyFilter(IEnumerable<Method> selection, string methodName) {
-            var filter = Assert.IsType<MemberNameFilter<Method, MethodInfo>>(selection);
+        internal static MemberNameFilter<Method, MethodInfo> VerifyFilter(IEnumerable<Method>? selection, string methodName) {
+            Assert.NotNull(selection);
+            var filter = (MemberNameFilter<Method, MethodInfo>)selection!;
             Assert.Equal(methodName, filter.MemberName);
             return filter;
         }
 
-        internal static MethodTypeFilter VerifyFilter(IEnumerable<Method> selection, Type expectedMethodType) {
-            var filter = Assert.IsType<MethodTypeFilter>(selection);
-            Assert.IsType<MethodDelegateFactory>(filter.DelegateFactory);
+        internal static MethodTypeFilter VerifyFilter(IEnumerable<Method>? selection, Type expectedMethodType) {
+            Assert.NotNull(selection);
+            var filter = (MethodTypeFilter)selection!;
+            object assert = (MethodDelegateFactory)filter.DelegateFactory;
             Assert.Equal(expectedMethodType, filter.DelegateType);
             return filter;
         }
