@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Inspector
+﻿namespace Inspector
 {
     /// <summary>
     /// Creates instances of type <typeparamref name="T"/> dynamically.
