@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using Inspector.Implementation;
@@ -24,7 +23,7 @@ namespace Inspector
             ConstructorInfo info = typeof(TestType).GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic).Single();
             constructor = new Constructor(info, instance);
 
-            delegateFactory.TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<ConstructorInfo>(), out Delegate _)
+            object arrange = delegateFactory.TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<ConstructorInfo>(), out Delegate _)
                 .Returns(args => {
                     args[3] = @delegate;
                     return true;
@@ -44,19 +43,19 @@ namespace Inspector
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenConstructorIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new Constructor<TestSignature>(null, delegateFactory));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new Constructor<TestSignature>(null!, delegateFactory));
                 Assert.Equal("constructor", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenDelegateFactoryIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new Constructor<TestSignature>(constructor, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new Constructor<TestSignature>(constructor, null!));
                 Assert.Equal("delegateFactory", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenDelegateFactoryCannotCreateDelegateForGivenConstructor() {
-                delegateFactory.TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<ConstructorInfo>(), out Delegate _).Returns(false);
+                object arrange = delegateFactory.TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<ConstructorInfo>(), out Delegate _).Returns(false);
 
                 var thrown = Assert.Throws<ArgumentException>(() => new Constructor<TestSignature>(constructor, delegateFactory));
                 Assert.Equal("constructor", thrown.ParamName);
@@ -69,8 +68,8 @@ namespace Inspector
             [Fact]
             public void ReturnsDelegateCreatedByDelegateFactoryForGivenConstructor() {
                 Assert.Same(@delegate, sut.Invoke);
-                delegateFactory.Received().TryCreate(typeof(TestSignature), sut.Instance, sut.Info, out Delegate _);
-                delegateFactory.Received(1).TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<ConstructorInfo>(), out Delegate _);
+                object assert = delegateFactory.Received().TryCreate(typeof(TestSignature), sut.Instance, sut.Info, out Delegate _);
+                assert = delegateFactory.Received(1).TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<ConstructorInfo>(), out Delegate _);
             }
         }
 
@@ -84,7 +83,8 @@ namespace Inspector
 
             [Fact]
             public void ConvertsNullConstructorToNullSignatureToSupportImplicitConversionRules() {
-                TestSignature actual = (Constructor<TestSignature>)null;
+                Constructor<TestSignature>? @null = null;
+                TestSignature? actual = @null;
                 Assert.Null(actual);
             }
         }
