@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using Inspector.Implementation;
 using NSubstitute;
 using Xunit;
@@ -16,16 +15,16 @@ namespace Inspector
         readonly object instance = new TestType();
         protected readonly Type delegateType = typeof(TestDelegate);
         protected readonly Constructor selected;
-        protected IEnumerable<Constructor> selection;
+        protected IEnumerable<Constructor>? selection;
 
         public ConstructorExtensionsTest() {
-            selected = new Constructor(typeof(TestType).GetConstructor(new Type[0]), instance);
-            select.Invoke(Arg.Do<IEnumerable<Constructor>>(_ => selection = _)).Returns(selected);
+            selected = new Constructor(typeof(TestType).GetConstructor(new Type[0])!, instance);
+            object arrange = select.Invoke(Arg.Do<IEnumerable<Constructor>>(_ => selection = _)).Returns(selected);
         }
 
         internal static ConstructorTypeFilter VerifyFilter(IEnumerable<Constructor> selection, Type expectedDelegateType) {
-            var filter = Assert.IsType<ConstructorTypeFilter>(selection);
-            Assert.IsType<ConstructorDelegateFactory>(filter.DelegateFactory);
+            var filter = (ConstructorTypeFilter)selection;
+            var assert = (ConstructorDelegateFactory)filter.DelegateFactory;
             Assert.Equal(expectedDelegateType, filter.DelegateType);
             return filter;
         }
