@@ -10,8 +10,8 @@ namespace Inspector
         readonly Event sut;
 
         // Constructor parameters
-        readonly EventInfo instanceInfo = typeof(TestType).GetEvent(nameof(TestType.Event));
-        readonly EventInfo staticInfo = typeof(TestType).GetEvent(nameof(TestType.StaticEvent));
+        readonly EventInfo instanceInfo = typeof(TestType).GetEvent(nameof(TestType.Event))!;
+        readonly EventInfo staticInfo = typeof(TestType).GetEvent(nameof(TestType.StaticEvent))!;
         readonly object instance = new TestType();
 
         public EventTest() =>
@@ -85,7 +85,7 @@ namespace Inspector
         class TestType
         {
             public event TestEvent Event = (s, a) => { };
-            public static event TestEvent StaticEvent;
+            public static event TestEvent? StaticEvent;
 
             public void RaiseEvent(TestArgs args) =>
                 Event(this, args);
