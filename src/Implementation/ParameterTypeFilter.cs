@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace Inspector.Implementation
 {
-    public static class ParameterTypeFilter
+    static class ParameterTypeFilter
     {
         public static IEnumerable<ParameterInfo> WithType(this IEnumerable<ParameterInfo> parameters, Type parameterType) =>
             new Implementation(parameters, parameterType);
