@@ -32,14 +32,16 @@ namespace Inspector
             Assert.Same(selected.Instance, generic.Instance);
         }
 
-        internal static MemberNameFilter<Field, FieldInfo> VerifyFilter(IEnumerable<Field> selection, string fieldName) {
-            var filter = (MemberNameFilter<Field, FieldInfo>)selection;
+        internal static MemberNameFilter<Field, FieldInfo> VerifyFilter(IEnumerable<Field>? selection, string fieldName) {
+            Assert.NotNull(selection);
+            var filter = (MemberNameFilter<Field, FieldInfo>)selection!;
             Assert.Equal(fieldName, filter.MemberName);
             return filter;
         }
 
-        internal static FieldTypeFilter VerifyFilter(IEnumerable<Field> selection, Type expectedFieldType) {
-            var filter = (FieldTypeFilter)selection;
+        internal static FieldTypeFilter VerifyFilter(IEnumerable<Field>? selection, Type expectedFieldType) {
+            Assert.NotNull(selection);
+            var filter = (FieldTypeFilter)selection!;
             Assert.Equal(expectedFieldType, filter.FieldType);
             return filter;
         }
