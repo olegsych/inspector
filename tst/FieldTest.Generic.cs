@@ -33,7 +33,7 @@ namespace Inspector
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenFieldIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new Field<FieldType>(null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new Field<FieldType>(null!));
                 Assert.Equal("field", thrown.ParamName);
             }
 
@@ -91,7 +91,8 @@ namespace Inspector
 
             [Fact]
             public void ConvertsNullFieldToDefaultValueToSupportImplicitTypeConversionRules() {
-                FieldType value = (Field<FieldType>)null;
+                Field<FieldType>? @null = null;
+                FieldType? value = @null;
                 Assert.Null(value);
             }
         }
