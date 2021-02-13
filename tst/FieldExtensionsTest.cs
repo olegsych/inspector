@@ -20,11 +20,11 @@ namespace Inspector
         // Shared test fixture
         protected readonly object instance = new TestType();
         protected readonly Field selected;
-        protected IEnumerable<Field> selection;
+        protected IEnumerable<Field>? selection;
 
         public FieldExtensionsTest() {
-            selected = new Field(typeof(TestType).GetField(nameof(TestType.Field)), instance);
-            select.Invoke(Arg.Do<IEnumerable<Field>>(f => selection = f)).Returns(selected);
+            selected = new Field(typeof(TestType).GetField(nameof(TestType.Field))!, instance);
+            object arrange = select.Invoke(Arg.Do<IEnumerable<Field>>(f => selection = f)).Returns(selected);
         }
 
         protected static void VerifyGenericField<T>(Field selected, Field<T> generic) {
@@ -33,13 +33,13 @@ namespace Inspector
         }
 
         internal static MemberNameFilter<Field, FieldInfo> VerifyFilter(IEnumerable<Field> selection, string fieldName) {
-            var filter = Assert.IsType<MemberNameFilter<Field, FieldInfo>>(selection);
+            var filter = (MemberNameFilter<Field, FieldInfo>)selection;
             Assert.Equal(fieldName, filter.MemberName);
             return filter;
         }
 
         internal static FieldTypeFilter VerifyFilter(IEnumerable<Field> selection, Type expectedFieldType) {
-            var filter = Assert.IsType<FieldTypeFilter>(selection);
+            var filter = (FieldTypeFilter)selection;
             Assert.Equal(expectedFieldType, filter.FieldType);
             return filter;
         }
