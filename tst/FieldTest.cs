@@ -1,4 +1,3 @@
-using System;
 using System.Reflection;
 using Xunit;
 
@@ -9,8 +8,8 @@ namespace Inspector
         readonly Field sut;
 
         // Constructor parameters
-        readonly FieldInfo instanceField = typeof(TestType).GetField(nameof(TestType.Field));
-        readonly FieldInfo staticField = typeof(TestType).GetField(nameof(TestType.StaticField));
+        readonly FieldInfo instanceField = typeof(TestType).GetField(nameof(TestType.Field))!;
+        readonly FieldInfo staticField = typeof(TestType).GetField(nameof(TestType.StaticField))!;
         readonly object instance = new TestType();
 
         public FieldTest() =>
