@@ -1,6 +1,5 @@
 using System;
 using System.Reflection;
-using NSubstitute;
 using Xunit;
 
 namespace Inspector
@@ -10,7 +9,7 @@ namespace Inspector
         readonly Member<MemberInfo> sut;
 
         // Constructor parameters
-        readonly MemberInfo info = typeof(InstanceType).GetField(nameof(InstanceType.Field));
+        readonly MemberInfo info = typeof(InstanceType).GetField(nameof(InstanceType.Field))!;
         readonly object instance = new InstanceType();
 
         public MemberTest() =>
@@ -24,7 +23,7 @@ namespace Inspector
 
         public class StaticMember: Member<MemberInfo>
         {
-            public StaticMember(MemberInfo info, object instance) : base(info, instance) { }
+            public StaticMember(MemberInfo info, object? instance) : base(info, instance) { }
             public override bool IsStatic => true;
         }
 
@@ -32,20 +31,20 @@ namespace Inspector
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenMemberInfoIsNullToFailFast() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new InstanceMember(null, instance));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new InstanceMember(null!, instance));
                 Assert.Equal("info", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionGivenInstanceMemberInfoWithoutInstance() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new InstanceMember(info, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new InstanceMember(info, null!));
                 Assert.Equal("instance", thrown.ParamName);
                 Assert.StartsWith($"Instance is required for {info}", thrown.Message);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionGivenInstanceForStaticMember() {
-                MemberInfo staticMember = typeof(InstanceType).GetField(nameof(InstanceType.StaticField));
+                MemberInfo staticMember = typeof(InstanceType).GetField(nameof(InstanceType.StaticField))!;
                 var thrown = Assert.Throws<ArgumentException>(() => new StaticMember(staticMember, instance));
                 Assert.Equal("instance", thrown.ParamName);
                 Assert.StartsWith($"Instance shouldn't be specified for static {staticMember}.", thrown.Message);
@@ -55,7 +54,7 @@ namespace Inspector
             public void ThrowsDescriptiveExceptionWhenGivenInstanceOfTypeDifferentFromMemberInfo() {
                 var thrown = Assert.Throws<ArgumentException>(() => new InstanceMember(info, new AnotherType()));
                 Assert.Equal("instance", thrown.ParamName);
-                Assert.StartsWith($"Instance type {nameof(AnotherType)} doesn't match type {info.DeclaringType.Name} where {info.Name} is declared.", thrown.Message);
+                Assert.StartsWith($"Instance type {nameof(AnotherType)} doesn't match type {info.DeclaringType!.Name} where {info.Name} is declared.", thrown.Message);
             }
 
             [Fact]
@@ -97,7 +96,8 @@ namespace Inspector
 
             [Fact]
             public void ConvertsNullToNullWithoutThrowingExceptionToSupportImplicitConversionRules() {
-                MemberInfo converted = (Member<MemberInfo>)null;
+                Member<MemberInfo>? @null = null;
+                MemberInfo? converted = @null;
                 Assert.Null(converted);
             }
         }
