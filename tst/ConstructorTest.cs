@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using System.Reflection;
 using Xunit;
 
@@ -48,7 +46,7 @@ namespace Inspector
             [Fact]
             public void DoesNotInvokeStaticConstructor() {
                 StaticType.field = new FieldType();
-                var sut = new Constructor(typeof(StaticType).TypeInitializer);
+                var sut = new Constructor(typeof(StaticType).TypeInitializer!);
 
                 sut.Invoke();
 
@@ -65,7 +63,7 @@ namespace Inspector
 
             [Fact]
             public void ReturnsTrueForStaticConstructorInfo() =>
-                Assert.True(new Constructor(typeof(InstanceType).TypeInitializer, null).IsStatic);
+                Assert.True(new Constructor(typeof(StaticType).TypeInitializer!, null).IsStatic);
         }
 
         class InstanceType
