@@ -20,21 +20,21 @@ namespace Inspector
         // Shared test fixture
         protected readonly object instance = new TestType();
         protected readonly Event selected;
-        protected IEnumerable<Event> selection;
+        protected IEnumerable<Event>? selection;
 
         public EventExtensionsTest() {
-            selected = new Event(typeof(TestType).GetEvent(nameof(TestType.Event)), instance);
-            select.Invoke(Arg.Do<IEnumerable<Event>>(e => selection = e)).Returns(selected);
+            selected = new Event(typeof(TestType).GetEvent(nameof(TestType.Event))!, instance);
+            object arrange = select.Invoke(Arg.Do<IEnumerable<Event>>(e => selection = e)).Returns(selected);
         }
 
         internal static MemberNameFilter<Event, EventInfo> VerifyFilter(IEnumerable<Event> selection, string eventName) {
-            var filter = Assert.IsType<MemberNameFilter<Event, EventInfo>>(selection);
+            var filter = (MemberNameFilter<Event, EventInfo>)selection;
             Assert.Equal(eventName, filter.MemberName);
             return filter;
         }
 
         internal static EventTypeFilter VerifyFilter(IEnumerable<Event> selection, Type expectedHandlerType) {
-            var filter = Assert.IsType<EventTypeFilter>(selection);
+            var filter = (EventTypeFilter)selection;
             Assert.Equal(expectedHandlerType, filter.HandlerType);
             return filter;
         }
@@ -46,7 +46,7 @@ namespace Inspector
 
         protected class TestType
         {
-            public event TestHandler Event;
+            public event TestHandler? Event;
         }
 
         protected class TestEventArgs: EventArgs { }
