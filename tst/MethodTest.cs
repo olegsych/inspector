@@ -1,4 +1,3 @@
-using System;
 using System.Reflection;
 using NSubstitute;
 using Xunit;
@@ -10,8 +9,8 @@ namespace Inspector
         readonly Method sut;
 
         // Constructor parameters
-        readonly MethodInfo instanceMethod = typeof(TestType).GetMethod(nameof(TestType.Method));
-        readonly MethodInfo staticMethod = typeof(TestType).GetMethod(nameof(TestType.StaticMethod));
+        readonly MethodInfo instanceMethod = typeof(TestType).GetMethod(nameof(TestType.Method))!;
+        readonly MethodInfo staticMethod = typeof(TestType).GetMethod(nameof(TestType.StaticMethod))!;
         readonly object instance = Substitute.For<TestType>();
 
         public MethodTest() =>
@@ -45,7 +44,7 @@ namespace Inspector
             public void CallsMethodAndReturnsItsResult() {
                 var expectedParameter = new ParameterType();
                 var expectedResult = new ReturnType();
-                ((TestType)instance).Method(expectedParameter).Returns(expectedResult);
+                object arrange = ((TestType)instance).Method(expectedParameter).Returns(expectedResult);
 
                 object actualResult = sut.Invoke(expectedParameter);
 
@@ -66,8 +65,8 @@ namespace Inspector
 
         public class TestType
         {
-            public virtual ReturnType Method(ParameterType p) => null;
-            public static ReturnType StaticMethod(ParameterType p) => null;
+            public virtual ReturnType? Method(ParameterType p) => null;
+            public static ReturnType? StaticMethod(ParameterType p) => null;
         }
 
         public class ParameterType { }
