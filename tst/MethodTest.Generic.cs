@@ -19,10 +19,10 @@ namespace Inspector
         readonly Signature @delegate = Substitute.For<Signature>();
 
         public GenericMethodTest() {
-            MethodInfo info = typeof(InstanceType).GetMethod(nameof(InstanceType.TestMethod));
+            MethodInfo info = typeof(InstanceType).GetMethod(nameof(InstanceType.TestMethod))!;
             method = new Method(info, instance);
 
-            delegateFactory.TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<MethodInfo>(), out Delegate _)
+            object arrange = delegateFactory.TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<MethodInfo>(), out Delegate _)
                 .Returns(args => {
                     args[3] = @delegate;
                     return true;
@@ -42,19 +42,19 @@ namespace Inspector
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenMethodIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new Method<Signature>(null, delegateFactory));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new Method<Signature>(null!, delegateFactory));
                 Assert.Equal("method", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenDelegateFactoryIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new Method<Signature>(method, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new Method<Signature>(method, null!));
                 Assert.Equal("delegateFactory", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenDelegateFactoryCannotCreateDelegateForGivenMethod() {
-                delegateFactory.TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<MethodInfo>(), out Delegate _).Returns(false);
+                object arrange = delegateFactory.TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<MethodInfo>(), out Delegate _).Returns(false);
 
                 var thrown = Assert.Throws<ArgumentException>(() => new Method<Signature>(method, delegateFactory));
                 Assert.Equal("method", thrown.ParamName);
@@ -67,8 +67,8 @@ namespace Inspector
             [Fact]
             public void ReturnsDelegateCreatedByDelegateFactoryForGivenMethod() {
                 Assert.Same(@delegate, sut.Invoke);
-                delegateFactory.Received().TryCreate(typeof(Signature), sut.Instance, sut.Info, out Delegate _);
-                delegateFactory.Received(1).TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<MethodInfo>(), out Delegate _);
+                object assert = delegateFactory.Received().TryCreate(typeof(Signature), sut.Instance, sut.Info, out Delegate _);
+                assert = delegateFactory.Received(1).TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<MethodInfo>(), out Delegate _);
             }
         }
 
@@ -82,18 +82,19 @@ namespace Inspector
 
             [Fact]
             public void ConvertsNullMethodToNullSignatureToSupportImplicitConversionRules() {
-                Signature actual = (Method<Signature>)null;
+                Method<Signature>? @null = null;
+                Signature? actual = @null;
                 Assert.Null(actual);
             }
         }
 
         internal class InstanceType
         {
-            public virtual R1 TestMethod(P1 p1, P2 p2) => null;
-            public R1 MethodWithFewerParameters(P1 p1) => null;
-            public R1 MethodWithDifferentParameterTypes(P2 p2, P1 p1) => null;
-            public R1 MethodWithMoreParameters(P1 p1, P2 p2, P3 p3) => null;
-            public R2 MethodWithDifferentReturnType(P1 p1, P2 p2) => null;
+            public virtual R1? TestMethod(P1 p1, P2 p2) => null;
+            public R1? MethodWithFewerParameters(P1 p1) => null;
+            public R1? MethodWithDifferentParameterTypes(P2 p2, P1 p1) => null;
+            public R1? MethodWithMoreParameters(P1 p1, P2 p2, P3 p3) => null;
+            public R2? MethodWithDifferentReturnType(P1 p1, P2 p2) => null;
         }
 
         internal class P1 { }
