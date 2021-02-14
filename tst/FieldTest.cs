@@ -41,7 +41,7 @@ namespace Inspector
         {
             [Fact]
             public void GetsFieldValue() {
-                object value = sut.Value;
+                object? value = sut.Value;
                 Assert.Same(((TestType)instance).Field, value);
             }
 
@@ -57,7 +57,7 @@ namespace Inspector
         {
             [Fact]
             public void GetsFieldValue() {
-                object value = sut.Get();
+                object? value = sut.Get();
                 Assert.Same(((TestType)instance).Field, value);
             }
         }

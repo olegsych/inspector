@@ -20,7 +20,7 @@ namespace Inspector
         /// <summary>
         /// Gets or sets the field value.
         /// </summary>
-        public new T Value {
+        public new T? Value {
             get => Get();
             set => Set(value);
         }
@@ -28,21 +28,18 @@ namespace Inspector
         /// <summary>
         /// Gets the field value.
         /// </summary>
-        public new T Get() =>
+        public new T? Get() =>
             (T)base.Get();
 
         /// <summary>
         /// Sets the field value.
         /// </summary>
-        public void Set(T value) =>
+        public void Set(T? value) =>
             base.Set(value);
 
         /// <summary>
         /// Implicitly converts the field to it's value for convenient use in assertions.
         /// </summary>
-        #if NETSTANDARD2_1
-        [return:NotNullIfNotNull("field")]
-        #endif
         public static implicit operator T?(Field<T>? field) =>
             field != null ? field.Get() : default;
 
