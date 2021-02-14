@@ -26,7 +26,7 @@ namespace Inspector.Implementation
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenDeclaringTypeIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new DeclarationFilter<Member<MemberInfo>, MemberInfo>(source, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new DeclarationFilter<Member<MemberInfo>, MemberInfo>(source, null!));
                 Assert.Equal("declaringType", thrown.ParamName);
             }
         }
@@ -54,7 +54,7 @@ namespace Inspector.Implementation
                 public override bool IsStatic => true;
             }
 
-            static Member<MemberInfo> Member(Type declaringType = default) {
+            static Member<MemberInfo> Member(Type? declaringType = default) {
                 MemberInfo info = Substitute.For<MemberInfo>();
                 ConfiguredCall arrange = info.DeclaringType.Returns(declaringType ?? typeof(UnexpectedType));
                 return new TestMember(info);
