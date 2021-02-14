@@ -24,19 +24,19 @@ namespace Inspector.Implementation
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenSourceIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new ConstructorTypeFilter(null, delegateType, delegateFactory));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new ConstructorTypeFilter(null!, delegateType, delegateFactory));
                 Assert.Equal(nameof(source), thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenDelegateTypeIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new ConstructorTypeFilter(source, null, delegateFactory));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new ConstructorTypeFilter(source, null!, delegateFactory));
                 Assert.Equal(nameof(delegateType), thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenFactoryIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new ConstructorTypeFilter(source, delegateType, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new ConstructorTypeFilter(source, delegateType, null!));
                 Assert.Equal(nameof(delegateFactory), thrown.ParamName);
             }
 
@@ -76,7 +76,7 @@ namespace Inspector.Implementation
                 ConfiguredCall arrange;
                 var target = new TestType();
                 ConstructorInfo[] infos = typeof(TestType).GetConstructors();
-                arrange = delegateFactory.TryCreate(delegateType, target, infos[1], out Delegate @delegate).Returns(true);
+                arrange = delegateFactory.TryCreate(delegateType, target, infos[1], out Delegate? @delegate).Returns(true);
                 arrange = delegateFactory.TryCreate(delegateType, target, infos[3], out @delegate).Returns(true);
                 List<Constructor> constructors = infos.Select(_ => new Constructor(_, target)).ToList();
                 arrange = source.GetEnumerator().Returns(constructors.GetEnumerator());
