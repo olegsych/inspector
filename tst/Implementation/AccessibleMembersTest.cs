@@ -18,7 +18,7 @@ namespace Inspector.Implementation
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenSourceIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new AccessibleMembers(null, accessibility));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new AccessibleMembers(null!, accessibility));
                 Assert.Equal("source", thrown.ParamName);
             }
 
