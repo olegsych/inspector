@@ -17,13 +17,14 @@ namespace Inspector.Implementation
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenSourceIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => default(IEnumerable<ParameterInfo>).WithType(parameterType));
+                IEnumerable<ParameterInfo> @null = null!;
+                var thrown = Assert.Throws<ArgumentNullException>(() => @null.WithType(parameterType));
                 Assert.Equal("source", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenParameterTypeIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => parameters.WithType(null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => parameters.WithType(null!));
                 Assert.Equal("parameterType", thrown.ParamName);
             }
         }
