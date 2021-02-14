@@ -17,13 +17,14 @@ namespace Inspector.Implementation
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenSourceIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => default(IEnumerable<ParameterInfo>).WithName(parameterName));
+                IEnumerable<ParameterInfo> @null = null!;
+                var thrown = Assert.Throws<ArgumentNullException>(() => @null.WithName(parameterName));
                 Assert.Equal("source", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenParameterNameIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => parameters.WithName(null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => parameters.WithName(null!));
                 Assert.Equal("parameterName", thrown.ParamName);
             }
         }
@@ -37,13 +38,13 @@ namespace Inspector.Implementation
 
             [Fact]
             public void ParameterNameReturnsValueGivenToWithName() {
-                var implementation = Assert.IsType<ParameterNameFilter.Implementation>(sut);
+                var implementation = (ParameterNameFilter.Implementation)sut;
                 Assert.Same(parameterName, implementation.ParameterName);
             }
 
             [Fact]
             public void SourceImplementsDecoratorAndReturnsValueGivenToWithName() {
-                var decorator = Assert.IsAssignableFrom<IDecorator<IEnumerable<ParameterInfo>>>(sut);
+                var decorator = (IDecorator<IEnumerable<ParameterInfo>>)sut;
                 Assert.Same(parameters, decorator.Source);
             }
 
