@@ -23,13 +23,13 @@ namespace Inspector.Implementation
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenSourceIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new DeclaredMembers(null, declaringType));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new DeclaredMembers(null!, declaringType));
                 Assert.Equal("source", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenDeclaringTypeIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new DeclaredMembers(source, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new DeclaredMembers(source, null!));
                 Assert.Equal("declaringType", thrown.ParamName);
             }
         }
@@ -57,7 +57,7 @@ namespace Inspector.Implementation
 
                 IEnumerable<Constructor> actual = sut.Constructors();
 
-                var declaredConstructors = Assert.IsType<DeclarationFilter<Constructor, ConstructorInfo>>(actual);
+                var declaredConstructors = (DeclarationFilter<Constructor, ConstructorInfo>)actual;
                 Assert.Equal(declaringType, declaredConstructors.DeclaringType);
                 Assert.Same(allConstructors, declaredConstructors.Source);
             }
@@ -72,7 +72,7 @@ namespace Inspector.Implementation
 
                 IEnumerable<Event> actual = sut.Events();
 
-                var declaredEvents = Assert.IsType<DeclarationFilter<Event, EventInfo>>(actual);
+                var declaredEvents = (DeclarationFilter<Event, EventInfo>)actual;
                 Assert.Equal(declaringType, declaredEvents.DeclaringType);
                 Assert.Same(allEvents, declaredEvents.Source);
             }
@@ -87,7 +87,7 @@ namespace Inspector.Implementation
 
                 IEnumerable<Field> actual = sut.Fields();
 
-                var declaredFields = Assert.IsType<DeclarationFilter<Field, FieldInfo>>(actual);
+                var declaredFields = (DeclarationFilter<Field, FieldInfo>)actual;
                 Assert.Equal(declaringType, declaredFields.DeclaringType);
                 Assert.Same(allFields, declaredFields.Source);
             }
@@ -102,7 +102,7 @@ namespace Inspector.Implementation
 
                 IEnumerable<Method> actual = sut.Methods();
 
-                var declaredMethods = Assert.IsType<DeclarationFilter<Method, MethodInfo>>(actual);
+                var declaredMethods = (DeclarationFilter<Method, MethodInfo>)actual;
                 Assert.Equal(declaringType, declaredMethods.DeclaringType);
                 Assert.Same(allMethods, declaredMethods.Source);
             }
@@ -117,7 +117,7 @@ namespace Inspector.Implementation
 
                 IEnumerable<Property> actual = sut.Properties();
 
-                var declaredProperties = Assert.IsType<DeclarationFilter<Property, PropertyInfo>>(actual);
+                var declaredProperties = (DeclarationFilter<Property, PropertyInfo>)actual;
                 Assert.Equal(declaringType, declaredProperties.DeclaringType);
                 Assert.Same(allProperties, declaredProperties.Source);
             }
