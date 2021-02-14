@@ -23,13 +23,13 @@ namespace Inspector.Implementation
         {
             [Fact]
             public void ThrowsArgumentNullExceptionIfSourceIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new PropertyTypeFilter(null, propertyType));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new PropertyTypeFilter(null!, propertyType));
                 Assert.Equal("source", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsArgumentNullExceptionIfPropertyTypeArgumentIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new PropertyTypeFilter(source, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new PropertyTypeFilter(source, null!));
                 Assert.Equal("propertyType", thrown.ParamName);
             }
 
@@ -51,7 +51,7 @@ namespace Inspector.Implementation
             public void ReturnsPropertiesWithGivenPropertyType() {
                 PropertyInfo propertyInfo = PropertyInfo(MethodAttributes.Static, propertyType);
 
-                var expected = new[] { new Property(propertyInfo), new Property(propertyInfo) };
+                Property[] expected = { new Property(propertyInfo), new Property(propertyInfo) };
 
                 IEnumerable<Property> mixed = new[] {
                     new Property(PropertyInfo(MethodAttributes.Static)),
