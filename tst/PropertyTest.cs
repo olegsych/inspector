@@ -8,8 +8,8 @@ namespace Inspector
         readonly Property sut;
 
         // Constructor parameters
-        readonly PropertyInfo property = typeof(TestType).GetProperty(nameof(TestType.Property));
-        readonly PropertyInfo staticProperty = typeof(TestType).GetProperty(nameof(TestType.StaticProperty));
+        readonly PropertyInfo property = typeof(TestType).GetProperty(nameof(TestType.Property))!;
+        readonly PropertyInfo staticProperty = typeof(TestType).GetProperty(nameof(TestType.StaticProperty))!;
         readonly object instance = new TestType();
 
         public PropertyTest() =>
@@ -93,8 +93,8 @@ namespace Inspector
 
         class TestType
         {
-            public TestValue Property { get; set; }
-            public static TestValue StaticProperty { get; set; }
+            public TestValue? Property { get; set; }
+            public static TestValue? StaticProperty { get; set; }
         }
 
         class TestValue { }
