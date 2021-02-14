@@ -50,7 +50,7 @@ namespace Inspector
         {
             [Fact]
             public void GetsPropertyValue() {
-                PropertyType value = sut.Get();
+                PropertyType? value = sut.Get();
                 Assert.Same(instance.Property, value);
             }
         }
@@ -69,7 +69,7 @@ namespace Inspector
         {
             [Fact]
             public void GetsPropertyValue() {
-                PropertyType value = sut.Value;
+                PropertyType? value = sut.Value;
                 Assert.Same(instance.Property, value);
             }
 
@@ -85,7 +85,7 @@ namespace Inspector
         {
             [Fact]
             public void ImplicitlyConvertsPropertyToValueType() {
-                PropertyType value = sut;
+                PropertyType? value = sut;
                 Assert.Same(value, instance.Property);
             }
 

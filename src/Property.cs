@@ -25,7 +25,7 @@ namespace Inspector
         /// <summary>
         /// Gets or sets the property value.
         /// </summary>
-        public object Value {
+        public object? Value {
             get => Get();
             set => Set(value);
         }
@@ -33,7 +33,7 @@ namespace Inspector
         /// <summary>
         /// Gets the property value.
         /// </summary>
-        public object Get() =>
+        public object? Get() =>
             Info.GetValue(Instance);
 
         /// <summary>
