@@ -20,7 +20,7 @@ namespace Inspector
         readonly string parameterName = Guid.NewGuid().ToString();
         readonly Type parameterType = typeof(ParameterType);
 
-        IEnumerable<ParameterInfo> selection;
+        IEnumerable<ParameterInfo>? selection;
 
         public ParameterExtensionsTest() {
             ConfiguredCall arrange;
@@ -120,19 +120,22 @@ namespace Inspector
             }
         }
 
-        static void VerifyParameters(IEnumerable<ParameterInfo> selection, MethodBase method) {
-            var filter = Assert.IsType<Parameters>(selection);
+        static void VerifyParameters(IEnumerable<ParameterInfo>? selection, MethodBase method) {
+            Assert.NotNull(selection);
+            var filter = (Parameters)selection!;
             Assert.Same(method, filter.Method);
         }
 
-        static ParameterNameFilter.Implementation VerifyFilter(IEnumerable<ParameterInfo> selection, string parameterName) {
-            var filter = Assert.IsType<ParameterNameFilter.Implementation>(selection);
+        static ParameterNameFilter.Implementation VerifyFilter(IEnumerable<ParameterInfo>? selection, string parameterName) {
+            Assert.NotNull(selection);
+            var filter = (ParameterNameFilter.Implementation)selection!;
             Assert.Equal(parameterName, filter.ParameterName);
             return filter;
         }
 
-        static ParameterTypeFilter.Implementation VerifyFilter(IEnumerable<ParameterInfo> selection, Type parameterType) {
-            var filter = Assert.IsType<ParameterTypeFilter.Implementation>(selection);
+        static ParameterTypeFilter.Implementation VerifyFilter(IEnumerable<ParameterInfo>? selection, Type parameterType) {
+            Assert.NotNull(selection);
+            var filter = (ParameterTypeFilter.Implementation)selection!;
             Assert.Equal(parameterType, filter.ParameterType);
             return filter;
         }
