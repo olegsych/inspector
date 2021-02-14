@@ -40,10 +40,10 @@ namespace Inspector
             }
 
             static void VerifyMembers(IMembers actual, Type type, Accessibility accessibility) {
-                var accessibleMembers = Assert.IsType<AccessibleMembers>(actual);
+                var accessibleMembers = (AccessibleMembers)actual;
                 Assert.Equal(accessibility, accessibleMembers.Accessibility);
 
-                var staticMembers = Assert.IsType<StaticMembers>(accessibleMembers.Source);
+                var staticMembers = (StaticMembers)accessibleMembers.Source;
                 Assert.Same(type, staticMembers.Type);
             }
         }
@@ -55,7 +55,8 @@ namespace Inspector
             [Fact]
             public void ReturnsSingleConstructorOfGivenType() {
                 Assert.Same(selected, type.Constructor());
-                var members = Assert.IsType<Members<ConstructorInfo, Constructor>>(selection);
+                Assert.NotNull(selection);
+                var members = (Members<ConstructorInfo, Constructor>)selection!;
                 Assert.Same(type, members.Type);
             }
         }
@@ -84,9 +85,9 @@ namespace Inspector
             }
 
             static void VerifyDeclaredMembers<TDeclaringType>(Type staticType, IMembers actual) {
-                var declaredMembers = Assert.IsType<DeclaredMembers>(actual);
+                var declaredMembers = (DeclaredMembers)actual;
                 Assert.Equal(typeof(TDeclaringType), declaredMembers.DeclaringType);
-                var staticMembers = Assert.IsType<StaticMembers>(declaredMembers.Source);
+                var staticMembers = (StaticMembers)declaredMembers.Source;
                 Assert.Equal(staticType, staticMembers.Type);
             }
         }
@@ -147,8 +148,9 @@ namespace Inspector
                 VerifyStaticEvents(typed.Source, testType);
             }
 
-            static void VerifyStaticEvents(IEnumerable<Event> selection, Type type) {
-                var events = Assert.IsType<Members<EventInfo, Event>>(selection);
+            static void VerifyStaticEvents(IEnumerable<Event>? selection, Type type) {
+                Assert.NotNull(selection);
+                var events = (Members<EventInfo, Event>)selection!;
                 Assert.Same(type, events.Type);
             }
         }
@@ -209,8 +211,9 @@ namespace Inspector
                 VerifyStaticFields(typed.Source, testType);
             }
 
-            static void VerifyStaticFields(IEnumerable<Field> selection, Type expected) {
-                var fields = Assert.IsType<Members<FieldInfo, Field>>(selection);
+            static void VerifyStaticFields(IEnumerable<Field>? selection, Type expected) {
+                Assert.NotNull(selection);
+                var fields = (Members<FieldInfo, Field>)selection!;
                 Assert.Same(expected, fields.Type);
             }
         }
@@ -241,9 +244,9 @@ namespace Inspector
             }
 
             static void VerifyInheritedMembers<TAncestorType>(Type staticType, IMembers actual) {
-                InheritedMembers inheritedMembers = Assert.IsType<InheritedMembers>(actual);
+                var inheritedMembers = (InheritedMembers)actual;
                 Assert.Equal(typeof(TAncestorType), inheritedMembers.AncestorType);
-                var staticMembers = Assert.IsType<StaticMembers>(inheritedMembers.Source);
+                var staticMembers = (StaticMembers)inheritedMembers.Source;
                 Assert.Equal(staticType, staticMembers.Type);
             }
         }
@@ -304,8 +307,9 @@ namespace Inspector
                 VerifyStaticMethods(typed.Source, testType);
             }
 
-            static void VerifyStaticMethods(IEnumerable<Method> selection, Type expected) {
-                var methods = Assert.IsType<Members<MethodInfo, Method>>(selection);
+            static void VerifyStaticMethods(IEnumerable<Method>? selection, Type expected) {
+                Assert.NotNull(selection);
+                var methods = (Members<MethodInfo, Method>)selection!;
                 Assert.Same(expected, methods.Type);
             }
         }
@@ -325,7 +329,7 @@ namespace Inspector
             [Fact]
             public void ReturnsNewInstanceCreatedByPublicConstructor() {
                 var value = new PropertyType();
-                var instance = Assert.IsType<TypeWithPublicConstructor>(typeof(TypeWithPublicConstructor).New(value));
+                var instance = (TypeWithPublicConstructor)typeof(TypeWithPublicConstructor).New(value);
                 Assert.Same(value, instance.Property);
             }
 
@@ -340,7 +344,7 @@ namespace Inspector
             [Fact]
             public void ReturnsNewInstanceCreatedByPrivateConstructor() {
                 var value = new PropertyType();
-                var instance = Assert.IsType<TypeWithPrivateConstructor>(typeof(TypeWithPrivateConstructor).New(value));
+                var instance = (TypeWithPrivateConstructor)typeof(TypeWithPrivateConstructor).New(value);
                 Assert.Same(value, instance.Property);
             }
 
@@ -412,8 +416,9 @@ namespace Inspector
                 VerifyStaticProperties(typed.Source, testType);
             }
 
-            static void VerifyStaticProperties(IEnumerable<Property> selection, Type expected) {
-                var properties = Assert.IsType<Members<PropertyInfo, Property>>(selection);
+            static void VerifyStaticProperties(IEnumerable<Property>? selection, Type expected) {
+                Assert.NotNull(selection);
+                var properties = (Members<PropertyInfo, Property>)selection!;
                 Assert.Same(expected, properties.Type);
             }
         }
@@ -427,7 +432,7 @@ namespace Inspector
 
             [Fact]
             public void ReturnsUninitializedInstanceOfGivenType() {
-                var instance = Assert.IsType<TestType>(typeof(TestType).Uninitialized());
+                var instance = (TestType)typeof(TestType).Uninitialized();
                 Assert.Equal(0, instance.TestField);
             }
         }
