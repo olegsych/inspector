@@ -23,13 +23,13 @@ namespace Inspector.Implementation
         {
             [Fact]
             public void ThrowsArgumentNullExceptionWhenSourceIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new FieldTypeFilter(null, fieldType));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new FieldTypeFilter(null!, fieldType));
                 Assert.Equal("source", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsArgumentNullExceptionIfFieldTypeArgumentIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new FieldTypeFilter(source, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new FieldTypeFilter(source, null!));
                 Assert.Equal("fieldType", thrown.ParamName);
             }
 
