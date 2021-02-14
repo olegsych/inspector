@@ -37,7 +37,7 @@ namespace Inspector
 
             static void VerifyAccessibleMembers(object instance, Accessibility accessibility, IMembers actual)
             {
-                var accessibleMembers = Assert.IsType<AccessibleMembers>(actual);
+                var accessibleMembers = (AccessibleMembers)actual;
                 Assert.Equal(accessibility, accessibleMembers.Accessibility);
                 VerifyInstanceMembers(instance, accessibleMembers.Source);
             }
@@ -50,7 +50,8 @@ namespace Inspector
             [Fact]
             public void ReturnsSingleConstructorDeclaredByTypeOfGivenInstance() {
                 Assert.Same(selected, instance.Constructor());
-                var declared = Assert.IsType<DeclarationFilter<Constructor, ConstructorInfo>>(selection);
+                Assert.NotNull(selection);
+                var declared = (DeclarationFilter<Constructor, ConstructorInfo>)selection!;
                 Assert.Equal(instance.GetType(), declared.DeclaringType);
                 VerifyInstanceConstructors(declared.Source, instance);
             }
@@ -72,7 +73,7 @@ namespace Inspector
             }
 
             static void VerifyInstanceConstructors(IEnumerable<Constructor> filter, object instance) {
-                var members = Assert.IsType<Members<ConstructorInfo, Constructor>>(filter);
+                var members = (Members<ConstructorInfo, Constructor>)filter;
                 Assert.Same(instance, members.Instance);
             }
         }
@@ -99,7 +100,7 @@ namespace Inspector
             }
 
             static void VerifyDeclaredMembers<TDeclaringType>(object instance, IMembers actual) {
-                var declaredMembers = Assert.IsType<DeclaredMembers>(actual);
+                var declaredMembers = (DeclaredMembers)actual;
                 Assert.Equal(typeof(TDeclaringType), declaredMembers.DeclaringType);
                 VerifyInstanceMembers(instance, declaredMembers.Source);
             }
@@ -160,8 +161,9 @@ namespace Inspector
                 VerifyInstanceEvents(typed.Source, instance);
             }
 
-            static void VerifyInstanceEvents(IEnumerable<Event> filter, object instance) {
-                var events = Assert.IsType<Members<EventInfo, Event>>(filter);
+            static void VerifyInstanceEvents(IEnumerable<Event>? filter, object instance) {
+                Assert.NotNull(filter);
+                var events = (Members<EventInfo, Event>)filter!;
                 Assert.Same(instance, events.Instance);
             }
         }
@@ -219,8 +221,9 @@ namespace Inspector
                 VerifyInstanceFields(typed.Source, instance);
             }
 
-            static void VerifyInstanceFields(IEnumerable<Field> filter, object instance) {
-                var fields = Assert.IsType<Members<FieldInfo, Field>>(filter);
+            static void VerifyInstanceFields(IEnumerable<Field>? filter, object instance) {
+                Assert.NotNull(filter);
+                var fields = (Members<FieldInfo, Field>)filter!;
                 Assert.Same(instance, fields.Instance);
             }
         }
@@ -251,7 +254,7 @@ namespace Inspector
             }
 
             static void VerifyInheritedMembers<TAncestorType>(object instance, IMembers actual) {
-                var inheritedMembers = Assert.IsType<InheritedMembers>(actual);
+                var inheritedMembers = (InheritedMembers)actual;
                 Assert.Equal(typeof(TAncestorType), inheritedMembers.AncestorType);
                 VerifyInstanceMembers(instance, inheritedMembers.Source);
             }
@@ -262,7 +265,8 @@ namespace Inspector
             [Fact]
             public void ReturnsSingleMethodDeclaredByTypeOfGivenInstance() {
                 Assert.Same(selected, instance.Method());
-                var declared = Assert.IsType<DeclarationFilter<Method, MethodInfo>>(selection);
+                Assert.NotNull(selection);
+                var declared = (DeclarationFilter<Method, MethodInfo>)selection!;
                 Assert.Equal(instance.GetType(), declared.DeclaringType);
                 VerifyInstanceMethods(declared.Source, instance);
             }
@@ -312,7 +316,7 @@ namespace Inspector
             }
 
             static void VerifyInstanceMethods(IEnumerable<Method> source, object instance) {
-                var members = Assert.IsType<Members<MethodInfo, Method>>(source);
+                var members = (Members<MethodInfo, Method>)source;
                 Assert.Same(instance, members.Instance);
             }
         }
@@ -371,13 +375,13 @@ namespace Inspector
             }
 
             static void VerifyInstanceProperties(IEnumerable<Property> filter, object instance) {
-                var properties = Assert.IsType<Members<PropertyInfo, Property>>(filter);
+                var properties = (Members<PropertyInfo, Property>)filter;
                 Assert.Same(instance, properties.Instance);
             }
         }
 
         internal static void VerifyInstanceMembers(object instance, IMembers actual) {
-            var instanceMembers = Assert.IsType<InstanceMembers>(actual);
+            var instanceMembers = (InstanceMembers)actual;
             Assert.Same(instance, instanceMembers.Instance);
         }
     }
