@@ -23,13 +23,13 @@ namespace Inspector.Implementation
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenSourceIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new EventTypeFilter(null, handlerType));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new EventTypeFilter(null!, handlerType));
                 Assert.Equal("source", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenEventHandlerTypeIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new EventTypeFilter(source, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new EventTypeFilter(source, null!));
                 Assert.Equal("handlerType", thrown.ParamName);
             }
 
