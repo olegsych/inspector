@@ -76,8 +76,8 @@ namespace Inspector.Implementation
 
         public abstract class GetEnumeratorTest: MembersTest
         {
-            protected IEnumerable<Member<MemberInfo>> sut;
-            protected Func<IEnumerator> getEnumerator;
+            protected IEnumerable<Member<MemberInfo>>? sut;
+            protected Func<IEnumerator>? getEnumerator;
             protected BindingFlags expectedBinding;
             protected object? expectedInstance;
             protected object? arrange;
@@ -96,7 +96,7 @@ namespace Inspector.Implementation
                 arrange = getMemberInfo.Invoke(expectedBinding).Returns(testTypeMembers, baseTypeMembers, rootTypeMembers);
 
                 // Act
-                IEnumerator enumerator = getEnumerator();
+                IEnumerator enumerator = getEnumerator!();
 
                 // Assert
                 foreach(MemberInfo memberInfo in testTypeMembers) {
@@ -158,17 +158,17 @@ namespace Inspector.Implementation
 
         public class UntypedInstanceEnumerator: InstanceEnumerator
         {
-            public UntypedInstanceEnumerator() => getEnumerator = ((IEnumerable)sut).GetEnumerator;
+            public UntypedInstanceEnumerator() => getEnumerator = ((IEnumerable)sut!).GetEnumerator;
         }
 
         public class UntypedTypeEnumeratorWithStaticBinding: TypeEnumeratorWithStaticBinding
         {
-            public UntypedTypeEnumeratorWithStaticBinding() => getEnumerator = ((IEnumerable)sut).GetEnumerator;
+            public UntypedTypeEnumeratorWithStaticBinding() => getEnumerator = ((IEnumerable)sut!).GetEnumerator;
         }
 
         public class UntypedTypeEnumeratorWithInstanceBinding: TypeEnumeratorWithInstanceBinding
         {
-            public UntypedTypeEnumeratorWithInstanceBinding() => getEnumerator = ((IEnumerable)sut).GetEnumerator;
+            public UntypedTypeEnumeratorWithInstanceBinding() => getEnumerator = ((IEnumerable)sut!).GetEnumerator;
         }
 
         class BaseType
