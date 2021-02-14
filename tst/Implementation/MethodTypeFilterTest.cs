@@ -24,19 +24,19 @@ namespace Inspector.Implementation
         {
             [Fact]
             public void ThrowsArgumentNullExceptionWhenSourceIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new MethodTypeFilter(null, delegateType, delegateFactory));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new MethodTypeFilter(null!, delegateType, delegateFactory));
                 Assert.Equal("source", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsArgumentNullExceptionWhenDelegateTypeIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new MethodTypeFilter(source, null, delegateFactory));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new MethodTypeFilter(source, null!, delegateFactory));
                 Assert.Equal("delegateType", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsArgumentNullExceptionWhenDelegateFactoryIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new MethodTypeFilter(source, delegateType, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new MethodTypeFilter(source, delegateType, null!));
                 Assert.Equal("delegateFactory", thrown.ParamName);
             }
 
@@ -76,7 +76,7 @@ namespace Inspector.Implementation
                 ConfiguredCall arrange;
                 var target = new TestType();
                 MethodInfo[] infos = typeof(TestType).GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public);
-                arrange = delegateFactory.TryCreate(delegateType, target, infos[1], out Delegate @delegate).Returns(true);
+                arrange = delegateFactory.TryCreate(delegateType, target, infos[1], out Delegate? @delegate).Returns(true);
                 arrange = delegateFactory.TryCreate(delegateType, target, infos[3], out @delegate).Returns(true);
 
                 List<Method> methods = infos.Select(_ => new Method(_, target)).ToList();
