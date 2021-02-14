@@ -33,7 +33,7 @@ namespace Inspector
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenPropertyIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new Property<PropertyType>(null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new Property<PropertyType>(null!));
                 Assert.Equal("property", thrown.ParamName);
             }
 
@@ -91,7 +91,8 @@ namespace Inspector
 
             [Fact]
             public void ConvertsNullPropertyToDefaultValueToSupportImplicitTypeConversionRules() {
-                PropertyType value = (Property<PropertyType>)null;
+                Property<PropertyType>? @null = null;
+                PropertyType? value = @null;
                 Assert.Null(value);
             }
         }
