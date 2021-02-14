@@ -12,7 +12,7 @@ namespace Inspector.Implementation
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenInstanceIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new InstanceMembers(null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new InstanceMembers(null!));
                 Assert.Equal("instance", thrown.ParamName);
             }
 
