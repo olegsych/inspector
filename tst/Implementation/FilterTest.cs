@@ -22,8 +22,8 @@ namespace Inspector.Implementation
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenSourceIsNull() {
-                var thrown = Assert.Throws<TargetInvocationException>(() => Substitute.ForPartsOf<Filter<TestType>>(new object[] { null }));
-                var actual = Assert.IsType<ArgumentNullException>(thrown.InnerException);
+                var thrown = Assert.Throws<TargetInvocationException>(() => Substitute.ForPartsOf<Filter<TestType>>(new object[] { null! }));
+                var actual = (ArgumentNullException)thrown.InnerException!;
                 Assert.Equal("source", actual.ParamName);
             }
         }
