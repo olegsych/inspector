@@ -24,7 +24,7 @@ namespace Inspector.Implementation
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenMethodIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new Parameters(null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new Parameters(null!));
                 Assert.Equal("method", thrown.ParamName);
             }
         }
