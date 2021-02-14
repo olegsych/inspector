@@ -12,7 +12,7 @@ namespace Inspector.Implementation
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenTypeIsNullToFailFast() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new StaticMembers(null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new StaticMembers(null!));
                 Assert.Equal("type", thrown.ParamName);
             }
 
