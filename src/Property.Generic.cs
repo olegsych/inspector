@@ -17,7 +17,7 @@ namespace Inspector
         /// <summary>
         /// Gets or sets the property value.
         /// </summary>
-        public new T Value {
+        public new T? Value {
             get => Get();
             set => Set(value);
         }
@@ -25,21 +25,18 @@ namespace Inspector
         /// <summary>
         /// Gets the property value.
         /// </summary>
-        public new T Get() =>
+        public new T? Get() =>
             (T)base.Get();
 
         /// <summary>
         /// Sets the property value.
         /// </summary>
-        public void Set(T value) =>
+        public void Set(T? value) =>
             base.Set(value);
 
         /// <summary>
         /// Implicitly converts the property to it's value for convenient use in assertions.
         /// </summary>
-        #if NETSTANDARD2_1
-        [return: NotNullIfNotNull("property")]
-        #endif
         public static implicit operator T?(Property<T>? property) =>
             property != null ? property.Get() : default;
 

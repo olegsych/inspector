@@ -20,7 +20,7 @@ namespace Inspector
             var bar = new Bar();
             var foo = new Foo(bar);
 
-            Bar value = foo.Property<Bar>().Get();
+            Bar? value = foo.Property<Bar>().Get();
 
             value.ShouldBeSameAs(bar);
         }
@@ -30,7 +30,7 @@ namespace Inspector
             var bar = new Bar();
             var foo = new Foo(bar);
 
-            Bar value = foo.Property<Bar>();
+            Bar? value = foo.Property<Bar>();
 
             value.ShouldBeSameAs(bar);
         }

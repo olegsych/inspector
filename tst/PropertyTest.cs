@@ -44,7 +44,7 @@ namespace Inspector
                 var expected = new TestValue();
                 ((TestType)instance).Property = expected;
 
-                object actual = sut.Get();
+                object? actual = sut.Get();
 
                 Assert.Same(expected, actual);
             }
@@ -78,7 +78,7 @@ namespace Inspector
                 var expected = new TestValue();
                 ((TestType)instance).Property = expected;
 
-                object actual = sut.Value;
+                object? actual = sut.Value;
 
                 Assert.Same(expected, actual);
             }
