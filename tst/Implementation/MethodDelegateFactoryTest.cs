@@ -14,7 +14,7 @@ namespace Inspector.Implementation
             readonly Type delegateType = typeof(Action<T1, P1>);
             readonly T1 target = new T1();
             readonly MethodInfo method = GetMethod<T1>();
-            Delegate @delegate = null;
+            Delegate? @delegate = null;
 
             // Fixture
             readonly P1 parameter = new P1();
@@ -22,7 +22,7 @@ namespace Inspector.Implementation
             [Fact]
             public void CreatesOpenDelegateForMethodWithMatchingParameters() {
                 Assert.True(sut.TryCreate(delegateType, null, method, out @delegate));
-                ((Action<T1, P1>)@delegate).Invoke(target, parameter);
+                ((Action<T1, P1>)@delegate!).Invoke(target, parameter);
                 Assert.Same(parameter, target.P);
             }
 
@@ -47,7 +47,7 @@ namespace Inspector.Implementation
             [Fact]
             public void CreatesClosedDelegateForMethodWithMatchingParameters() {
                 Assert.True(sut.TryCreate(typeof(Action<P1>), target, method, out @delegate));
-                ((Action<P1>)@delegate).Invoke(parameter);
+                ((Action<P1>)@delegate!).Invoke(parameter);
                 Assert.Same(parameter, target.P);
             }
 
@@ -59,13 +59,13 @@ namespace Inspector.Implementation
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenDelegateTypeIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => sut.TryCreate(null, target, method, out @delegate));
+                var thrown = Assert.Throws<ArgumentNullException>(() => sut.TryCreate(null!, target, method, out @delegate));
                 Assert.Equal("delegateType", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenMethodInfoIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => sut.TryCreate(delegateType, target, null, out @delegate));
+                var thrown = Assert.Throws<ArgumentNullException>(() => sut.TryCreate(delegateType, target, null!, out @delegate));
                 Assert.Equal("method", thrown.ParamName);
             }
 
@@ -76,7 +76,7 @@ namespace Inspector.Implementation
             class T1
             {
                 void M(P1 p) => P = p;
-                public P1 P { get; private set; }
+                public P1? P { get; private set; }
             }
 
             class T2
@@ -85,7 +85,7 @@ namespace Inspector.Implementation
             }
 
             static MethodInfo GetMethod<T>() =>
-                typeof(T).GetMethod("M", BindingFlags.Instance | BindingFlags.NonPublic);
+                typeof(T).GetMethod("M", BindingFlags.Instance | BindingFlags.NonPublic) ?? throw new ArgumentException();
         }
     }
 }
