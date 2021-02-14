@@ -22,13 +22,13 @@ namespace Inspector.Implementation
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenSourceIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new MemberNameFilter<Member<MemberInfo>, MemberInfo>(null, memberName));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new MemberNameFilter<Member<MemberInfo>, MemberInfo>(null!, memberName));
                 Assert.Equal("source", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenMemberNameIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new MemberNameFilter<Member<MemberInfo>, MemberInfo>(source, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new MemberNameFilter<Member<MemberInfo>, MemberInfo>(source, null!));
                 Assert.Equal("memberName", thrown.ParamName);
             }
 
@@ -61,7 +61,7 @@ namespace Inspector.Implementation
                 public override bool IsStatic => true;
             }
 
-            static Member<MemberInfo> Member(string name = default) {
+            static Member<MemberInfo> Member(string? name = default) {
                 MemberInfo info = Substitute.For<MemberInfo>();
                 ConfiguredCall arrange = info.Name.Returns(name ?? Guid.NewGuid().ToString());
                 return new TestMember(info);
