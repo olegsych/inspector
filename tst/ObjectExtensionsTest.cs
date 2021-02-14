@@ -374,8 +374,9 @@ namespace Inspector
                 VerifyInstanceProperties(typed.Source, instance);
             }
 
-            static void VerifyInstanceProperties(IEnumerable<Property> filter, object instance) {
-                var properties = (Members<PropertyInfo, Property>)filter;
+            static void VerifyInstanceProperties(IEnumerable<Property>? filter, object instance) {
+                Assert.NotNull(filter);
+                var properties = (Members<PropertyInfo, Property>)filter!;
                 Assert.Same(instance, properties.Instance);
             }
         }
