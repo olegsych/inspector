@@ -10,36 +10,32 @@ namespace Inspector
 
         static uint Next => seed++;
 
+        static object? arrange;
+
         public static ConstructorInfo ConstructorInfo(MethodAttributes attributes) {
             var constructor = Substitute.For<ConstructorInfo>();
-            constructor.Attributes.Returns(attributes);
+            arrange = constructor.Attributes.Returns(attributes);
             return constructor;
         }
 
-        public static EventInfo EventInfo(MethodAttributes attributes, string eventName) =>
-            EventInfo(attributes, null, eventName);
-
-        public static EventInfo EventInfo(MethodAttributes attributes, Type handlerType = default, string eventName = default) {
+        public static EventInfo EventInfo(MethodAttributes attributes, Type? handlerType = default, string? eventName = default) {
             handlerType = handlerType ?? Type();
             eventName = eventName ?? $"Event{Next}";
             var @event = Substitute.For<EventInfo>();
-            var addMethod = MethodInfo(attributes);
-            @event.AddMethod.Returns(addMethod);
-            @event.EventHandlerType.Returns(handlerType);
-            @event.Name.Returns(eventName);
+            MethodInfo addMethod = MethodInfo(attributes);
+            arrange = @event.AddMethod.Returns(addMethod);
+            arrange = @event.EventHandlerType.Returns(handlerType);
+            arrange = @event.Name.Returns(eventName);
             return @event;
         }
 
-        public static FieldInfo FieldInfo(FieldAttributes attributes, string fieldName) =>
-            FieldInfo(attributes, null, fieldName);
-
-        public static FieldInfo FieldInfo(FieldAttributes attributes, Type fieldType = default, string fieldName = default) {
+        public static FieldInfo FieldInfo(FieldAttributes attributes, Type? fieldType = default, string? fieldName = default) {
             fieldType = fieldType ?? Type();
             fieldName = fieldName ?? $"Field{Next}";
             var field = Substitute.For<FieldInfo>();
-            field.Attributes.Returns(attributes);
-            field.FieldType.Returns(fieldType);
-            field.Name.Returns(fieldName);
+            arrange = field.Attributes.Returns(attributes);
+            arrange = field.FieldType.Returns(fieldType);
+            arrange = field.Name.Returns(fieldName);
             return field;
         }
 
@@ -47,52 +43,52 @@ namespace Inspector
             parameters = parameters ?? new ParameterInfo[0];
             var method = Substitute.For<MethodBase>();
             Type declaringType = Type();
-            method.DeclaringType.Returns(declaringType);
-            method.Name.Returns($"Method{Next}");
-            method.GetParameters().Returns(parameters);
+            arrange = method.DeclaringType.Returns(declaringType);
+            arrange = method.Name.Returns($"Method{Next}");
+            arrange = method.GetParameters().Returns(parameters);
             return method;
         }
 
-        public static MethodInfo MethodInfo(MethodAttributes attributes, string name = default) {
+        public static MethodInfo MethodInfo(MethodAttributes attributes, string? name = default) {
             name = name ?? $"Method{Next}";
             var method = Substitute.For<MethodInfo>();
-            method.Attributes.Returns(attributes);
-            method.Name.Returns(name);
+            arrange = method.Attributes.Returns(attributes);
+            arrange = method.Name.Returns(name);
             return method;
         }
 
         public static ParameterInfo ParameterInfo(string name) =>
             ParameterInfo(default, name);
 
-        public static ParameterInfo ParameterInfo(Type parameterType = default, string name = default) {
+        public static ParameterInfo ParameterInfo(Type? parameterType = default, string? name = default) {
             name = name ?? $"Parameter{Next}";
             parameterType = parameterType ?? Type();
             var parameter = Substitute.For<ParameterInfo>();
-            parameter.Name.Returns(name);
-            parameter.ParameterType.Returns(parameterType);
+            arrange = parameter.Name.Returns(name);
+            arrange = parameter.ParameterType.Returns(parameterType);
             return parameter;
         }
 
-        public static PropertyInfo PropertyInfo(MethodAttributes attributes, Type propertyType = default) {
+        public static PropertyInfo PropertyInfo(MethodAttributes attributes, Type? propertyType = default) {
             propertyType = propertyType ?? Type();
             var property = Substitute.For<PropertyInfo>();
             MethodInfo get = MethodInfo(attributes);
-            property.GetMethod.Returns(get);
-            property.PropertyType.Returns(propertyType);
+            arrange = property.GetMethod.Returns(get);
+            arrange = property.PropertyType.Returns(propertyType);
             return property;
         }
 
         public static Type Type() {
             var type = Substitute.For<Type>();
-            type.Name.Returns($"Type{Next}");
-            type.Namespace.Returns($"Namespace{Next}");
+            arrange = type.Name.Returns($"Type{Next}");
+            arrange = type.Namespace.Returns($"Namespace{Next}");
             string fullName = $"{$"Namespace{Next}"}.{$"Type{Next}"}";
-            type.FullName.Returns(fullName);
+            arrange = type.FullName.Returns(fullName);
             return type;
         }
 
         public static T WithDeclaringType<T>(this T memberInfo, Type declaringType) where T : MemberInfo {
-            memberInfo.DeclaringType.Returns(declaringType);
+            arrange = memberInfo.DeclaringType.Returns(declaringType);
             return memberInfo;
         }
     }
