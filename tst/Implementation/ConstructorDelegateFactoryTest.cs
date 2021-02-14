@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using Xunit;
@@ -16,7 +15,7 @@ namespace Inspector.Implementation
             readonly Type delegateType = typeof(Action<T1, P1>);
             readonly T1 target = (T1)FormatterServices.GetUninitializedObject(typeof(T1));
             readonly ConstructorInfo constructor = GetConstructor<T1>();
-            Delegate @delegate = null;
+            Delegate? @delegate = null;
 
             // Fixture
             readonly P1 parameter = new P1();
@@ -24,7 +23,7 @@ namespace Inspector.Implementation
             [Fact]
             public void CreatesOpenDelegateForConstructorWithMatchingParameters() {
                 Assert.True(sut.TryCreate(delegateType, null, constructor, out @delegate));
-                ((Action<T1, P1>)@delegate).Invoke(target, parameter);
+                ((Action<T1, P1>)@delegate!).Invoke(target, parameter);
                 Assert.Same(parameter, target.P);
             }
 
@@ -49,7 +48,7 @@ namespace Inspector.Implementation
             [Fact]
             public void CreatesClosedDelegateForConstructorWithMatchingParameters() {
                 Assert.True(sut.TryCreate(typeof(Action<P1>), target, constructor, out @delegate));
-                ((Action<P1>)@delegate).Invoke(parameter);
+                ((Action<P1>)@delegate!).Invoke(parameter);
                 Assert.Same(parameter, target.P);
             }
 
@@ -61,13 +60,13 @@ namespace Inspector.Implementation
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenDelegateTypeIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => sut.TryCreate(null, target, constructor, out @delegate));
+                var thrown = Assert.Throws<ArgumentNullException>(() => sut.TryCreate(null!, target, constructor, out @delegate));
                 Assert.Equal("delegateType", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenConstructorInfoIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => sut.TryCreate(delegateType, target, null, out @delegate));
+                var thrown = Assert.Throws<ArgumentNullException>(() => sut.TryCreate(delegateType, target, null!, out @delegate));
                 Assert.Equal("method", thrown.ParamName);
             }
 
