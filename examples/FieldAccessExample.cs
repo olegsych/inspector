@@ -186,9 +186,9 @@ namespace Inspector
             [Fact]
             public void ThrowDescriptiveExceptionWhenMoreThanOneFieldOfGivenTypeExists() {
                 var thrown = Should.Throw<InvalidOperationException>(() => bar.Field<Baz>());
-                thrown.Message.ShouldContain(typeof(Baz).FullName);
-                thrown.Message.ShouldContain(typeof(Foo).FullName);
-                thrown.Message.ShouldContain(typeof(Bar).FullName);
+                thrown.Message.ShouldContain(typeof(Baz).FullName!);
+                thrown.Message.ShouldContain(typeof(Foo).FullName!);
+                thrown.Message.ShouldContain(typeof(Bar).FullName!);
             }
 
             [Fact]
@@ -249,8 +249,8 @@ namespace Inspector
             [Fact]
             public void ThrowDescriptiveExceptionWhenMoreThanOneFieldOfGivenTypeExistsInDeclaringType() {
                 var thrown = Should.Throw<InvalidOperationException>(() => foo.Field<Qux>());
-                thrown.Message.ShouldContain(typeof(Qux).FullName);
-                thrown.Message.ShouldContain(typeof(Foo).FullName);
+                thrown.Message.ShouldContain(typeof(Qux).FullName!);
+                thrown.Message.ShouldContain(typeof(Foo).FullName!);
                 thrown.Message.ShouldContain(nameof(Foo.field1));
                 thrown.Message.ShouldContain(nameof(Foo.field2));
             }
