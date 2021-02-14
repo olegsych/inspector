@@ -24,19 +24,19 @@ namespace Inspector
         {
             [Fact]
             public void GetWithMethod() {
-                Bar value = foo.Field<Bar>().Get();
+                Bar? value = foo.Field<Bar>().Get();
                 value.ShouldBeSameAs(bar);
             }
 
             [Fact]
             public void GetWithProperty() {
-                Bar value = foo.Field<Bar>().Value;
+                Bar? value = foo.Field<Bar>().Value;
                 value.ShouldBeSameAs(bar);
             }
 
             [Fact]
             public void GetWithImplicitConversionToFieldType() {
-                Bar value = foo.Field<Bar>();
+                Bar? value = foo.Field<Bar>();
                 value.ShouldBeSameAs(bar);
             }
 

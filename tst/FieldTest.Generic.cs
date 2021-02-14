@@ -50,7 +50,7 @@ namespace Inspector
         {
             [Fact]
             public void GetsFieldValue() {
-                FieldType value = sut.Get();
+                FieldType? value = sut.Get();
                 Assert.Same(instance.field, value);
             }
         }
@@ -69,7 +69,7 @@ namespace Inspector
         {
             [Fact]
             public void GetsFieldValue() {
-                FieldType value = sut.Value;
+                FieldType? value = sut.Value;
                 Assert.Same(instance.field, value);
             }
 
@@ -85,7 +85,7 @@ namespace Inspector
         {
             [Fact]
             public void ImplicitlyConvertsFieldToValueType() {
-                FieldType value = sut;
+                FieldType? value = sut;
                 Assert.Same(value, instance.field);
             }
 
