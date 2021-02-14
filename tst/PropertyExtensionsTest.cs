@@ -20,11 +20,11 @@ namespace Inspector
         // Shared test fixture
         protected readonly object instance = new TestType();
         protected readonly Property selected;
-        protected IEnumerable<Property> selection;
+        protected IEnumerable<Property>? selection;
 
         public PropertyExtensionsTest() {
-            selected = new Property(typeof(TestType).GetProperty(nameof(TestType.Property)), instance);
-            select.Invoke(Arg.Do<IEnumerable<Property>>(p => selection = p)).Returns(selected);
+            selected = new Property(typeof(TestType).GetProperty(nameof(TestType.Property))!, instance);
+            object arrange = select.Invoke(Arg.Do<IEnumerable<Property>>(p => selection = p)).Returns(selected);
         }
 
         protected static void VerifyGenericProperty<T>(Property selected, Property<T> generic) {
@@ -32,14 +32,16 @@ namespace Inspector
             Assert.Same(selected.Instance, generic.Instance);
         }
 
-        internal static MemberNameFilter<Property, PropertyInfo> VerifyFilter(IEnumerable<Property> selection, string propertyName) {
-            var filter = Assert.IsType<MemberNameFilter<Property, PropertyInfo>>(selection);
+        internal static MemberNameFilter<Property, PropertyInfo> VerifyFilter(IEnumerable<Property>? selection, string propertyName) {
+            Assert.NotNull(selection);
+            var filter = (MemberNameFilter<Property, PropertyInfo>)selection!;
             Assert.Equal(propertyName, filter.MemberName);
             return filter;
         }
 
-        internal static PropertyTypeFilter VerifyFilter(IEnumerable<Property> selection, Type expectedPropertyType) {
-            var filter = Assert.IsType<PropertyTypeFilter>(selection);
+        internal static PropertyTypeFilter VerifyFilter(IEnumerable<Property>? selection, Type expectedPropertyType) {
+            Assert.NotNull(selection);
+            var filter = (PropertyTypeFilter)selection!;
             Assert.Equal(expectedPropertyType, filter.PropertyType);
             return filter;
         }
