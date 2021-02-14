@@ -27,13 +27,13 @@ namespace Inspector.Implementation
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenSourceIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new InheritedMembers(null, ancestor));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new InheritedMembers(null!, ancestor));
                 Assert.Equal("source", thrown.ParamName);
             }
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenAncestorTypeIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => new InheritedMembers(source, null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => new InheritedMembers(source, null!));
                 Assert.Equal("ancestorType", thrown.ParamName);
             }
         }
