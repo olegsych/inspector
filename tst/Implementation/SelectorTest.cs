@@ -15,7 +15,7 @@ namespace Inspector.Implementation
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenFilterIsNull() {
-                var thrown = Assert.Throws<ArgumentNullException>(() => Selector<TestType>.Select(null));
+                var thrown = Assert.Throws<ArgumentNullException>(() => Selector<TestType>.Select(null!));
                 Assert.Equal("filter", thrown.ParamName);
             }
 
