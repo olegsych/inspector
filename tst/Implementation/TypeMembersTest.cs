@@ -13,8 +13,8 @@ namespace Inspector.Implementation
         public class Constructors: TypeMembersTest
         {
             [Theory, MemberData(nameof(ConstructorData))]
-            internal void ReturnsConstructorsOfGivenTypeOrInstance(IMembers sut, Type type, object instance) {
-                var members = Assert.IsType<Members<ConstructorInfo, Constructor>>(sut.Constructors());
+            internal void ReturnsConstructorsOfGivenTypeOrInstance(IMembers sut, Type type, object? instance) {
+                var members = (Members<ConstructorInfo, Constructor>)sut.Constructors();
 
                 Assert.Same(type, members.Type);
                 Assert.Same(instance, members.Instance);
@@ -23,18 +23,18 @@ namespace Inspector.Implementation
                 Assert.Equal(Lifetime.Instance, members.Lifetime);
             }
 
-            public static IEnumerable<object[]> ConstructorData() {
+            public static IEnumerable<object?[]> ConstructorData() {
                 var instance = new TestType();
-                yield return new object[] { Substitute.ForPartsOf<TypeMembers>(instance), instance.GetType(), instance };
-                yield return new object[] { Substitute.ForPartsOf<TypeMembers>(typeof(TestType)), typeof(TestType), null };
+                yield return new object?[] { Substitute.ForPartsOf<TypeMembers>(instance), instance.GetType(), instance };
+                yield return new object?[] { Substitute.ForPartsOf<TypeMembers>(typeof(TestType)), typeof(TestType), null };
             }
         }
 
         public class Events: TypeMembersTest
         {
             [Theory, MemberData(nameof(MemberData))]
-            internal void ReturnsEventsOfGivenTypeOrInstance(IMembers sut, Type type, object instance, Lifetime lifetime) {
-                var members = Assert.IsType<Members<EventInfo, Event>>(sut.Events());
+            internal void ReturnsEventsOfGivenTypeOrInstance(IMembers sut, Type type, object? instance, Lifetime lifetime) {
+                var members = (Members<EventInfo, Event>)sut.Events();
 
                 Assert.Same(type, members.Type);
                 Assert.Same(instance, members.Instance);
@@ -47,8 +47,8 @@ namespace Inspector.Implementation
         public class Fields: TypeMembersTest
         {
             [Theory, MemberData(nameof(MemberData))]
-            internal void ReturnsFieldsOfGivenTypeOrInstance(IMembers sut, Type type, object instance, Lifetime lifetime) {
-                var members = Assert.IsType<Members<FieldInfo, Field>>(sut.Fields());
+            internal void ReturnsFieldsOfGivenTypeOrInstance(IMembers sut, Type type, object? instance, Lifetime lifetime) {
+                var members = (Members<FieldInfo, Field>)sut.Fields();
 
                 Assert.Same(type, members.Type);
                 Assert.Same(instance, members.Instance);
@@ -61,8 +61,8 @@ namespace Inspector.Implementation
         public class Methods: TypeMembersTest
         {
             [Theory, MemberData(nameof(MemberData))]
-            internal void ReturnsMethodsOfGivenTypeOrInstance(IMembers sut, Type type, object instance, Lifetime lifetime) {
-                var members = Assert.IsType<Members<MethodInfo, Method>>(sut.Methods());
+            internal void ReturnsMethodsOfGivenTypeOrInstance(IMembers sut, Type type, object? instance, Lifetime lifetime) {
+                var members = (Members<MethodInfo, Method>)sut.Methods();
 
                 Assert.Same(type, members.Type);
                 Assert.Same(instance, members.Instance);
@@ -75,8 +75,8 @@ namespace Inspector.Implementation
         public class Properties: TypeMembersTest
         {
             [Theory, MemberData(nameof(MemberData))]
-            internal void ReturnsPropertiesOfGivenTypeOrInstance(IMembers sut, Type type, object instance, Lifetime lifetime) {
-                var members = Assert.IsType<Members<PropertyInfo, Property>>(sut.Properties());
+            internal void ReturnsPropertiesOfGivenTypeOrInstance(IMembers sut, Type type, object? instance, Lifetime lifetime) {
+                var members = (Members<PropertyInfo, Property>)sut.Properties();
 
                 Assert.Same(type, members.Type);
                 Assert.Same(instance, members.Instance);
@@ -86,10 +86,10 @@ namespace Inspector.Implementation
             }
         }
 
-        public static IEnumerable<object[]> MemberData() {
+        public static IEnumerable<object?[]> MemberData() {
             var instance = new TestType();
-            yield return new object[] { Substitute.ForPartsOf<TypeMembers>(instance), instance.GetType(), instance, Lifetime.Instance };
-            yield return new object[] { Substitute.ForPartsOf<TypeMembers>(typeof(TestType)), typeof(TestType), null, Lifetime.Static };
+            yield return new object?[] { Substitute.ForPartsOf<TypeMembers>(instance), instance.GetType(), instance, Lifetime.Instance };
+            yield return new object?[] { Substitute.ForPartsOf<TypeMembers>(typeof(TestType)), typeof(TestType), null, Lifetime.Static };
         }
     }
 }
