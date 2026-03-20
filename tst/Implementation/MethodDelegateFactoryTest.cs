@@ -58,6 +58,18 @@ namespace Inspector.Implementation
             }
 
             [Fact]
+            public void DoesNotCreateDelegateForExtensionMethodWithMismatchedSignature() {
+                Assert.False(sut.TryCreate(typeof(Action<I1, P1>), null, GetExtensionMethod(1), out @delegate));
+                Assert.Null(@delegate);
+            }
+
+            [Fact]
+            public void CreatesOpenDelegateForExtensionMethodWithMatchingParameters() {
+                Assert.True(sut.TryCreate(typeof(Action<I1, P1>), null, GetExtensionMethod(2), out @delegate));
+                Assert.NotNull(@delegate);
+            }
+
+            [Fact]
             public void ThrowsDescriptiveExceptionWhenDelegateTypeIsNull() {
                 var thrown = Assert.Throws<ArgumentNullException>(() => sut.TryCreate(null!, target, method, out @delegate));
                 Assert.Equal("delegateType", thrown.ParamName);
@@ -68,6 +80,8 @@ namespace Inspector.Implementation
                 var thrown = Assert.Throws<ArgumentNullException>(() => sut.TryCreate(delegateType, target, null!, out @delegate));
                 Assert.Equal("method", thrown.ParamName);
             }
+
+            interface I1 { }
 
             class P1 { }
 
@@ -84,8 +98,18 @@ namespace Inspector.Implementation
                 void M(P1 p) { }
             }
 
+            static class Extensions
+            {
+                internal static void M(I1 t) { }
+                internal static void M(I1 t, P1 p) { }
+            }
+
             static MethodInfo GetMethod<T>() =>
                 typeof(T).GetMethod("M", BindingFlags.Instance | BindingFlags.NonPublic) ?? throw new ArgumentException();
+
+            static MethodInfo GetExtensionMethod(int parameterCount) =>
+                Array.Find(typeof(Extensions).GetMethods(BindingFlags.Static | BindingFlags.NonPublic),
+                    m => m.Name == "M" && m.GetParameters().Length == parameterCount) ?? throw new ArgumentException();
         }
     }
 }

@@ -182,7 +182,7 @@
     ".NETStandard,Version=v2.1": []
   },
   "packageFolders": {
-    "/home/runner/.nuget/packages/": {}
+    "/tmp/codeql-scratch-37efe55ad9de78a5/dbs/csharp/working/packages": {}
   },
   "project": {
     "version": "1.0.0",
@@ -190,7 +190,7 @@
       "projectUniqueName": "/home/runner/work/inspector/inspector/src/Inspector.csproj",
       "projectName": "Inspector",
       "projectPath": "/home/runner/work/inspector/inspector/src/Inspector.csproj",
-      "packagesPath": "/home/runner/.nuget/packages/",
+      "packagesPath": "/tmp/codeql-scratch-37efe55ad9de78a5/dbs/csharp/working/packages",
       "outputPath": "/home/runner/work/inspector/inspector/src/obj/",
       "projectStyle": "PackageReference",
       "crossTargeting": true,
@@ -263,6 +263,12 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "NETStandard.Library.Ref",
+            "version": "[2.1.0, 2.1.0]"
+          }
+        ],
         "frameworkReferences": {
           "NETStandard.Library": {
             "privateAssets": "all"

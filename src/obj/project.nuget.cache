@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "j5vC4lta7zs=",
+  "dgSpecHash": "TjOAOU9zMdw=",
   "success": true,
   "projectFilePath": "/home/runner/work/inspector/inspector/src/Inspector.csproj",
   "expectedPackageFiles": [
-    "/home/runner/.nuget/packages/microsoft.netcore.platforms/1.1.0/microsoft.netcore.platforms.1.1.0.nupkg.sha512",
-    "/home/runner/.nuget/packages/netstandard.library/2.0.3/netstandard.library.2.0.3.nupkg.sha512"
+    "/tmp/codeql-scratch-37efe55ad9de78a5/dbs/csharp/working/packages/microsoft.netcore.platforms/1.1.0/microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "/tmp/codeql-scratch-37efe55ad9de78a5/dbs/csharp/working/packages/netstandard.library/2.0.3/netstandard.library.2.0.3.nupkg.sha512",
+    "/tmp/codeql-scratch-37efe55ad9de78a5/dbs/csharp/working/packages/netstandard.library.ref/2.1.0/netstandard.library.ref.2.1.0.nupkg.sha512"
   ],
   "logs": []
 }

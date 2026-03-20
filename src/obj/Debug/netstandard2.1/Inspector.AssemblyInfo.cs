@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("A simple .NET Reflection API for white-box unit testing.")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3dbb6e162102e81ac1deda75d83b140be2143167")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c7c67393ec163e0c55ab4d7f3a9003296070679d")]
 [assembly: System.Reflection.AssemblyProductAttribute("Inspector")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Inspector")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
