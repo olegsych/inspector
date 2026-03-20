@@ -22,6 +22,6 @@ namespace Inspector.Implementation
         public IDelegateFactory<MethodInfo> DelegateFactory { get; }
 
         protected override IEnumerable<Method> Where() =>
-            Source.Where(method => DelegateFactory.TryCreate(DelegateType, method.Instance, method.Info, out Delegate _));
+            Source.Where(method => DelegateFactory.TryCreate(DelegateType, method.Instance, method.Info, out Delegate? _));
     }
 }

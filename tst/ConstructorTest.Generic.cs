@@ -23,7 +23,7 @@ namespace Inspector
             ConstructorInfo info = typeof(TestType).GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic).Single();
             constructor = new Constructor(info, instance);
 
-            object arrange = delegateFactory.TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<ConstructorInfo>(), out Delegate _)
+            object arrange = delegateFactory.TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<ConstructorInfo>(), out Delegate? _)
                 .Returns(args => {
                     args[3] = @delegate;
                     return true;
@@ -55,7 +55,7 @@ namespace Inspector
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenDelegateFactoryCannotCreateDelegateForGivenConstructor() {
-                object arrange = delegateFactory.TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<ConstructorInfo>(), out Delegate _).Returns(false);
+                object arrange = delegateFactory.TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<ConstructorInfo>(), out Delegate? _).Returns(false);
 
                 var thrown = Assert.Throws<ArgumentException>(() => new Constructor<TestSignature>(constructor, delegateFactory));
                 Assert.Equal("constructor", thrown.ParamName);
@@ -68,8 +68,8 @@ namespace Inspector
             [Fact]
             public void ReturnsDelegateCreatedByDelegateFactoryForGivenConstructor() {
                 Assert.Same(@delegate, sut.Invoke);
-                object assert = delegateFactory.Received().TryCreate(typeof(TestSignature), sut.Instance, sut.Info, out Delegate _);
-                assert = delegateFactory.Received(1).TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<ConstructorInfo>(), out Delegate _);
+                object assert = delegateFactory.Received().TryCreate(typeof(TestSignature), sut.Instance, sut.Info, out Delegate? _);
+                assert = delegateFactory.Received(1).TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<ConstructorInfo>(), out Delegate? _);
             }
         }
 

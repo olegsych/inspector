@@ -28,7 +28,7 @@ namespace Inspector
         /// Gets the field value.
         /// </summary>
         public new T? Get() =>
-            (T)base.Get();
+            (T?)base.Get();
 
         /// <summary>
         /// Sets the field value.
