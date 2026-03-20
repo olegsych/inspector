@@ -1,6 +1,6 @@
 using System;
 using System.Reflection;
-using System.Runtime.Serialization;
+using System.Runtime.CompilerServices;
 using Inspector.Implementation;
 using NSubstitute;
 using Xunit;
@@ -16,7 +16,7 @@ namespace Inspector
         readonly IDelegateFactory<ConstructorInfo> delegateFactory = Substitute.For<IDelegateFactory<ConstructorInfo>>();
 
         // Test fixture
-        readonly TestType instance = (TestType)FormatterServices.GetUninitializedObject(typeof(TestType));
+        readonly TestType instance = (TestType)RuntimeHelpers.GetUninitializedObject(typeof(TestType));
         readonly TestSignature @delegate = Substitute.For<TestSignature>();
 
         public GenericConstructorTest() {

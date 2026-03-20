@@ -1,6 +1,6 @@
 using System;
 using System.Reflection;
-using System.Runtime.Serialization;
+using System.Runtime.CompilerServices;
 using Xunit;
 
 namespace Inspector
@@ -70,7 +70,7 @@ namespace Inspector
                 var ctor = (Action<Foo, int>)actionInfo.Invoke(new object?[] { null, fooInfo.MethodHandle.GetFunctionPointer() });
                 Assert.NotNull(ctor);
 
-                var foo = (Foo)FormatterServices.GetUninitializedObject(typeof(Foo));
+                var foo = (Foo)RuntimeHelpers.GetUninitializedObject(typeof(Foo));
                 ctor.Invoke(foo, 42);
 
                 Assert.Equal(42, foo.bar);
@@ -84,7 +84,7 @@ namespace Inspector
                 ConstructorInfo fooInfo = typeof(Foo).GetConstructor(new Type[] { typeof(int) })!;
                 Assert.NotNull(fooInfo);
 
-                var foo = (Foo)FormatterServices.GetUninitializedObject(typeof(Foo));
+                var foo = (Foo)RuntimeHelpers.GetUninitializedObject(typeof(Foo));
 
                 var ctor = (Action<int>)actionInfo.Invoke(new object[] { foo, fooInfo.MethodHandle.GetFunctionPointer() });
                 Assert.NotNull(ctor);
@@ -153,7 +153,7 @@ namespace Inspector
                 var bound = (bool)bindToMethodInfo.Invoke(d, new object?[] { firstArgument, rtMethod, typeof(Foo), flags})!;
                 Assert.True(bound);
 
-                var foo = (Foo)FormatterServices.GetUninitializedObject(typeof(Foo));
+                var foo = (Foo)RuntimeHelpers.GetUninitializedObject(typeof(Foo));
                 var constructor = (Action<Foo, int>)d;
                 constructor.Invoke(foo, 42);
                 Assert.Equal(42, foo.bar);
@@ -170,7 +170,7 @@ namespace Inspector
                 var d = (Delegate)internalAlloc.Invoke(null, new object[] { typeof(Action<int>) })!;
                 Assert.NotNull(d);
 
-                var foo = (Foo)FormatterServices.GetUninitializedObject(typeof(Foo));
+                var foo = (Foo)RuntimeHelpers.GetUninitializedObject(typeof(Foo));
 
                 object firstArgument = foo;
                 object rtMethod = typeof(Foo).GetConstructor(new[] { typeof(int) })!; // IRuntimeMethodInfo
