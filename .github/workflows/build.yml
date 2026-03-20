@@ -1,0 +1,22 @@
+name: build
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - run: dotnet build Inspector.sln
+      - run: dotnet test tst/Tests.csproj
+      - run: dotnet pack src/Inspector.csproj --configuration Release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: packages
+          path: bin/release/*.*nupkg
