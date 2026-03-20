@@ -1,6 +1,6 @@
 using System;
 using System.Reflection;
-using System.Runtime.Serialization;
+using System.Runtime.CompilerServices;
 using Xunit;
 
 namespace Inspector.Implementation
@@ -13,7 +13,7 @@ namespace Inspector.Implementation
         {
             // Method parameters
             readonly Type delegateType = typeof(Action<T1, P1>);
-            readonly T1 target = (T1)FormatterServices.GetUninitializedObject(typeof(T1));
+            readonly T1 target = (T1)RuntimeHelpers.GetUninitializedObject(typeof(T1));
             readonly ConstructorInfo constructor = GetConstructor<T1>();
             Delegate? @delegate = null;
 
