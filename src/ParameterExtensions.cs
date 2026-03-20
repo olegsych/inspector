@@ -23,6 +23,9 @@ namespace Inspector
         public static ParameterInfo Parameter(this MethodBase method, string parameterName) =>
             new Parameters(method).WithName(parameterName).Single();
 
+        public static ParameterInfo Parameter(this MethodBase method, int position) =>
+            new Parameters(method).WithPosition(position).Single();
+
         public static ParameterInfo Parameter(this MethodBase method, Type parameterType, string parameterName) =>
             new Parameters(method).WithType(parameterType).WithName(parameterName).Single();
 
@@ -38,6 +41,9 @@ namespace Inspector
 
         public static ParameterInfo Parameter<TParameterType>(this IMember<MethodBase> method, string parameterName) =>
             method.Info.Parameter<TParameterType>(parameterName);
+
+        public static ParameterInfo Parameter(this IMember<MethodBase> method, int position) =>
+            method.Info.Parameter(position);
 
         public static ParameterInfo Parameter(this IMember<MethodBase> method, Type parameterType) =>
             method.Info.Parameter(parameterType);

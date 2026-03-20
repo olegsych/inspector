@@ -60,12 +60,16 @@ namespace Inspector
         public static ParameterInfo ParameterInfo(string name) =>
             ParameterInfo(default, name);
 
-        public static ParameterInfo ParameterInfo(Type? parameterType = default, string? name = default) {
+        public static ParameterInfo ParameterInfo(int position) =>
+            ParameterInfo(default, default, position);
+
+        public static ParameterInfo ParameterInfo(Type? parameterType = default, string? name = default, int? position = default) {
             name = name ?? $"Parameter{Next}";
             parameterType = parameterType ?? Type();
             var parameter = Substitute.For<ParameterInfo>();
             arrange = parameter.Name.Returns(name);
             arrange = parameter.ParameterType.Returns(parameterType);
+            arrange = parameter.Position.Returns(position ?? 0);
             return parameter;
         }
 
