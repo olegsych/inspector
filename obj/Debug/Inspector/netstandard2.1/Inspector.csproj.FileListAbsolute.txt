@@ -1,0 +1,10 @@
+/home/runner/work/inspector/inspector/bin/Debug/netstandard2.1/Inspector.deps.json
+/home/runner/work/inspector/inspector/bin/Debug/netstandard2.1/Inspector.dll
+/home/runner/work/inspector/inspector/bin/Debug/netstandard2.1/Inspector.pdb
+/home/runner/work/inspector/inspector/obj/Debug/Inspector/netstandard2.1/Inspector.GeneratedMSBuildEditorConfig.editorconfig
+/home/runner/work/inspector/inspector/obj/Debug/Inspector/netstandard2.1/Inspector.AssemblyInfoInputs.cache
+/home/runner/work/inspector/inspector/obj/Debug/Inspector/netstandard2.1/Inspector.AssemblyInfo.cs
+/home/runner/work/inspector/inspector/obj/Debug/Inspector/netstandard2.1/Inspector.csproj.CoreCompileInputs.cache
+/home/runner/work/inspector/inspector/obj/Debug/Inspector/netstandard2.1/Inspector.sourcelink.json
+/home/runner/work/inspector/inspector/obj/Debug/Inspector/netstandard2.1/Inspector.dll
+/home/runner/work/inspector/inspector/obj/Debug/Inspector/netstandard2.1/Inspector.pdb
