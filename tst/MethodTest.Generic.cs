@@ -22,7 +22,7 @@ namespace Inspector
             MethodInfo info = typeof(InstanceType).GetMethod(nameof(InstanceType.TestMethod))!;
             method = new Method(info, instance);
 
-            object arrange = delegateFactory.TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<MethodInfo>(), out Delegate _)
+            object arrange = delegateFactory.TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<MethodInfo>(), out Delegate? _)
                 .Returns(args => {
                     args[3] = @delegate;
                     return true;
@@ -54,7 +54,7 @@ namespace Inspector
 
             [Fact]
             public void ThrowsDescriptiveExceptionWhenDelegateFactoryCannotCreateDelegateForGivenMethod() {
-                object arrange = delegateFactory.TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<MethodInfo>(), out Delegate _).Returns(false);
+                object arrange = delegateFactory.TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<MethodInfo>(), out Delegate? _).Returns(false);
 
                 var thrown = Assert.Throws<ArgumentException>(() => new Method<Signature>(method, delegateFactory));
                 Assert.Equal("method", thrown.ParamName);
@@ -67,8 +67,8 @@ namespace Inspector
             [Fact]
             public void ReturnsDelegateCreatedByDelegateFactoryForGivenMethod() {
                 Assert.Same(@delegate, sut.Invoke);
-                object assert = delegateFactory.Received().TryCreate(typeof(Signature), sut.Instance, sut.Info, out Delegate _);
-                assert = delegateFactory.Received(1).TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<MethodInfo>(), out Delegate _);
+                object assert = delegateFactory.Received().TryCreate(typeof(Signature), sut.Instance, sut.Info, out Delegate? _);
+                assert = delegateFactory.Received(1).TryCreate(Arg.Any<Type>(), Arg.Any<object>(), Arg.Any<MethodInfo>(), out Delegate? _);
             }
         }
 

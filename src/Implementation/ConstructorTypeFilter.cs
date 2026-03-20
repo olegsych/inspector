@@ -22,6 +22,6 @@ namespace Inspector.Implementation
         public IDelegateFactory<ConstructorInfo> DelegateFactory { get; }
 
         protected override IEnumerable<Constructor> Where() =>
-            Source.Where(constructor => DelegateFactory.TryCreate(DelegateType, constructor.Instance, constructor.Info, out Delegate _));
+            Source.Where(constructor => DelegateFactory.TryCreate(DelegateType, constructor.Instance, constructor.Info, out Delegate? _));
     }
 }
