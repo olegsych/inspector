@@ -31,7 +31,7 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       - name: Tag commit with package version
         run: |
-          $version = (Get-Item $env:PACKAGES | Select-Object -First 1).Name -replace 'Inspector\.(.+)\.nupkg','$1'
+          $version = (dir $env:PACKAGES | select -First 1).Name -replace 'Inspector\.(.+)\.nupkg','$1'
           $tag = "v$version"
           git fetch --tags
           if (-not (git tag -l $tag)) {
