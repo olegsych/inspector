@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using Shouldly;
 using Xunit;
 
 namespace Inspector
@@ -35,13 +34,13 @@ namespace Inspector
             [Fact]
             public void GetByType() {
                 Field<Bar> field = typeof(Foo).Field<Bar>();
-                field.Info.ShouldBe(typeof(Foo).GetRuntimeField(nameof(Foo.barField)));
+                Assert.Equal(typeof(Foo).GetRuntimeField(nameof(Foo.barField)), field.Info);
             }
 
             [Fact]
             public void GetByTypeAndName() {
                 Field<Bar> field = typeof(Foo).Field<Bar>(nameof(Foo.barField));
-                field.Info.ShouldBe(typeof(Foo).GetRuntimeField(nameof(Foo.barField)));
+                Assert.Equal(typeof(Foo).GetRuntimeField(nameof(Foo.barField)), field.Info);
             }
         }
 
@@ -50,13 +49,13 @@ namespace Inspector
             [Fact]
             public void GetByType() {
                 Property<Baz> property = typeof(Foo).Property<Baz>();
-                property.Info.ShouldBe(typeof(Foo).GetRuntimeProperty(nameof(Foo.BazProperty)));
+                Assert.Equal(typeof(Foo).GetRuntimeProperty(nameof(Foo.BazProperty)), property.Info);
             }
 
             [Fact]
             public void GetByTypeAndName() {
                 Property<Baz> property = typeof(Foo).Property<Baz>(nameof(Foo.BazProperty));
-                property.Info.ShouldBe(typeof(Foo).GetRuntimeProperty(nameof(Foo.BazProperty)));
+                Assert.Equal(typeof(Foo).GetRuntimeProperty(nameof(Foo.BazProperty)), property.Info);
             }
         }
     }

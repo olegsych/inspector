@@ -1,6 +1,5 @@
 using System;
 using System.Reflection;
-using Shouldly;
 using Xunit;
 
 namespace Inspector
@@ -24,19 +23,19 @@ namespace Inspector
             [Fact]
             public void CanBeAccessedByRuntimeType() {
                 ParameterInfo parameter = instance.Constructor().Parameter(runtimeType);
-                parameter.Name.ShouldBe("baz");
+                Assert.Equal("baz", parameter.Name);
             }
 
             [Fact]
             public void CanBeAccessedByCompileTimeType() {
                 ParameterInfo parameter = instance.Constructor().Parameter<string>();
-                parameter.Name.ShouldBe("bar");
+                Assert.Equal("bar", parameter.Name);
             }
 
             [Fact]
             public void CanBeAccessedByName() {
                 ParameterInfo parameter = instance.Constructor().Parameter("bar");
-                parameter.ParameterType.ShouldBe(typeof(string));
+                Assert.Equal(typeof(string), parameter.ParameterType);
             }
         }
 
@@ -46,21 +45,21 @@ namespace Inspector
             public void CanBeAccessedByRuntimeType() {
                 ConstructorInfo constructor = instance.Constructor();
                 ParameterInfo parameter = constructor.Parameter(runtimeType);
-                parameter.Name.ShouldBe("baz");
+                Assert.Equal("baz", parameter.Name);
             }
 
             [Fact]
             public void CanBeAccessedByCompileTimeType() {
                 ConstructorInfo constructor = instance.Constructor();
                 ParameterInfo parameter = constructor.Parameter<string>();
-                parameter.Name.ShouldBe("bar");
+                Assert.Equal("bar", parameter.Name);
             }
 
             [Fact]
             public void CanBeAccessedByName() {
                 ConstructorInfo constructor = instance.Constructor();
                 ParameterInfo parameter = constructor.Parameter("bar");
-                parameter.ParameterType.ShouldBe(typeof(string));
+                Assert.Equal(typeof(string), parameter.ParameterType);
             }
         }
 
@@ -69,19 +68,19 @@ namespace Inspector
             [Fact]
             public void CanBeAccessedByRuntimeType() {
                 ParameterInfo parameter = instance.Method().Parameter(runtimeType);
-                parameter.Name.ShouldBe("baz");
+                Assert.Equal("baz", parameter.Name);
             }
 
             [Fact]
             public void CanBeAccessedByCompileTimeType() {
                 ParameterInfo parameter = instance.Method().Parameter<string>();
-                parameter.Name.ShouldBe("bar");
+                Assert.Equal("bar", parameter.Name);
             }
 
             [Fact]
             public void CanBeAccessedByName() {
                 ParameterInfo parameter = instance.Method().Parameter("bar");
-                parameter.ParameterType.ShouldBe(typeof(string));
+                Assert.Equal(typeof(string), parameter.ParameterType);
             }
         }
 
@@ -91,21 +90,21 @@ namespace Inspector
             public void CanBeAccessedByRuntimeType() {
                 MethodInfo method = instance.Method();
                 ParameterInfo parameter = method.Parameter(runtimeType);
-                parameter.Name.ShouldBe("baz");
+                Assert.Equal("baz", parameter.Name);
             }
 
             [Fact]
             public void CanBeAccessedByCompileTimeType() {
                 MethodInfo method = instance.Method();
                 ParameterInfo parameter = method.Parameter<string>();
-                parameter.Name.ShouldBe("bar");
+                Assert.Equal("bar", parameter.Name);
             }
 
             [Fact]
             public void CanBeAccessedByName() {
                 MethodInfo method = instance.Method();
                 ParameterInfo parameter = method.Parameter("bar");
-                parameter.ParameterType.ShouldBe(typeof(string));
+                Assert.Equal(typeof(string), parameter.ParameterType);
             }
         }
     }

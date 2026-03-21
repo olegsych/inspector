@@ -9,7 +9,6 @@
   <ItemGroup>
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.*" />
     <PackageVersion Include="NSubstitute" Version="4.*" />
-    <PackageVersion Include="Shouldly" Version="4.*" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.*" />
     <PackageVersion Include="xunit.v3.assert" Version="3.*" />
     <PackageVersion Include="xunit.v3" Version="3.*" />

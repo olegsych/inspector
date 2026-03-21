@@ -1,6 +1,5 @@
 using System;
 using System.Reflection;
-using Shouldly;
 using Xunit;
 
 namespace Inspector
@@ -22,7 +21,7 @@ namespace Inspector
 
             Bar? value = foo.Property<Bar>().Get();
 
-            value.ShouldBeSameAs(bar);
+            Assert.Same(bar, value);
         }
 
         [Fact]
@@ -32,7 +31,7 @@ namespace Inspector
 
             Bar? value = foo.Property<Bar>();
 
-            value.ShouldBeSameAs(bar);
+            Assert.Same(bar, value);
         }
 
         [Fact]
@@ -42,7 +41,7 @@ namespace Inspector
 
             foo.Property<Bar>().Set(bar);
 
-            foo.Property<Bar>().Get().ShouldBe(bar);
+            Assert.Equal(bar, foo.Property<Bar>().Get());
         }
 
         [Fact]
@@ -52,7 +51,7 @@ namespace Inspector
 
             PropertyInfo info = foo.Property<Bar>().Info;
 
-            info.ShouldBe(typeof(Foo).GetProperty("Bar", BindingFlags.Instance | BindingFlags.NonPublic));
+            Assert.Equal(typeof(Foo).GetProperty("Bar", BindingFlags.Instance | BindingFlags.NonPublic), info);
         }
 
         [Fact]
@@ -62,7 +61,7 @@ namespace Inspector
 
             PropertyInfo info = foo.Property<Bar>();
 
-            info.ShouldBe(typeof(Foo).GetProperty("Bar", BindingFlags.Instance | BindingFlags.NonPublic));
+            Assert.Equal(typeof(Foo).GetProperty("Bar", BindingFlags.Instance | BindingFlags.NonPublic), info);
         }
 
         public class ReadOnlyPropertyBackedByField
@@ -82,7 +81,7 @@ namespace Inspector
 
                 bar.Property<Foo>().Set(foo);
 
-                bar.Property<Foo>().Get().ShouldBe(foo);
+                Assert.Equal(foo, bar.Property<Foo>().Get());
             }
         }
 
@@ -99,10 +98,10 @@ namespace Inspector
             public void CannotBeSetAndWillThrowDescriptiveException() {
                 var foo = new Foo();
 
-                var thrown = Should.Throw<InvalidOperationException>(() => foo.Field<Bar>().Set(new Bar()));
+                var thrown = Assert.Throws<InvalidOperationException>(() => foo.Field<Bar>().Set(new Bar()));
 
-                thrown.Message.ShouldContain(nameof(Bar));
-                thrown.Message.ShouldContain(nameof(Foo.BarProperty));
+                Assert.Contains(nameof(Bar), thrown.Message);
+                Assert.Contains(nameof(Foo.BarProperty), thrown.Message);
             }
         }
     }
