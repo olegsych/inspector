@@ -7,7 +7,7 @@ on:
     branches: [master]
 
 env:
-  PACKAGES: bin/Release/Inspector.*.nupkg
+  PACKAGES: bin/Release/Inspector.*.*nupkg
 
 jobs:
   build:
