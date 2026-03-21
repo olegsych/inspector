@@ -6,9 +6,14 @@ on:
   pull_request:
     branches: [master]
 
+env:
+  PACKAGES: bin/Release/Inspector.*.nupkg
+
 jobs:
   build:
     runs-on: windows-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v6
         with:
@@ -20,8 +25,30 @@ jobs:
       - uses: actions/upload-artifact@v6
         with:
           name: packages
-          path: bin/Release/*.*nupkg
-      - run: |
-          dir bin/Release/*.*nupkg |
+          path: ${{ env.PACKAGES }}
+
+  publish:
+    runs-on: windows-latest
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v6
+        with:
+          name: packages
+          path: bin/Release
+      - name: Publish packages to NuGet.org
+        run: |
+          dir "$env:PACKAGES" |
           %{ dotnet nuget push $_ --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate }
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      - name: Tag commit with package version
+        run: |
+          $version = (dir $env:PACKAGES | select -First 1).Name -replace 'Inspector\.(.+)\.nupkg','$1'
+          $tag = "v$version"
+          git fetch --tags
+          if (-not (git tag -l $tag)) {
+            git tag $tag
+            git push origin $tag
+          }
