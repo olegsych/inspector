@@ -1,1 +1,1 @@
-dotnet build .\Inspector.sln -nologo
+dotnet build .\Inspector.slnx -nologo

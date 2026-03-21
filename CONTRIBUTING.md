@@ -7,7 +7,7 @@ git clone --recurse-submodules -c core.symlinks=true https://github.com/olegsych
 # build
 Use [Visual Studio](https://visualstudio.microsoft.com/downloads) or command line.
 ```PowerShell
-dotnet build .\Inspector.sln
+dotnet build .\Inspector.slnx
 ```
 
 # test
