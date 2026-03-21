@@ -10,13 +10,14 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: recursive
+          fetch-depth: 0
       - run: dotnet build Inspector.slnx
       - run: dotnet test --no-build tst/Tests.csproj
       - run: dotnet pack src/Inspector.csproj
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: packages
           path: bin/Release/*.*nupkg
