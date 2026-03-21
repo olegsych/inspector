@@ -1,11 +1,13 @@
 using System;
+using System.Linq;
 using System.Reflection;
 
 namespace Inspector.Implementation
 {
     sealed class ConstructorDelegateFactory: IDelegateFactory<ConstructorInfo>
     {
-        static readonly MethodInfo internalAlloc = typeof(Delegate).GetMethod("InternalAlloc", BindingFlags.Static | BindingFlags.NonPublic);
+        static readonly MethodInfo internalAlloc = typeof(Delegate).GetMethods(BindingFlags.Static | BindingFlags.NonPublic)
+          .First(_ => _.Name == "InternalAlloc" && _.GetParameters().Length == 1); // .NET 9 has 2 overloads
         static readonly MethodInfo bindToMethodInfo = typeof(Delegate).GetMethod("BindToMethodInfo", BindingFlags.Instance | BindingFlags.NonPublic);
         const byte RelaxedSignature = 0x80; // from internal DelegateBindingFlags
 

@@ -2,6 +2,9 @@ using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Xunit;
+#if NETFRAMEWORK
+using RuntimeHelpers = System.Runtime.Serialization.FormatterServices;
+#endif
 
 namespace Inspector.Implementation
 {

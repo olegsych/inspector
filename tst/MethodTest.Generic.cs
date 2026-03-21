@@ -76,7 +76,7 @@ namespace Inspector
         {
             [Fact]
             public void ImplicitlyConvertsMethodToItsSignatureDelegate() {
-                Signature actual = sut;
+                Signature? actual = sut;
                 Assert.Same(sut.Invoke, actual);
             }
 
