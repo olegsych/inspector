@@ -25,7 +25,7 @@ jobs:
         with:
           name: packages
           path: ${{ env.PACKAGES }}
-      - name: Push NuGet packages
+      - name: Publish packages to NuGet.org
         run: |
           dir "$env:PACKAGES" |
           %{ dotnet nuget push $_ --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate }
