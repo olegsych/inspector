@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v6
         with:
@@ -24,4 +26,13 @@ jobs:
       - run: |
           dir bin/Release/*.*nupkg |
           %{ dotnet nuget push $_ --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate }
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      - name: Tag commit with package version
+        run: |
+          $version = (Get-Item bin/Release/Inspector.*.nupkg | Select-Object -First 1).Name -replace 'Inspector\.(.+)\.nupkg','$1'
+          git fetch --tags
+          if (-not (git tag -l "v$version")) {
+            git tag "v$version"
+            git push origin "v$version"
+          }
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
