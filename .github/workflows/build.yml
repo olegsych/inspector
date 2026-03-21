@@ -25,7 +25,8 @@ jobs:
         with:
           name: packages
           path: ${{ env.PACKAGES }}
-      - run: |
+      - name: Push NuGet packages
+        run: |
           dir "$env:PACKAGES" |
           %{ dotnet nuget push $_ --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate }
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
