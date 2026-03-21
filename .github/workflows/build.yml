@@ -11,6 +11,8 @@ jobs:
     runs-on: windows-latest
     permissions:
       contents: write
+    env:
+      PACKAGES: bin/Release/Inspector.*.nupkg
     steps:
       - uses: actions/checkout@v6
         with:
@@ -22,17 +24,18 @@ jobs:
       - uses: actions/upload-artifact@v6
         with:
           name: packages
-          path: bin/Release/*.*nupkg
+          path: ${{ env.PACKAGES }}
       - run: |
-          dir bin/Release/*.*nupkg |
+          dir "$env:PACKAGES" |
           %{ dotnet nuget push $_ --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate }
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       - name: Tag commit with package version
         run: |
-          $version = (Get-Item bin/Release/Inspector.*.nupkg | Select-Object -First 1).Name -replace 'Inspector\.(.+)\.nupkg','$1'
+          $version = (Get-Item $env:PACKAGES | Select-Object -First 1).Name -replace 'Inspector\.(.+)\.nupkg','$1'
+          $tag = "v$version"
           git fetch --tags
-          if (-not (git tag -l "v$version")) {
-            git tag "v$version"
-            git push origin "v$version"
+          if (-not (git tag -l $tag)) {
+            git tag $tag
+            git push origin $tag
           }
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
