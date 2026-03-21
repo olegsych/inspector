@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: windows-latest
     permissions:
-      contents: write
+      contents: read
     env:
       PACKAGES: bin/Release/Inspector.*.nupkg
     steps:
@@ -25,11 +25,27 @@ jobs:
         with:
           name: packages
           path: ${{ env.PACKAGES }}
+
+  publish:
+    runs-on: windows-latest
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    permissions:
+      contents: write
+    env:
+      PACKAGES: bin/Release/Inspector.*.nupkg
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v6
+        with:
+          name: packages
+          path: bin/Release
       - name: Publish packages to NuGet.org
         run: |
           dir "$env:PACKAGES" |
           %{ dotnet nuget push $_ --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate }
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       - name: Tag commit with package version
         run: |
           $version = (dir $env:PACKAGES | select -First 1).Name -replace 'Inspector\.(.+)\.nupkg','$1'
@@ -39,4 +55,3 @@ jobs:
             git tag $tag
             git push origin $tag
           }
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
