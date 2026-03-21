@@ -6,13 +6,14 @@ on:
   pull_request:
     branches: [master]
 
+env:
+  PACKAGES: bin/Release/Inspector.*.nupkg
+
 jobs:
   build:
     runs-on: windows-latest
     permissions:
       contents: read
-    env:
-      PACKAGES: bin/Release/Inspector.*.nupkg
     steps:
       - uses: actions/checkout@v6
         with:
@@ -32,12 +33,8 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     permissions:
       contents: write
-    env:
-      PACKAGES: bin/Release/Inspector.*.nupkg
     steps:
       - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
       - uses: actions/download-artifact@v6
         with:
           name: packages
