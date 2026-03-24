@@ -9,7 +9,6 @@ on:
 env:
   Artifacts: ${{ github.workspace }}/out
   Logs: ${{ github.workspace }}/out/logs
-  PACKAGES: bin/Release/Inspector.*.*nupkg
 
 jobs:
   build:
@@ -43,15 +42,16 @@ jobs:
       - uses: actions/checkout@v6
       - uses: actions/download-artifact@v6
         with:
-          name: build-windows
-          path: bin/Release
+          name: build-windows-latest
       - name: Publish packages to NuGet.org
+        working-directory: build-windows-latest/packages
         run: |
-          dir "$env:PACKAGES" |
+          dir "*.*nupkg" |
           %{ dotnet nuget push $_ --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate }
       - name: Tag commit with package version
+        working-directory: build-windows-latest/packages
         run: |
-          $version = (dir $env:PACKAGES | select -First 1).Name -replace 'Inspector\.(.+)\.nupkg','$1'
+          $version = (dir *.nupkg | select -First 1).Name -replace '\D+\.(\d.+)\.nupkg','$1'
           $tag = "v$version"
           git fetch --tags
           if (-not (git tag -l $tag)) {
