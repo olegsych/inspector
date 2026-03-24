@@ -1,1 +1,4 @@
-./modules/csharp.common/.gitignore
+.vs/
+bin/
+obj/
+out/
