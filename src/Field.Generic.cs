@@ -25,7 +25,7 @@ namespace Inspector
         }
 
         /// <summary>
-        /// Gets the field value.
+        /// Returns the field value.
         /// </summary>
         public new T? Get() =>
             (T?)base.Get();
@@ -37,7 +37,7 @@ namespace Inspector
             base.Set(value);
 
         /// <summary>
-        /// Implicitly converts the field to it's value for convenient use in assertions.
+        /// Implicitly converts the field to its value for convenient use in assertions.
         /// </summary>
         public static implicit operator T?(Field<T>? field) =>
             field != null ? field.Get() : default;

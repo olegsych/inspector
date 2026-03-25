@@ -4,7 +4,7 @@ using System.Reflection;
 namespace Inspector
 {
     /// <summary>
-    /// Provides access to events of type not accessible at compile time.
+    /// Provides access to an event of type not accessible at compile time.
     /// </summary>
     public class Event: Member<EventInfo>
     {
@@ -18,7 +18,7 @@ namespace Inspector
             new Event(info, instance);
 
         /// <summary>
-        /// Returns <c>true</c> when the <see cref="Event"/> is static.
+        /// Gets a value that indicates whether the event is static.
         /// </summary>
         public override bool IsStatic =>
             Info.AddMethod.IsStatic;
@@ -29,6 +29,9 @@ namespace Inspector
         public void Add(Delegate handler) =>
             Info.AddEventHandler(Instance, handler);
 
+        /// <summary>
+        /// Raises the event with specified arguments.
+        /// </summary>
         public void Raise(params object[] args) =>
             throw new NotImplementedException();
 

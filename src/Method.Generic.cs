@@ -24,7 +24,7 @@ namespace Inspector
         }
 
         /// <summary>
-        /// Invokes the method.
+        /// Gets a delegate that invokes the method.
         /// </summary>
         public new TSignature Invoke => @delegate;
 
