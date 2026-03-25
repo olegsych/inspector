@@ -23,7 +23,7 @@ namespace Inspector
             base.Add(handler);
 
         /// <summary>
-        /// Raises the event.
+        /// Gets a delegate that raises the event.
         /// </summary>
         public new T Raise =>
             throw new NotImplementedException();
