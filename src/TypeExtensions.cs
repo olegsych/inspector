@@ -167,7 +167,7 @@ namespace Inspector
             new StaticMembers(type).Method<T>(methodName);
 
         /// <summary>
-        /// Creates an instance of given <see cref="Type"/> using the constructor that best matches given <paramref name="args"/>.
+        /// Returns a new instance of given <see cref="Type"/> using the constructor that best matches given <paramref name="args"/>.
         /// </summary>
         public static object New(this Type type, params object[] args) {
             try {
@@ -233,7 +233,7 @@ namespace Inspector
             new StaticMembers(type).Public();
 
         /// <summary>
-        /// Creates an uninitialized instance of given <see cref="Type"/>.
+        /// Returns an uninitialized instance of given <see cref="Type"/>.
         /// </summary>
         /// <returns>
         /// A zeroed object of given type, created without invoking any instance constructors.

@@ -23,7 +23,7 @@ namespace Inspector
         }
 
         /// <summary>
-        /// Invokes the constructor.
+        /// Gets a delegate that invokes the constructor.
         /// </summary>
         public new TSignature Invoke => @delegate;
 

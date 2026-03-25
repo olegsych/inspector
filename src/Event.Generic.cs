@@ -3,9 +3,9 @@ using System;
 namespace Inspector
 {
     /// <summary>
-    /// Provides access to events of type <typeparamref name="T"/>.
+    /// Provides access to an event of type <typeparamref name="T"/>.
     /// </summary>
-    /// <typeparam name="T">Type of event handler</typeparam>
+    /// <typeparam name="T">Type of event handler.</typeparam>
     public class Event<T>: Event where T : Delegate
     {
         /// <summary>

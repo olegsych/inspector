@@ -15,7 +15,7 @@ namespace Inspector
             throw new NotImplementedException();
 
         /// <summary>
-        /// Gets a value indicating whether the indexer is static.
+        /// Gets a value that indicates whether the indexer is static.
         /// </summary>
         public override bool IsStatic =>
             throw new NotImplementedException();

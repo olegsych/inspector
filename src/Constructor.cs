@@ -15,7 +15,7 @@ namespace Inspector
             base(info, instance) { }
 
         /// <summary>
-        /// Returns <c>true</c> when the <see cref="Constructor"/> is static.
+        /// Gets a value that indicates whether the constructor is static.
         /// </summary>
         public override bool IsStatic =>
             Info.IsStatic;
@@ -26,7 +26,7 @@ namespace Inspector
         /// <remarks>
         /// <para>
         /// This method is void because constructors don't allocate types or instances; they only initialize them.
-        /// The <see cref="MethodBase.Invoke(object, object[])"/> method returns <c>null</c> for both
+        /// The <see cref="MethodBase.Invoke(object, object[])"/> method returns <see langword="null"/> for both
         /// static and instance constructors. While the <see cref="ConstructorInfo.Invoke(object[])"/>
         /// method does create and returns an initialized instance, it's only a convenience method and,
         /// arguably, one that makes understanding constructors more confusing.

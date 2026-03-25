@@ -42,12 +42,12 @@ namespace Inspector
         public TMemberInfo Info { get; }
 
         /// <summary>
-        /// Gets the object of the member or <c>null</c> if the member is static.
+        /// Gets the object instance or <see langword="null"/> if the member is static.
         /// </summary>
         public object? Instance { get; }
 
         /// <summary>
-        /// Returns <c>true</c> when <see cref="Info"/> represents a static member.
+        /// Gets a value that indicates whether the member is static.
         /// </summary>
         public abstract bool IsStatic { get; }
 
