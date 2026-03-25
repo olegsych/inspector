@@ -133,7 +133,7 @@ namespace Inspector
             new InheritedMembers(members, typeof(T));
 
         /// <summary>
-        /// Returns members with <see langword="internal"/> accessibility.
+        /// Returns <see langword="internal"/> members.
         /// </summary>
         public static IMembers Internal(this IMembers members) =>
             new AccessibleMembers(members, Accessibility.Internal);
@@ -178,7 +178,7 @@ namespace Inspector
             new Method<T>(members.Method(typeof(T), methodName), methodFactory);
 
         /// <summary>
-        /// Returns members with <see langword="private"/> accessibility.
+        /// Returns <see langword="private"/> members.
         /// </summary>
         public static IMembers Private(this IMembers members) =>
             new AccessibleMembers(members, Accessibility.Private);
@@ -223,13 +223,13 @@ namespace Inspector
             new Property<T>(members.Property(typeof(T), propertyName));
 
         /// <summary>
-        /// Returns members with <see langword="protected"/> accessibility.
+        /// Returns <see langword="protected"/> members.
         /// </summary>
         public static IMembers Protected(this IMembers members) =>
             new AccessibleMembers(members, Accessibility.Protected);
 
         /// <summary>
-        /// Returns members with <see langword="public"/> accessibility.
+        /// Returns <see langword="public"/> members.
         /// </summary>
         public static IMembers Public(this IMembers members) =>
             new AccessibleMembers(members, Accessibility.Public);

@@ -125,7 +125,7 @@ namespace Inspector
             new StaticMembers(type).InheritedFrom<T>();
 
         /// <summary>
-        /// Returns static members with <see langword="internal"/> accessibility.
+        /// Returns <see langword="internal"/> static members.
         /// </summary>
         public static IMembers Internal(this Type type) =>
             new StaticMembers(type).Internal();
@@ -179,7 +179,7 @@ namespace Inspector
         }
 
         /// <summary>
-        /// Returns static members with <see langword="private"/> accessibility.
+        /// Returns <see langword="private"/> static members.
         /// </summary>
         public static IMembers Private(this Type type) =>
             new StaticMembers(type).Private();
@@ -221,13 +221,13 @@ namespace Inspector
             new StaticMembers(type).Property<T>(propertyName);
 
         /// <summary>
-        /// Returns static members with <see langword="protected"/> accessibility.
+        /// Returns <see langword="protected"/> static members.
         /// </summary>
         public static IMembers Protected(this Type type) =>
             new StaticMembers(type).Protected();
 
         /// <summary>
-        /// Returns static members with <see langword="public"/> accessibility.
+        /// Returns <see langword="public"/> static members.
         /// </summary>
         public static IMembers Public(this Type type) =>
             new StaticMembers(type).Public();

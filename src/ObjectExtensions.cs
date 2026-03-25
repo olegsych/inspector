@@ -135,7 +135,7 @@ namespace Inspector
             new InstanceMembers(instance).InheritedFrom<T>();
 
         /// <summary>
-        /// Returns members with <see langword="internal"/> accessibility.
+        /// Returns <see langword="internal"/> members.
         /// </summary>
         public static IMembers Internal(this object instance) =>
             new InstanceMembers(instance).Internal();
@@ -177,7 +177,7 @@ namespace Inspector
             new InstanceMembers(instance).Method<T>(methodName);
 
         /// <summary>
-        /// Returns members with <see langword="private"/> accessibility.
+        /// Returns <see langword="private"/> members.
         /// </summary>
         public static IMembers Private(this object instance) =>
             new InstanceMembers(instance).Private();
@@ -219,13 +219,13 @@ namespace Inspector
             new InstanceMembers(instance).Property<T>(propertyName);
 
         /// <summary>
-        /// Returns members with <see langword="protected"/> accessibility.
+        /// Returns <see langword="protected"/> members.
         /// </summary>
         public static IMembers Protected(this object instance) =>
             new InstanceMembers(instance).Protected();
 
         /// <summary>
-        /// Returns members with <see langword="public"/> accessibility.
+        /// Returns <see langword="public"/> members.
         /// </summary>
         public static IMembers Public(this object instance) =>
             new InstanceMembers(instance).Public();
