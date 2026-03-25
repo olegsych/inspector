@@ -29,6 +29,9 @@ namespace Inspector
         public void Add(Delegate handler) =>
             Info.AddEventHandler(Instance, handler);
 
+        /// <summary>
+        /// Raises the event with specified arguments.
+        /// </summary>
         public void Raise(params object[] args) =>
             throw new NotImplementedException();
 

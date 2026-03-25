@@ -9,7 +9,7 @@ namespace Inspector
     public class Constructor: Member<ConstructorInfo>
     {
         /// <summary>
-        /// Initializes a new method of the <see cref="Constructor"/> class.
+        /// Initializes a new instance of the <see cref="Constructor"/> class.
         /// </summary>
         public Constructor(ConstructorInfo info, object? instance = null) :
             base(info, instance) { }

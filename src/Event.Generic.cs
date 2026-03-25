@@ -22,6 +22,9 @@ namespace Inspector
         public void Add(T handler) =>
             base.Add(handler);
 
+        /// <summary>
+        /// Raises the event.
+        /// </summary>
         public new T Raise =>
             throw new NotImplementedException();
 
