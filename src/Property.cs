@@ -17,7 +17,7 @@ namespace Inspector
             new Property(property, instance);
 
         /// <summary>
-        /// Returns <c>true</c> if the <see cref="Property"/> is static.
+        /// Gets a value that indicates whether the property is static.
         /// </summary>
         public override bool IsStatic =>
             Info.GetMethod.IsStatic;
@@ -31,7 +31,7 @@ namespace Inspector
         }
 
         /// <summary>
-        /// Gets the property value.
+        /// Returns the property value.
         /// </summary>
         public object? Get() =>
             Info.GetValue(Instance);

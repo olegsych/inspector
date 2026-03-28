@@ -14,7 +14,7 @@ namespace Inspector
             base(info, instance) { }
 
         /// <summary>
-        /// Returns <c>true</c> when the <see cref="Method"/> is static.
+        /// Gets a value that indicates whether the method is static.
         /// </summary>
         public override bool IsStatic =>
             Info.IsStatic;
@@ -23,7 +23,7 @@ namespace Inspector
             new Method(info, instance);
 
         /// <summary>
-        /// Invokes the method with specified <paramref name="parameters"/> and returns the value it returns.
+        /// Returns the result of invoking the method with given <paramref name="parameters"/>.
         /// </summary>
         public object Invoke(params object[] parameters) =>
             Info.Invoke(Instance, parameters);

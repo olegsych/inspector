@@ -1,6 +1,5 @@
 using System;
 using System.Reflection;
-using Shouldly;
 using Xunit;
 
 namespace Inspector
@@ -25,33 +24,33 @@ namespace Inspector
             [Fact]
             public void GetWithMethod() {
                 Bar? value = foo.Field<Bar>().Get();
-                value.ShouldBeSameAs(bar);
+                Assert.Same(bar, value);
             }
 
             [Fact]
             public void GetWithProperty() {
                 Bar? value = foo.Field<Bar>().Value;
-                value.ShouldBeSameAs(bar);
+                Assert.Same(bar, value);
             }
 
             [Fact]
             public void GetWithImplicitConversionToFieldType() {
                 Bar? value = foo.Field<Bar>();
-                value.ShouldBeSameAs(bar);
+                Assert.Same(bar, value);
             }
 
             [Fact]
             public void SetWithMethod() {
                 var baz = new Bar();
                 foo.Field<Bar>().Set(baz);
-                foo.Field<Bar>().Get().ShouldBe(baz);
+                Assert.Equal(baz, foo.Field<Bar>().Get());
             }
 
             [Fact]
             public void SetWithValue() {
                 var baz = new Bar();
                 foo.Field<Bar>().Value = baz;
-                foo.Field<Bar>().Value.ShouldBe(baz);
+                Assert.Equal(baz, foo.Field<Bar>().Value);
             }
 
             //[Fact]
@@ -68,13 +67,13 @@ namespace Inspector
             [Fact]
             public void GetWithProperty() {
                 FieldInfo info = foo.Field<Bar>().Info;
-                info.ShouldBe(typeof(Foo).GetField("bar", BindingFlags.Instance | BindingFlags.NonPublic));
+                Assert.Equal(typeof(Foo).GetField("bar", BindingFlags.Instance | BindingFlags.NonPublic), info);
             }
 
             [Fact]
             public void GetWithImplicitConversionToFieldInfo() {
                 FieldInfo info = foo.Field<Bar>();
-                info.ShouldBe(typeof(Foo).GetField("bar", BindingFlags.Instance | BindingFlags.NonPublic));
+                Assert.Equal(typeof(Foo).GetField("bar", BindingFlags.Instance | BindingFlags.NonPublic), info);
             }
         }
 
@@ -90,13 +89,13 @@ namespace Inspector
 
             [Fact]
             public void UseFieldValueWithBinaryOperators() {
-                (foo.Field<int>() + 1).ShouldBe(43);
+                Assert.Equal(43, foo.Field<int>() + 1);
             }
 
             [Fact]
             public void ChangeFieldValueWithAssignmentOperator() {
                 foo.Field<int>().Value += 1;
-                foo.Field<int>().Value.ShouldBe(43);
+                Assert.Equal(43, foo.Field<int>().Value);
             }
         }
 
@@ -122,44 +121,44 @@ namespace Inspector
             [Fact]
             public void SelectPrivateField() {
                 FieldInfo field = foo.Private().Field<Bar>();
-                field.Name.ShouldBe("privateField");
+                Assert.Equal("privateField", field.Name);
             }
 
             [Fact]
             public void SelectProtectedField() {
                 FieldInfo field = foo.Protected().Field<Bar>();
-                field.Name.ShouldBe("protectedField");
+                Assert.Equal("protectedField", field.Name);
             }
 
             [Fact]
             public void SelectInternalField() {
                 FieldInfo field = foo.Internal().Field<Bar>();
-                field.Name.ShouldBe("internalField");
+                Assert.Equal("internalField", field.Name);
             }
 
             [Fact]
             public void SelectProtectedInternalField() {
                 FieldInfo field = foo.Protected().Internal().Field<Bar>();
-                field.Name.ShouldBe("protectedInternalField");
+                Assert.Equal("protectedInternalField", field.Name);
             }
 
             [Fact]
             public void SelectPrivateProtectedField() {
                 FieldInfo field = foo.Private().Protected().Field<Bar>();
-                field.Name.ShouldBe("privateProtectedField");
+                Assert.Equal("privateProtectedField", field.Name);
             }
 
             [Fact]
             public void SelectPublicField() {
                 FieldInfo field = foo.Public().Field<Bar>();
-                field.Name.ShouldBe("publicField");
+                Assert.Equal("publicField", field.Name);
             }
 
             [Fact]
             public void ThrowDescriptiveExceptionWhenCompbinationOfVisibilityFiltersIsInvalid() {
-                Should.Throw<InvalidOperationException>(() => foo.Public().Private().Field<Bar>());
-                Should.Throw<InvalidOperationException>(() => foo.Public().Internal().Field<Bar>());
-                Should.Throw<InvalidOperationException>(() => foo.Public().Protected().Field<Bar>());
+                Assert.Throws<InvalidOperationException>(() => foo.Public().Private().Field<Bar>());
+                Assert.Throws<InvalidOperationException>(() => foo.Public().Internal().Field<Bar>());
+                Assert.Throws<InvalidOperationException>(() => foo.Public().Protected().Field<Bar>());
             }
         }
 
@@ -185,34 +184,34 @@ namespace Inspector
 
             [Fact]
             public void ThrowDescriptiveExceptionWhenMoreThanOneFieldOfGivenTypeExists() {
-                var thrown = Should.Throw<InvalidOperationException>(() => bar.Field<Baz>());
-                thrown.Message.ShouldContain(typeof(Baz).FullName!);
-                thrown.Message.ShouldContain(typeof(Foo).FullName!);
-                thrown.Message.ShouldContain(typeof(Bar).FullName!);
+                var thrown = Assert.Throws<InvalidOperationException>(() => bar.Field<Baz>());
+                Assert.Contains(typeof(Baz).FullName!, thrown.Message);
+                Assert.Contains(typeof(Foo).FullName!, thrown.Message);
+                Assert.Contains(typeof(Bar).FullName!, thrown.Message);
             }
 
             [Fact]
             public void SelectDeclaredField() {
                 FieldInfo field = bar.Declared().Field<Baz>();
-                field.DeclaringType.ShouldBe(typeof(Bar));
+                Assert.Equal(typeof(Bar), field.DeclaringType);
             }
 
             [Fact]
             public void SelectFieldDeclaredBySpecificType() {
                 FieldInfo field = bar.DeclaredBy<Foo>().Field<Baz>();
-                field.DeclaringType.ShouldBe(typeof(Foo));
+                Assert.Equal(typeof(Foo), field.DeclaringType);
             }
 
             [Fact]
             public void SelectInheritedField() {
                 FieldInfo field = bar.Inherited().Field<Baz>();
-                field.DeclaringType.ShouldBe(typeof(Foo));
+                Assert.Equal(typeof(Foo), field.DeclaringType);
             }
 
             [Fact]
             public void SelectFieldInheritedFromSpecificType() {
                 FieldInfo field = bar.InheritedFrom<Foo>().Field<Baz>();
-                field.DeclaringType.ShouldBe(typeof(Foo));
+                Assert.Equal(typeof(Foo), field.DeclaringType);
             }
         }
 
@@ -248,37 +247,37 @@ namespace Inspector
 
             [Fact]
             public void ThrowDescriptiveExceptionWhenMoreThanOneFieldOfGivenTypeExistsInDeclaringType() {
-                var thrown = Should.Throw<InvalidOperationException>(() => foo.Field<Qux>());
-                thrown.Message.ShouldContain(typeof(Qux).FullName!);
-                thrown.Message.ShouldContain(typeof(Foo).FullName!);
-                thrown.Message.ShouldContain(nameof(Foo.field1));
-                thrown.Message.ShouldContain(nameof(Foo.field2));
+                var thrown = Assert.Throws<InvalidOperationException>(() => foo.Field<Qux>());
+                Assert.Contains(typeof(Qux).FullName!, thrown.Message);
+                Assert.Contains(typeof(Foo).FullName!, thrown.Message);
+                Assert.Contains(nameof(Foo.field1), thrown.Message);
+                Assert.Contains(nameof(Foo.field2), thrown.Message);
             }
 
             [Fact]
             public void SelectFieldDeclaredWithSpecificName() {
                 FieldInfo field = foo.Field<Qux>(nameof(Foo.field2));
-                field.Name.ShouldBe(nameof(Foo.field2));
+                Assert.Equal(nameof(Foo.field2), field.Name);
             }
 
             [Fact]
             public void SelectFieldWithSpecificNameAndVisibility() {
                 FieldInfo field = foo.Public().Field<Qux>(nameof(Foo.field2));
-                field.Name.ShouldBe(nameof(Foo.field2));
+                Assert.Equal(nameof(Foo.field2), field.Name);
             }
 
             [Fact]
             public void SelectInheritedFieldWithSpecificName() {
                 FieldInfo field = bar.InheritedFrom<Foo>().Field<Qux>(nameof(Foo.field2));
-                field.DeclaringType.ShouldBe(typeof(Foo));
-                field.Name.ShouldBe(nameof(Foo.field2));
+                Assert.Equal(typeof(Foo), field.DeclaringType);
+                Assert.Equal(nameof(Foo.field2), field.Name);
             }
 
             [Fact]
             public void SelectFieldWithSpecificNameAndDeclaringType() {
                 FieldInfo field = baz.DeclaredBy<Bar>().Field<Qux>(nameof(Bar.field2));
-                field.DeclaringType.ShouldBe(typeof(Bar));
-                field.Name.ShouldBe(nameof(Bar.field2));
+                Assert.Equal(typeof(Bar), field.DeclaringType);
+                Assert.Equal(nameof(Bar.field2), field.Name);
             }
         }
     }

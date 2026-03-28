@@ -4,6 +4,9 @@ using System.Runtime.CompilerServices;
 using Inspector.Implementation;
 using NSubstitute;
 using Xunit;
+#if NETFRAMEWORK
+using RuntimeHelpers = System.Runtime.Serialization.FormatterServices;
+#endif
 
 namespace Inspector
 {
@@ -77,7 +80,7 @@ namespace Inspector
         {
             [Fact]
             public void ImplicitlyConvertsConstructorToItsSignatureDelegate() {
-                TestSignature actual = sut;
+                TestSignature? actual = sut;
                 Assert.Same(sut.Invoke, actual);
             }
 

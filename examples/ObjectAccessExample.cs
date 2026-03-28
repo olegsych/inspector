@@ -1,6 +1,5 @@
 using System;
 using System.Reflection;
-using Shouldly;
 using Xunit;
 
 namespace Inspector
@@ -31,8 +30,8 @@ namespace Inspector
                 public void NewInstanceWithDefaultConstructor() {
                     Foo foo = Type<Foo>.New();
 
-                    foo.Field<Bar>().Value.ShouldNotBeNull();
-                    foo.Field<Baz>().Value.ShouldNotBeNull();
+                    Assert.NotNull(foo.Field<Bar>().Value);
+                    Assert.NotNull(foo.Field<Baz>().Value);
                 }
 
                 [Fact]
@@ -42,16 +41,16 @@ namespace Inspector
 
                     Foo foo = Type<Foo>.New(bar, baz);
 
-                    foo.Field<Bar>().Value.ShouldBeSameAs(bar);
-                    foo.Field<Baz>().Value.ShouldBeSameAs(baz);
+                    Assert.Same(bar, foo.Field<Bar>().Value);
+                    Assert.Same(baz, foo.Field<Baz>().Value);
                 }
 
                 [Fact]
                 public void UninitializedInstance() {
                     Foo foo = Type<Foo>.Uninitialized();
 
-                    foo.Field<Bar>().Value.ShouldBeNull();
-                    foo.Field<Baz>().Value.ShouldBeNull();
+                    Assert.Null(foo.Field<Bar>().Value);
+                    Assert.Null(foo.Field<Baz>().Value);
                 }
             }
 
@@ -149,8 +148,8 @@ namespace Inspector
                 public void NewInstanceWithDefaultConstructor() {
                     object foo = typeOfFoo.New();
 
-                    foo.Field(typeOfBar).Value.ShouldNotBeNull();
-                    foo.Field(typeOfBaz).Value.ShouldNotBeNull();
+                    Assert.NotNull(foo.Field(typeOfBar).Value);
+                    Assert.NotNull(foo.Field(typeOfBaz).Value);
                 }
 
                 [Fact]
@@ -160,16 +159,16 @@ namespace Inspector
 
                     object foo = typeOfFoo.New(bar, baz);
 
-                    foo.Field(typeOfBar).Value.ShouldBeSameAs(bar);
-                    foo.Field(typeOfBaz).Value.ShouldBeSameAs(baz);
+                    Assert.Same(bar, foo.Field(typeOfBar).Value);
+                    Assert.Same(baz, foo.Field(typeOfBaz).Value);
                 }
 
                 [Fact]
                 public void UninitializedInstance() {
                     object foo = typeOfFoo.Uninitialized();
 
-                    foo.Field(typeOfBar).Value.ShouldBeNull();
-                    foo.Field(typeOfBaz).Value.ShouldBeNull();
+                    Assert.Null(foo.Field(typeOfBar).Value);
+                    Assert.Null(foo.Field(typeOfBaz).Value);
                 }
             }
 
@@ -181,21 +180,21 @@ namespace Inspector
                 public void ByType() {
                     Field field = foo.Field(typeOfBar);
 
-                    field.Value.ShouldBeOfType(typeOfBar);
+                    Assert.IsType(typeOfBar, field.Value);
                 }
 
                 [Fact]
                 public void ByName() {
                     Field field = foo.Field("barField");
 
-                    field.Value.ShouldBeOfType(typeOfBar);
+                    Assert.IsType(typeOfBar, field.Value);
                 }
 
                 [Fact]
                 public void ByTypeAndName() {
                     Field field = foo.Field(typeOfBar, "barField");
 
-                    field.Value.ShouldBeOfType(typeOfBar);
+                    Assert.IsType(typeOfBar, field.Value);
                 }
             }
         }

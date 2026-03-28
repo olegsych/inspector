@@ -17,7 +17,7 @@ namespace Inspector
             new Field(info, instance);
 
         /// <summary>
-        /// Returns <c>true</c> when the <see cref="Field"/> is static.
+        /// Gets a value that indicates whether the field is static.
         /// </summary>
         public override bool IsStatic =>
             Info.IsStatic;
@@ -31,7 +31,7 @@ namespace Inspector
         }
 
         /// <summary>
-        /// Gets the field value.
+        /// Returns the field value.
         /// </summary>
         public object? Get() =>
             Info.GetValue(Instance);

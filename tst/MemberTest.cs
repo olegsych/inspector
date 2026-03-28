@@ -90,7 +90,7 @@ namespace Inspector
         {
             [Fact]
             public void ImplicitlyConvertsMemberToMemberInfo() {
-                MemberInfo converted = sut;
+                MemberInfo? converted = sut;
                 Assert.Same(info, converted);
             }
 

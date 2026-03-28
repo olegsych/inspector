@@ -5,7 +5,7 @@ namespace Inspector
     /// <summary>
     /// Provides access to a property of type <typeparamref name="T"/>.
     /// </summary>
-    /// <typeparam name="T">Type of property value</typeparam>
+    /// <typeparam name="T">Type of property value.</typeparam>
     public class Property<T>: Property
     {
         internal Property(Property property) : base(NotNull(property).Info, property.Instance) {
@@ -22,7 +22,7 @@ namespace Inspector
         }
 
         /// <summary>
-        /// Gets the property value.
+        /// Returns the property value.
         /// </summary>
         public new T? Get() =>
             (T?)base.Get();
@@ -34,7 +34,7 @@ namespace Inspector
             base.Set(value);
 
         /// <summary>
-        /// Implicitly converts the property to it's value for convenient use in assertions.
+        /// Implicitly converts the property to its value for convenient use in assertions.
         /// </summary>
         public static implicit operator T?(Property<T>? property) =>
             property != null ? property.Get() : default;

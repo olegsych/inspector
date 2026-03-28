@@ -1,0 +1,60 @@
+name: build
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+env:
+  Artifacts: ${{ github.workspace }}/out
+  Logs: ${{ github.workspace }}/out/logs
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+          fetch-depth: 0
+      - run: dotnet build -bl:"${{ env.Logs }}/build.binLog"
+      - run: dotnet test --no-build tst/Tests.csproj --logger trx -bl:"${{ env.Logs }}/test.binLog"
+      - run: dotnet pack src/Inspector.csproj -bl:"${{ env.Logs }}/pack.binLog"
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: build-${{ matrix.os }}
+          path: ${{ env.Artifacts }}
+
+  publish:
+    runs-on: windows-latest
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v6
+        with:
+          name: build-windows-latest
+      - name: Publish packages to NuGet.org
+        working-directory: packages
+        run: |
+          dir "*.*nupkg" |
+          %{ dotnet nuget push $_ --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate }
+      - name: Tag commit with package version
+        working-directory: packages
+        run: |
+          $version = (dir *.nupkg | select -First 1).Name -replace '\D+\.(\d.+)\.nupkg','$1'
+          $tag = "v$version"
+          git fetch --tags
+          if (-not (git tag -l $tag)) {
+            git tag $tag
+            git push origin $tag
+          }

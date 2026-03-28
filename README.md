@@ -1,5 +1,4 @@
-[![Build](https://img.shields.io/appveyor/ci/olegsych/inspector/master)](https://ci.appveyor.com/project/olegsych/inspector/branch/master)
-[![Tests](https://img.shields.io/appveyor/tests/olegsych/inspector/master)](https://ci.appveyor.com/project/olegsych/inspector/branch/master/tests)
+[![Build](https://github.com/olegsych/inspector/actions/workflows/build.yml/badge.svg)](https://github.com/olegsych/inspector/actions/workflows/build.yml)
 [![Nuget](https://img.shields.io/nuget/v/inspector.svg)](https://www.nuget.org/packages/inspector)
 
 Inspector is a simple .NET Reflection API for white-box unit testing.
