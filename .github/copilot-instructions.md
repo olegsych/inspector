@@ -85,7 +85,7 @@ The CI checks out with `submodules: recursive` and `fetch-depth: 0` (full histor
   - No `this.` qualifier, no redundant `private` modifier, no braces for single-line blocks
   - Use `var` only when type is apparent; use explicit types elsewhere
   - Expression-bodied members when on single line
-  - No space after `if`/`for`/`while` keywords before parenthesis
+  - No space after `if`/`for`/`while` keywords before parentheses
 - **Nullable reference types** are enabled (`<Nullable>enable</Nullable>`)
 - **C# language version**: `latest`
 - **XML documentation**: Follow conventions in `.github/instructions/docs.instructions.md`
