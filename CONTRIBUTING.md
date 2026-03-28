@@ -1,4 +1,4 @@
-# clone
+# Clone
 This repository contains submodules and symlinks.
 ```PowerShell
 git clone --recurse-submodules -c core.symlinks=true https://github.com/olegsych/inspector.git
@@ -11,7 +11,7 @@ git submodule update --init --recursive
 
 The build depends on symlinked files from the `modules/csharp.common` submodule. Without it, `Directory.Build.props`, `Directory.Build.targets`, `.editorconfig`, and `StrongName.snk` are broken symlinks and the build will fail.
 
-# repository layout
+# Repository layout
 
 ```
 Inspector.slnx              # Solution file (3 projects)
@@ -33,7 +33,7 @@ modules/csharp.common/       # Git submodule with shared build/style config
 - `src/` — Public API: `ObjectExtensions.cs`, `TypeExtensions.cs`, `Type.cs`, and member types (`Field.cs`, `Property.cs`, `Method.cs`, `Event.cs`, `Constructor.cs`) plus generic variants. `src/Implementation/` has internal helpers (filters, factories, selectors).
 - `tst/` — One test file per source file. `tst/Implementation/` mirrors `src/Implementation/`.
 
-# build
+# Build
 Use [Visual Studio](https://visualstudio.microsoft.com/downloads) or command line. Always run commands from the repository root.
 ```PowerShell
 dotnet build .\Inspector.slnx
@@ -41,7 +41,7 @@ dotnet build .\Inspector.slnx
 
 The `examples/` project may emit pre-existing nullable reference warnings during local builds; these are not CI-gated. In Release configuration, `TreatWarningsAsErrors` is enabled.
 
-# test
+# Test
 Use Visual Studio or command line. Always use `--no-build` after building to avoid redundant compilation.
 ```PowerShell
 dotnet test --no-build .\tst\Tests.csproj
@@ -54,18 +54,18 @@ dotnet test --no-build .\tst\Tests.csproj --framework net9.0
 
 Do not run `dotnet test` against the full solution or `examples/Examples.csproj` — examples have pre-existing test failures unrelated to the library and are not tested in CI.
 
-# pack
+# Pack
 ```PowerShell
 dotnet pack .\src\Inspector.csproj
 ```
 
 Creates NuGet packages in `out/packages/`.
 
-# pull requests
+# Pull requests
 Pull requests are automatically validated by the [build](https://github.com/olegsych/inspector/actions/workflows/build.yml)
 workflow. NuGet and symbol packages are uploaded to build artifacts.
 
-# continuous integration
+# Continuous integration
 The [build](https://github.com/olegsych/inspector/actions/workflows/build.yml) is automatically triggered for the `master`
 branch. NuGet and symbol packages are published to [public package feed](https://www.nuget.org/packages/inspector).
 
@@ -77,7 +77,7 @@ The CI build runs on both `windows-latest` and `ubuntu-latest`:
 
 The CI checks out with `submodules: recursive` and `fetch-depth: 0` (full history required for Nerdbank.GitVersioning).
 
-# coding conventions
+# Coding conventions
 
 - **C# style** is enforced by `.editorconfig` with many rules set to `error` severity. Key rules:
   - K&R brace style (new line before open brace only for types/namespaces)
@@ -92,7 +92,7 @@ The CI checks out with `submodules: recursive` and `fetch-depth: 0` (full histor
 - **Test naming**: Test classes mirror source classes with `Test` suffix; nested classes group related tests
 - **Versioning**: Nerdbank.GitVersioning — do not manually edit assembly versions
 
-# important notes
+# Important notes
 
 - The `out/`, `bin/`, and `obj/` directories are in `.gitignore` — never commit build artifacts.
 - Central package management is used (`Directory.Packages.props`) — specify package versions there, not in individual `.csproj` files.
