@@ -44,7 +44,7 @@ Always run commands from the repository root.
 dotnet build
 ```
 
-Builds all 3 projects. Takes ~18 seconds. Expect 0 errors and ~46 nullable reference warnings in examples (pre-existing, safe to ignore). In Release configuration, `TreatWarningsAsErrors` is enabled.
+Builds all 3 projects. The `examples/` project may emit pre-existing nullable reference warnings during local builds; these are not CI-gated. In Release configuration, `TreatWarningsAsErrors` is enabled.
 
 ### Test
 
