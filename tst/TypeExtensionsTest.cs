@@ -314,6 +314,30 @@ namespace Inspector
             }
         }
 
+        [Collection(nameof(MethodExtensionsTest))]
+        public class GenericMethodOfTypeWithOverloadedExtensionMethods: TypeExtensionsTest
+        {
+            // Simulates the issue scenario: a static class with two overloaded extension methods,
+            // where the first (this) parameter is an interface type
+            interface ITestInterface { }
+            class TestParameter { }
+            delegate void TestDelegate(ITestInterface t, TestParameter p);
+
+            static class TestExtensions
+            {
+                public static void Extension(ITestInterface t) { }
+                public static void Extension(ITestInterface t, TestParameter p) { }
+            }
+
+            [Fact]
+            public void ReturnsMethodMatchingDelegateType() {
+                Method<TestDelegate> actual = typeof(TestExtensions).Method<TestDelegate>();
+                Assert.Equal(
+                    typeof(TestExtensions).GetMethod(nameof(TestExtensions.Extension), new[] { typeof(ITestInterface), typeof(TestParameter) }),
+                    actual.Info);
+            }
+        }
+
         public class New: TypeExtensionsTest
         {
             class PropertyType { }
