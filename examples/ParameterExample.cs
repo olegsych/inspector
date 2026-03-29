@@ -10,9 +10,9 @@ namespace Inspector
         {
             class Baz { }
 
-            TestType(int foo, string bar, Baz baz) { }
+            TestType(int min, int max, string label, Baz extra) { }
 
-            void TestMethod(int foo, string bar, Baz baz) { }
+            void TestMethod(int min, int max, string label, Baz extra) { }
         }
 
         readonly TestType instance = Type<TestType>.Uninitialized();
@@ -23,25 +23,37 @@ namespace Inspector
             [Fact]
             public void CanBeAccessedByRuntimeType() {
                 ParameterInfo parameter = instance.Constructor().Parameter(runtimeType);
-                Assert.Equal("baz", parameter.Name);
+                Assert.Equal("extra", parameter.Name);
             }
 
             [Fact]
             public void CanBeAccessedByCompileTimeType() {
                 ParameterInfo parameter = instance.Constructor().Parameter<string>();
-                Assert.Equal("bar", parameter.Name);
+                Assert.Equal("label", parameter.Name);
             }
 
             [Fact]
             public void CanBeAccessedByName() {
-                ParameterInfo parameter = instance.Constructor().Parameter("bar");
+                ParameterInfo parameter = instance.Constructor().Parameter("label");
                 Assert.Equal(typeof(string), parameter.ParameterType);
             }
 
             [Fact]
             public void CanBeAccessedByPosition() {
-                ParameterInfo parameter = instance.Constructor().Parameter(1);
-                Assert.Equal("bar", parameter.Name);
+                ParameterInfo parameter = instance.Constructor().Parameter(2);
+                Assert.Equal("label", parameter.Name);
+            }
+
+            [Fact]
+            public void CanBeAccessedByCompileTimeTypeAndPosition() {
+                ParameterInfo parameter = instance.Constructor().Parameter<int>(1);
+                Assert.Equal("max", parameter.Name);
+            }
+
+            [Fact]
+            public void CanBeAccessedByRuntimeTypeAndPosition() {
+                ParameterInfo parameter = instance.Constructor().Parameter(typeof(int), 0);
+                Assert.Equal("min", parameter.Name);
             }
         }
 
@@ -51,28 +63,42 @@ namespace Inspector
             public void CanBeAccessedByRuntimeType() {
                 ConstructorInfo constructor = instance.Constructor();
                 ParameterInfo parameter = constructor.Parameter(runtimeType);
-                Assert.Equal("baz", parameter.Name);
+                Assert.Equal("extra", parameter.Name);
             }
 
             [Fact]
             public void CanBeAccessedByCompileTimeType() {
                 ConstructorInfo constructor = instance.Constructor();
                 ParameterInfo parameter = constructor.Parameter<string>();
-                Assert.Equal("bar", parameter.Name);
+                Assert.Equal("label", parameter.Name);
             }
 
             [Fact]
             public void CanBeAccessedByName() {
                 ConstructorInfo constructor = instance.Constructor();
-                ParameterInfo parameter = constructor.Parameter("bar");
+                ParameterInfo parameter = constructor.Parameter("label");
                 Assert.Equal(typeof(string), parameter.ParameterType);
             }
 
             [Fact]
             public void CanBeAccessedByPosition() {
                 ConstructorInfo constructor = instance.Constructor();
-                ParameterInfo parameter = constructor.Parameter(1);
-                Assert.Equal("bar", parameter.Name);
+                ParameterInfo parameter = constructor.Parameter(2);
+                Assert.Equal("label", parameter.Name);
+            }
+
+            [Fact]
+            public void CanBeAccessedByCompileTimeTypeAndPosition() {
+                ConstructorInfo constructor = instance.Constructor();
+                ParameterInfo parameter = constructor.Parameter<int>(1);
+                Assert.Equal("max", parameter.Name);
+            }
+
+            [Fact]
+            public void CanBeAccessedByRuntimeTypeAndPosition() {
+                ConstructorInfo constructor = instance.Constructor();
+                ParameterInfo parameter = constructor.Parameter(typeof(int), 0);
+                Assert.Equal("min", parameter.Name);
             }
         }
 
@@ -81,25 +107,37 @@ namespace Inspector
             [Fact]
             public void CanBeAccessedByRuntimeType() {
                 ParameterInfo parameter = instance.Method().Parameter(runtimeType);
-                Assert.Equal("baz", parameter.Name);
+                Assert.Equal("extra", parameter.Name);
             }
 
             [Fact]
             public void CanBeAccessedByCompileTimeType() {
                 ParameterInfo parameter = instance.Method().Parameter<string>();
-                Assert.Equal("bar", parameter.Name);
+                Assert.Equal("label", parameter.Name);
             }
 
             [Fact]
             public void CanBeAccessedByName() {
-                ParameterInfo parameter = instance.Method().Parameter("bar");
+                ParameterInfo parameter = instance.Method().Parameter("label");
                 Assert.Equal(typeof(string), parameter.ParameterType);
             }
 
             [Fact]
             public void CanBeAccessedByPosition() {
-                ParameterInfo parameter = instance.Method().Parameter(1);
-                Assert.Equal("bar", parameter.Name);
+                ParameterInfo parameter = instance.Method().Parameter(2);
+                Assert.Equal("label", parameter.Name);
+            }
+
+            [Fact]
+            public void CanBeAccessedByCompileTimeTypeAndPosition() {
+                ParameterInfo parameter = instance.Method().Parameter<int>(1);
+                Assert.Equal("max", parameter.Name);
+            }
+
+            [Fact]
+            public void CanBeAccessedByRuntimeTypeAndPosition() {
+                ParameterInfo parameter = instance.Method().Parameter(typeof(int), 0);
+                Assert.Equal("min", parameter.Name);
             }
         }
 
@@ -109,28 +147,42 @@ namespace Inspector
             public void CanBeAccessedByRuntimeType() {
                 MethodInfo method = instance.Method();
                 ParameterInfo parameter = method.Parameter(runtimeType);
-                Assert.Equal("baz", parameter.Name);
+                Assert.Equal("extra", parameter.Name);
             }
 
             [Fact]
             public void CanBeAccessedByCompileTimeType() {
                 MethodInfo method = instance.Method();
                 ParameterInfo parameter = method.Parameter<string>();
-                Assert.Equal("bar", parameter.Name);
+                Assert.Equal("label", parameter.Name);
             }
 
             [Fact]
             public void CanBeAccessedByName() {
                 MethodInfo method = instance.Method();
-                ParameterInfo parameter = method.Parameter("bar");
+                ParameterInfo parameter = method.Parameter("label");
                 Assert.Equal(typeof(string), parameter.ParameterType);
             }
 
             [Fact]
             public void CanBeAccessedByPosition() {
                 MethodInfo method = instance.Method();
-                ParameterInfo parameter = method.Parameter(1);
-                Assert.Equal("bar", parameter.Name);
+                ParameterInfo parameter = method.Parameter(2);
+                Assert.Equal("label", parameter.Name);
+            }
+
+            [Fact]
+            public void CanBeAccessedByCompileTimeTypeAndPosition() {
+                MethodInfo method = instance.Method();
+                ParameterInfo parameter = method.Parameter<int>(1);
+                Assert.Equal("max", parameter.Name);
+            }
+
+            [Fact]
+            public void CanBeAccessedByRuntimeTypeAndPosition() {
+                MethodInfo method = instance.Method();
+                ParameterInfo parameter = method.Parameter(typeof(int), 0);
+                Assert.Equal("min", parameter.Name);
             }
         }
     }
