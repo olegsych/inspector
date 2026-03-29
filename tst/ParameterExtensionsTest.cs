@@ -19,6 +19,7 @@ namespace Inspector
         readonly ParameterInfo parameter = ParameterInfo();
         readonly string parameterName = Guid.NewGuid().ToString();
         readonly Type parameterType = typeof(ParameterType);
+        readonly int parameterPosition = Random.Shared.Next();
 
         IEnumerable<ParameterInfo>? selection;
 
@@ -58,6 +59,29 @@ namespace Inspector
             }
 
             [Fact]
+            public void ReturnsParameterWithGivenPosition() {
+                Assert.Same(parameter, method.Parameter(parameterPosition));
+                ParameterPositionFilter.Implementation filter = VerifyFilter(selection, parameterPosition);
+                VerifyParameters(filter.Source, method);
+            }
+
+            [Fact]
+            public void ReturnsParameterOfGivenTypeAtGivenPosition() {
+                Assert.Same(parameter, method.Parameter(parameterType, parameterPosition));
+                ParameterPositionFilter.Implementation positionFilter = VerifyFilter(selection, parameterPosition);
+                ParameterTypeFilter.Implementation typeFilter = VerifyFilter(positionFilter.Source, parameterType);
+                VerifyParameters(typeFilter.Source, method);
+            }
+
+            [Fact]
+            public void ReturnsParameterOfGivenGenericTypeAtGivenPosition() {
+                Assert.Same(parameter, method.Parameter<ParameterType>(parameterPosition));
+                ParameterPositionFilter.Implementation positionFilter = VerifyFilter(selection, parameterPosition);
+                ParameterTypeFilter.Implementation typeFilter = VerifyFilter(positionFilter.Source, parameterType);
+                VerifyParameters(typeFilter.Source, method);
+            }
+
+            [Fact]
             public void ReturnsParameterWithGivenTypeAndName() {
                 Assert.Same(parameter, method.Parameter(parameterType, parameterName));
                 ParameterNameFilter.Implementation nameFilter = VerifyFilter(selection, parameterName);
@@ -94,6 +118,29 @@ namespace Inspector
                 Assert.Same(parameter, member.Parameter(parameterName));
                 ParameterNameFilter.Implementation filter = VerifyFilter(selection, parameterName);
                 VerifyParameters(filter.Source, method);
+            }
+
+            [Fact]
+            public void ReturnsParameterWithGivenPosition() {
+                Assert.Same(parameter, member.Parameter(parameterPosition));
+                ParameterPositionFilter.Implementation filter = VerifyFilter(selection, parameterPosition);
+                VerifyParameters(filter.Source, method);
+            }
+
+            [Fact]
+            public void ReturnsParameterOfGivenTypeAtGivenPosition() {
+                Assert.Same(parameter, member.Parameter(parameterType, parameterPosition));
+                ParameterPositionFilter.Implementation positionFilter = VerifyFilter(selection, parameterPosition);
+                ParameterTypeFilter.Implementation typeFilter = VerifyFilter(positionFilter.Source, parameterType);
+                VerifyParameters(typeFilter.Source, method);
+            }
+
+            [Fact]
+            public void ReturnsParameterOfGivenGenericTypeAtGivenPosition() {
+                Assert.Same(parameter, member.Parameter<ParameterType>(parameterPosition));
+                ParameterPositionFilter.Implementation positionFilter = VerifyFilter(selection, parameterPosition);
+                ParameterTypeFilter.Implementation typeFilter = VerifyFilter(positionFilter.Source, parameterType);
+                VerifyParameters(typeFilter.Source, method);
             }
 
             [Fact]
@@ -137,6 +184,13 @@ namespace Inspector
             Assert.NotNull(selection);
             var filter = (ParameterTypeFilter.Implementation)selection!;
             Assert.Equal(parameterType, filter.ParameterType);
+            return filter;
+        }
+
+        static ParameterPositionFilter.Implementation VerifyFilter(IEnumerable<ParameterInfo>? selection, int position) {
+            Assert.NotNull(selection);
+            var filter = (ParameterPositionFilter.Implementation)selection!;
+            Assert.Equal(position, filter.Position);
             return filter;
         }
     }
