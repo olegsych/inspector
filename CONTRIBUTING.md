@@ -92,6 +92,14 @@ The CI checks out with `submodules: recursive` and `fetch-depth: 0` (full histor
 - **Test naming**: Test classes mirror source classes with `Test` suffix; nested classes group related tests
 - **Versioning**: Nerdbank.GitVersioning — do not manually edit assembly versions
 
+# Examples
+
+The `examples/` project demonstrates API usage. When adding new APIs:
+
+- Add examples for **all new overloads**, including type-based and position-based combinations.
+- Design example test types with **multiple parameters of the same type** when demonstrating type+position overloads, so the examples show the real disambiguation benefit.
+- New examples for newly-implemented APIs must pass. Do not add examples for APIs that are not yet implemented.
+
 # Important notes
 
 - The `out/`, `bin/`, and `obj/` directories are in `.gitignore` — never commit build artifacts.
