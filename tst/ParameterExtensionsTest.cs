@@ -19,7 +19,7 @@ namespace Inspector
         readonly ParameterInfo parameter = ParameterInfo();
         readonly string parameterName = Guid.NewGuid().ToString();
         readonly Type parameterType = typeof(ParameterType);
-        readonly int parameterPosition = Random.Shared.Next();
+        readonly int parameterPosition = new Random().Next();
 
         IEnumerable<ParameterInfo>? selection;
 

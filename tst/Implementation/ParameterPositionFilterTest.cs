@@ -11,7 +11,7 @@ namespace Inspector.Implementation
     public class ParameterPositionFilterTest
     {
         readonly IEnumerable<ParameterInfo> parameters = Substitute.For<IEnumerable<ParameterInfo>>();
-        readonly int position = Random.Shared.Next();
+        readonly int position = new Random().Next();
 
         public class WithPosition: ParameterPositionFilterTest
         {
