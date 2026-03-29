@@ -37,6 +37,12 @@ namespace Inspector
                 ParameterInfo parameter = instance.Constructor().Parameter("bar");
                 Assert.Equal(typeof(string), parameter.ParameterType);
             }
+
+            [Fact]
+            public void CanBeAccessedByPosition() {
+                ParameterInfo parameter = instance.Constructor().Parameter(1);
+                Assert.Equal("bar", parameter.Name);
+            }
         }
 
         public class ConstructorInfoParameter: ParameterExample
@@ -61,6 +67,13 @@ namespace Inspector
                 ParameterInfo parameter = constructor.Parameter("bar");
                 Assert.Equal(typeof(string), parameter.ParameterType);
             }
+
+            [Fact]
+            public void CanBeAccessedByPosition() {
+                ConstructorInfo constructor = instance.Constructor();
+                ParameterInfo parameter = constructor.Parameter(1);
+                Assert.Equal("bar", parameter.Name);
+            }
         }
 
         public class MethodParameter: ParameterExample
@@ -81,6 +94,12 @@ namespace Inspector
             public void CanBeAccessedByName() {
                 ParameterInfo parameter = instance.Method().Parameter("bar");
                 Assert.Equal(typeof(string), parameter.ParameterType);
+            }
+
+            [Fact]
+            public void CanBeAccessedByPosition() {
+                ParameterInfo parameter = instance.Method().Parameter(1);
+                Assert.Equal("bar", parameter.Name);
             }
         }
 
@@ -105,6 +124,13 @@ namespace Inspector
                 MethodInfo method = instance.Method();
                 ParameterInfo parameter = method.Parameter("bar");
                 Assert.Equal(typeof(string), parameter.ParameterType);
+            }
+
+            [Fact]
+            public void CanBeAccessedByPosition() {
+                MethodInfo method = instance.Method();
+                ParameterInfo parameter = method.Parameter(1);
+                Assert.Equal("bar", parameter.Name);
             }
         }
     }

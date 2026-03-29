@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using NSubstitute;
@@ -10,14 +11,14 @@ namespace Inspector.Implementation
     public class ParameterPositionFilterTest
     {
         readonly IEnumerable<ParameterInfo> parameters = Substitute.For<IEnumerable<ParameterInfo>>();
-        readonly int position = 1;
+        readonly int position = Random.Shared.Next();
 
         public class WithPosition: ParameterPositionFilterTest
         {
             [Fact]
             public void ThrowsDescriptiveExceptionWhenSourceIsNull() {
                 IEnumerable<ParameterInfo> @null = null!;
-                var thrown = Assert.Throws<System.ArgumentNullException>(() => @null.WithPosition(position));
+                var thrown = Assert.Throws<ArgumentNullException>(() => @null.WithPosition(position));
                 Assert.Equal("source", thrown.ParamName);
             }
         }
@@ -43,8 +44,9 @@ namespace Inspector.Implementation
 
             [Fact]
             public void GetEnumeratorReturnsParametersWithGivenPosition() {
+                int otherPosition = unchecked(position + 1);
                 var expected = new ParameterInfo[] { ParameterInfo(position), ParameterInfo(position) };
-                IEnumerable<ParameterInfo> mixed = new ParameterInfo[] { ParameterInfo(0), expected[0], ParameterInfo(0), expected[1], ParameterInfo(0) };
+                IEnumerable<ParameterInfo> mixed = new ParameterInfo[] { ParameterInfo(otherPosition), expected[0], ParameterInfo(otherPosition), expected[1], ParameterInfo(otherPosition) };
                 ConfiguredCall arrange = parameters.GetEnumerator().Returns(mixed.GetEnumerator());
 
                 Assert.Equal(expected, sut);
