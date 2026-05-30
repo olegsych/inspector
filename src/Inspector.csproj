@@ -9,6 +9,6 @@
     <DefineConstants>DEBUG</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" />
+    <PackageReference Include="Nerdbank.GitVersioning" PrivateAssets="all" />
   </ItemGroup>
 </Project>
