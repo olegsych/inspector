@@ -68,6 +68,8 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v6
+        with:
+          submodules: recursive
       - uses: actions/download-artifact@v6
         with:
           name: build-windows-latest
