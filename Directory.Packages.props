@@ -7,6 +7,8 @@
 
   <!-- Sort packages by name to reduce merge conflicts -->
   <ItemGroup>
+    <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.0.6" /> <!-- Last version for M.T.P 1.* -->
+    <PackageVersion Include="Microsoft.Testing.Platform" Version="1.9.1" /> <!-- M.T.E.C->1.8.4; x.v.c.m->1.9.1 -->
     <PackageVersion Include="Nerdbank.GitVersioning" Version="3.*" />
     <PackageVersion Include="NSubstitute" Version="4.*" />
     <PackageVersion Include="xunit.v3.assert" Version="3.*" />
