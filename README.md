@@ -1,4 +1,5 @@
 [![Build](https://github.com/olegsych/inspector/actions/workflows/build.yml/badge.svg)](https://github.com/olegsych/inspector/actions/workflows/build.yml)
+[![codecov](https://codecov.io/github/olegsych/inspector/graph/badge.svg)](https://codecov.io/github/olegsych/inspector)
 [![Nuget](https://img.shields.io/nuget/v/inspector.svg)](https://www.nuget.org/packages/inspector)
 
 Inspector is a simple .NET Reflection API for white-box unit testing.

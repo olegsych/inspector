@@ -25,8 +25,35 @@ jobs:
           submodules: recursive
           fetch-depth: 0
       - run: dotnet build -bl:"${{ env.Logs }}/build.binLog"
-      - run: dotnet test --no-build tst/Tests.csproj -bl:"${{ env.Logs }}/test.binLog" -p TestResultsPath=${{ env.Tests }}
+      - run: dotnet test --no-build tst/Tests.csproj -bl:"${{ env.Logs }}/test.binLog"
       - run: dotnet pack src/Inspector.csproj -bl:"${{ env.Logs }}/pack.binLog"
+      - name: Locate Codecov input files (workaround for files glob not working on Windows)
+        if: always()
+        id: test
+        shell: pwsh
+        run: |
+          $coverage = (Get-ChildItem '${{ env.Tests }}/*.cobertura.xml' | ForEach-Object FullName) -join ','
+          $results = (Get-ChildItem '${{ env.Tests }}/*.junit.xml' | ForEach-Object FullName) -join ','
+          "coverage=$coverage" >> $env:GITHUB_OUTPUT
+          "results=$results" >> $env:GITHUB_OUTPUT
+      - name: Upload coverage to Codecov
+        if: always() && steps.test.outputs.coverage != ''
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ${{ steps.test.outputs.coverage }}
+          disable_search: true
+          flags: ${{ matrix.os }}
+          fail_ci_if_error: false
+      - name: Upload test results to Codecov
+        if: always() && steps.test.outputs.results != ''
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ${{ steps.test.outputs.results }}
+          disable_search: true
+          flags: ${{ matrix.os }}
+          report_type: test_results
       - uses: actions/upload-artifact@v6
         if: always()
         with:
