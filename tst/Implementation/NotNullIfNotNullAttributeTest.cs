@@ -27,9 +27,11 @@ public abstract class NotNullIfNotNullAttributeTest
             typeof(NotNullIfNotNull).GetCustomAttribute<AttributeUsageAttribute>()!;
 
         [Fact]
-        public void MatchesPolyfilledAttribute() {
+        public void AllowsAttributeOnParameterPropertyAndReturnValue() =>
             Assert.Equal(AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.ReturnValue, usage.ValidOn);
+
+        [Fact]
+        public void AllowsMultipleAttributes() =>
             Assert.True(usage.AllowMultiple);
-        }
     }
 }
