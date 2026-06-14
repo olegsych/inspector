@@ -1,40 +1,34 @@
 extern alias inspector;
 using System.Reflection;
 using Xunit;
-using NotNullIfNotNull = inspector::System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute;
+using PolyfillAttribute = inspector::System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute;
 
+#pragma warning disable IDE0130 // Namespace must match the polyfilled type
 namespace System.Diagnostics.CodeAnalysis;
+#pragma warning restore IDE0130
 
 public abstract class NotNullIfNotNullAttributeTest
 {
-    readonly NotNullIfNotNull sut;
+    readonly PolyfillAttribute sut;
     readonly string parameterName = Guid.NewGuid().ToString();
 
-    NotNullIfNotNullAttributeTest() =>
-        sut = new NotNullIfNotNull(parameterName);
+    NotNullIfNotNullAttributeTest() => sut = new PolyfillAttribute(parameterName);
 
     public sealed class Constructor: NotNullIfNotNullAttributeTest
     {
         [Fact]
-        public void InitializesParameterName() =>
-            Assert.Same(parameterName, sut.ParameterName);
+        public void InitializesParameterName() => Assert.Same(parameterName, sut.ParameterName);
     }
 
     public sealed class AttributeUsage: NotNullIfNotNullAttributeTest
     {
-        readonly AttributeUsageAttribute usage =
-            typeof(NotNullIfNotNull).GetCustomAttribute<AttributeUsageAttribute>()!;
-
         [Fact]
-        public void AllowsAttributeOnParameterPropertyAndReturnValue() =>
+        public void MatchesBcl()
+        {
+            AttributeUsageAttribute usage = typeof(PolyfillAttribute).GetCustomAttribute<AttributeUsageAttribute>()!;
             Assert.Equal(AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.ReturnValue, usage.ValidOn);
-
-        [Fact]
-        public void AllowsMultipleAttributes() =>
             Assert.True(usage.AllowMultiple);
-
-        [Fact(Explicit = true)] // TODO: SUT bug. NotNullIfNotNullAttribute should not be inherited.
-        public void PreventsAttributeInheritance() =>
-            Assert.False(usage.Inherited, "BCL declares [AttributeUsage(..., Inherited = false)]; polyfill omits it.");
+            Assert.False(usage.Inherited);
+        }
     }
 }
