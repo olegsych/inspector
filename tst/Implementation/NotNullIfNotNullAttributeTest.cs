@@ -21,7 +21,7 @@ public abstract class NotNullIfNotNullAttributeTest
             Assert.Same(parameterName, sut.ParameterName);
     }
 
-    public sealed class Usage: NotNullIfNotNullAttributeTest
+    public sealed class AttributeUsage: NotNullIfNotNullAttributeTest
     {
         readonly AttributeUsageAttribute usage =
             typeof(NotNullIfNotNull).GetCustomAttribute<AttributeUsageAttribute>()!;
