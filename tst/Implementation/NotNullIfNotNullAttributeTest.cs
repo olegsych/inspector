@@ -33,5 +33,9 @@ public abstract class NotNullIfNotNullAttributeTest
         [Fact]
         public void AllowsMultipleAttributes() =>
             Assert.True(usage.AllowMultiple);
+
+        [Fact(Explicit = true)] // TODO: SUT bug. NotNullIfNotNullAttribute should not be inherited.
+        public void PreventsAttributeInheritance() =>
+            Assert.False(usage.Inherited);
     }
 }
