@@ -1,5 +1,4 @@
 extern alias inspector;
-using System;
 using System.Reflection;
 using Xunit;
 using NotNullIfNotNull = inspector::System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute;
