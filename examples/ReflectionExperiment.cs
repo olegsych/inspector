@@ -2,7 +2,6 @@ using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Xunit;
-using Xunit.Sdk;
 #if NETFRAMEWORK
 using RuntimeHelpers = System.Runtime.Serialization.FormatterServices;
 #endif
