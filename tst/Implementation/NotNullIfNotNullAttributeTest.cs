@@ -35,6 +35,6 @@ public abstract class NotNullIfNotNullAttributeTest
 
         [Fact(Explicit = true)] // TODO: SUT bug. NotNullIfNotNullAttribute should not be inherited.
         public void PreventsAttributeInheritance() =>
-            Assert.False(usage.Inherited);
+            Assert.False(usage.Inherited, "BCL declares [AttributeUsage(..., Inherited = false)]; polyfill omits it.");
     }
 }
