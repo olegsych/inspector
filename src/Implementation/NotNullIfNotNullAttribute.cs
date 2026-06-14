@@ -1,4 +1,4 @@
-// Polyfill type not available on netstandard2.0
+// Polyfill a netstandard2.1 type to netstandard2.0 to prevent nullable warnings in net4xx callers.
 // https://learn.microsoft.com/dotnet/api/system.diagnostics.codeanalysis.notnullifnotnullattribute
 
 #pragma warning disable IDE0130 // Namespace must match the polyfilled type
