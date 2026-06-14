@@ -9,8 +9,6 @@ namespace System.Diagnostics.CodeAnalysis;
 public abstract class NotNullIfNotNullAttributeTest
 {
     readonly NotNullIfNotNull sut;
-
-    // Constructor parameters
     readonly string parameterName = Guid.NewGuid().ToString();
 
     NotNullIfNotNullAttributeTest() =>
