@@ -24,9 +24,8 @@ jobs:
         with:
           submodules: recursive
           fetch-depth: 0
-      - run: dotnet build -c Release -bl:"${{ env.Logs }}/build.binLog"
-      - run: dotnet test tst/Tests.csproj -c Debug -bl:"${{ env.Logs }}/test.binLog"
-      - run: dotnet pack src/Inspector.csproj -c Release -bl:"${{ env.Logs }}/pack.binLog"
+      - run: dotnet test -bl:"${{ env.Logs }}/test.binLog"
+      - run: dotnet pack -bl:"${{ env.Logs }}/pack.binLog"
       - name: Locate Codecov input files (workaround for files glob not working on Windows)
         if: always()
         id: test
