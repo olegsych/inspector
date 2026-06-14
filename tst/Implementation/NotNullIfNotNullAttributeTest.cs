@@ -1,11 +1,11 @@
 extern alias inspector;
+
+using System;
 using System.Reflection;
 using Xunit;
 using PolyfillAttribute = inspector::System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute;
 
-#pragma warning disable IDE0130 // Namespace must match the polyfilled type
-namespace System.Diagnostics.CodeAnalysis;
-#pragma warning restore IDE0130
+namespace Inspector.Implementation;
 
 public abstract class NotNullIfNotNullAttributeTest
 {
