@@ -1,5 +1,6 @@
 # Clone
-This repository contains submodules and symlinks.
+
+- _Include submodules and symlinks_.
 ```PowerShell
 git clone --recurse-submodules -c core.symlinks=true https://github.com/olegsych/inspector.git
 ```
@@ -13,37 +14,32 @@ The build depends on symlinked files from the `modules/csharp.common` submodule.
 
 # Build
 
+_Build the `Release` configuration for full build-time validation_.
 ```PowerShell
-dotnet build
+dotnet build -c Release
 ```
-
-In `Release` configuration, `TreatWarningsAsErrors` is enabled.
 
 # Test
 
-Run tests on all frameworks to verify your work.
-```PowerShell
-dotnet test --no-build ./tst/Tests.csproj
-```
+- _Run tests in the default `Debug` configuration on all frameworks and platforms_.
+  Many tests require `#if DEBUG` hooks and fail with `-c Release`. 
+  ```PowerShell
+  dotnet test
+  wsl -e dotnet test
+  ```
 
-Run tests on WSL to catch Linux-only errors before CI.
-```PowerShell
-wsl -e dotnet test --no-build --project ./tst/Tests.csproj
-```
-
-Run tests for a specific framework to speed up iteration during development.
-```PowerShell
-dotnet test --no-build ./tst/Tests.csproj --framework net9.0
-```
-
-`examples/Examples.csproj` has pre-existing test failures unrelated to the library and are not tested in CI.
+- _Troubleshoot specific projects, target frameworks, tests, including explicit_
+  ```PowerShell
+  dotnet run --project ./examples/Examples.csproj -f net10.0 -- -reporter verbose -namespace * -class * -method * -explicit on
+  ```
 
 # Pack
+
 ```PowerShell
-dotnet pack .\src\Inspector.csproj
+dotnet pack
 ```
 
-Creates NuGet packages in the `out/packages/` directory.
+This builds the `Release` configuration by default and creates NuGet packages in the `out/packages/` directory.
 
 # Pull requests
 Pull requests are automatically validated by the [build](https://github.com/olegsych/inspector/actions/workflows/build.yml) workflow. NuGet and symbol packages are uploaded to build artifacts.
