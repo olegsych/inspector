@@ -2,19 +2,19 @@ extern alias inspector;
 using System;
 using System.Reflection;
 using Xunit;
-using NotNullIfNotNullAttribute = inspector::System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute;
+using NotNullIfNotNull = inspector::System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute;
 
-namespace Inspector.Implementation;
+namespace System.Diagnostics.CodeAnalysis;
 
 public abstract class NotNullIfNotNullAttributeTest
 {
-    readonly NotNullIfNotNullAttribute sut;
+    readonly NotNullIfNotNull sut;
 
     // Constructor parameters
     readonly string parameterName = Guid.NewGuid().ToString();
 
     NotNullIfNotNullAttributeTest() =>
-        sut = new NotNullIfNotNullAttribute(parameterName);
+        sut = new NotNullIfNotNull(parameterName);
 
     public sealed class ParameterName: NotNullIfNotNullAttributeTest
     {
@@ -26,7 +26,7 @@ public abstract class NotNullIfNotNullAttributeTest
     public sealed class Usage: NotNullIfNotNullAttributeTest
     {
         readonly AttributeUsageAttribute usage =
-            typeof(NotNullIfNotNullAttribute).GetCustomAttribute<AttributeUsageAttribute>()!;
+            typeof(NotNullIfNotNull).GetCustomAttribute<AttributeUsageAttribute>()!;
 
         [Fact]
         public void MatchesPolyfilledAttribute() {
