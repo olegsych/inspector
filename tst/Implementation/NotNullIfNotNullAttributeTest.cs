@@ -16,10 +16,10 @@ public abstract class NotNullIfNotNullAttributeTest
     NotNullIfNotNullAttributeTest() =>
         sut = new NotNullIfNotNull(parameterName);
 
-    public sealed class ParameterName: NotNullIfNotNullAttributeTest
+    public sealed class Constructor: NotNullIfNotNullAttributeTest
     {
         [Fact]
-        public void IsSetToGivenValue() =>
+        public void InitializesParameterName() =>
             Assert.Same(parameterName, sut.ParameterName);
     }
 
