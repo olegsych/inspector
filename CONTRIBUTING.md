@@ -12,21 +12,28 @@ git submodule update --init --recursive
 The build depends on symlinked files from the `modules/csharp.common` submodule. Without it, `Directory.Build.props`, `Directory.Build.targets`, `.editorconfig`, and `StrongName.snk` are broken symlinks and the build will fail.
 
 # Build
+
 ```PowerShell
-dotnet build .\Inspector.slnx
+dotnet build
 ```
 
-The `examples/` project may emit pre-existing nullable reference warnings during local builds; these are not CI-gated. In Release configuration, `TreatWarningsAsErrors` is enabled.
+In `Release` configuration, `TreatWarningsAsErrors` is enabled.
 
 # Test
+
 Run tests on all frameworks to verify your work.
 ```PowerShell
-dotnet test --no-build .\tst\Tests.csproj
+dotnet test --no-build ./tst/Tests.csproj
+```
+
+Run tests on WSL to catch Linux-only errors before CI.
+```PowerShell
+wsl -e dotnet test --no-build --project ./tst/Tests.csproj
 ```
 
 Run tests for a specific framework to speed up iteration during development.
 ```PowerShell
-dotnet test --no-build .\tst\Tests.csproj --framework net9.0
+dotnet test --no-build ./tst/Tests.csproj --framework net9.0
 ```
 
 `examples/Examples.csproj` has pre-existing test failures unrelated to the library and are not tested in CI.
