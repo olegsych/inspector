@@ -30,9 +30,7 @@ namespace Inspector
         /// <summary>
         /// Implicitly converts the constructor to its <typeparamref name="TSignature"/> delegate.
         /// </summary>
-        #if NETSTANDARD2_1
-        [return:NotNullIfNotNull("constructor")]
-        #endif
+        [return: NotNullIfNotNull(nameof(constructor))]
         public static implicit operator TSignature?(Constructor<TSignature>? constructor) =>
             constructor?.Invoke;
 

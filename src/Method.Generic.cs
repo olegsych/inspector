@@ -31,9 +31,7 @@ namespace Inspector
         /// <summary>
         /// Implicitly converts the method to its <typeparamref name="TSignature"/> delegate.
         /// </summary>
-        #if NETSTANDARD2_1
-        [return: NotNullIfNotNull("method")]
-        #endif
+        [return: NotNullIfNotNull(nameof(method))]
         public static implicit operator TSignature?(Method<TSignature>? method) =>
             (method != null) ? method.Invoke : default;
 
