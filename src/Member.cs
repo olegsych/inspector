@@ -54,9 +54,7 @@ namespace Inspector
         /// <summary>
         /// Implicitly converts a given member to its <see cref="MemberInfo"/> for convenient access to Reflection APIs.
         /// </summary>
-        #if NETSTANDARD2_1
-        [return: NotNullIfNotNull("member")]
-        #endif
+        [return: NotNullIfNotNull(nameof(member))]
         public static implicit operator TMemberInfo?(Member<TMemberInfo>? member) =>
             member?.Info;
     }

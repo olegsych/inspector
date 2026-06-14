@@ -24,9 +24,10 @@ jobs:
         with:
           submodules: recursive
           fetch-depth: 0
-      - run: dotnet build -bl:"${{ env.Logs }}/build.binLog"
-      - run: dotnet test --no-build tst/Tests.csproj -bl:"${{ env.Logs }}/test.binLog"
-      - run: dotnet pack src/Inspector.csproj -bl:"${{ env.Logs }}/pack.binLog"
+      - run: dotnet restore
+      - run: dotnet test -c Debug --no-restore -bl:"${{ env.Logs }}/test.binLog"
+      - run: dotnet build -c Release --no-restore -bl:"${{ env.Logs }}/build.binLog"
+      - run: dotnet pack -c Release --no-build -bl:"${{ env.Logs }}/pack.binLog"
       - name: Locate Codecov input files (workaround for files glob not working on Windows)
         if: always()
         id: test
@@ -68,6 +69,8 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v6
+        with:
+          submodules: recursive
       - uses: actions/download-artifact@v6
         with:
           name: build-windows-latest

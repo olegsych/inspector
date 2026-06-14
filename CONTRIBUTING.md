@@ -1,5 +1,6 @@
 # Clone
-This repository contains submodules and symlinks.
+
+- _Include submodules and symlinks_.
 ```PowerShell
 git clone --recurse-submodules -c core.symlinks=true https://github.com/olegsych/inspector.git
 ```
@@ -9,34 +10,36 @@ If you already cloned without `--recurse-submodules`, initialize them manually:
 git submodule update --init --recursive
 ```
 
-The build depends on symlinked files from the `modules/csharp.common` submodule. Without it, `Directory.Build.props`, `Directory.Build.targets`, `.editorconfig`, and `StrongName.snk` are broken symlinks and the build will fail.
+The build depends on symlinked files from the `modules/csharp.common` submodule. Without it the build will fail.
 
 # Build
-```PowerShell
-dotnet build .\Inspector.slnx
-```
 
-The `examples/` project may emit pre-existing nullable reference warnings during local builds; these are not CI-gated. In Release configuration, `TreatWarningsAsErrors` is enabled.
+_Build the `Release` configuration for full build-time validation_.
+```PowerShell
+dotnet build -c Release
+```
 
 # Test
-Run tests on all frameworks to verify your work.
-```PowerShell
-dotnet test --no-build .\tst\Tests.csproj
-```
 
-Run tests for a specific framework to speed up iteration during development.
-```PowerShell
-dotnet test --no-build .\tst\Tests.csproj --framework net9.0
-```
+- _Run tests in the default `Debug` configuration on all frameworks and platforms_.
+  Many tests require `#if DEBUG` hooks and fail with `-c Release`.
+  ```PowerShell
+  dotnet test
+  wsl -e dotnet test
+  ```
 
-`examples/Examples.csproj` has pre-existing test failures unrelated to the library and are not tested in CI.
+- _Troubleshoot specific projects, target frameworks, tests, including explicit tests_
+  ```PowerShell
+  dotnet run --project ./examples/Examples.csproj -f net10.0 -- -reporter verbose -namespace * -class * -method * -explicit on
+  ```
 
 # Pack
+
 ```PowerShell
-dotnet pack .\src\Inspector.csproj
+dotnet pack
 ```
 
-Creates NuGet packages in the `out/packages/` directory.
+This builds the `Release` configuration by default and creates NuGet packages in the `out/packages/` directory.
 
 # Pull requests
 Pull requests are automatically validated by the [build](https://github.com/olegsych/inspector/actions/workflows/build.yml) workflow. NuGet and symbol packages are uploaded to build artifacts.

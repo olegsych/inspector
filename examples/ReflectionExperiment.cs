@@ -45,7 +45,7 @@ namespace Inspector
                 Assert.Equal(42, foo.bar);
             }
 
-            [Fact]
+            [Fact(Explicit = true)] // TODO: .NET Framework reinitializes the type, resetting staticBar to 0
             public void StaticConstructorDoesNotReinitializesType() {
                 ConstructorInfo constructor = typeof(Foo).TypeInitializer!;
                 Assert.True(constructor.IsStatic);
@@ -100,7 +100,7 @@ namespace Inspector
 
         public class Signature : ReflectionExperiment
         {
-            [Fact(Skip = "Broken")]
+            [Fact(Explicit = true)]
             public void CompareSig() {
                 Type signatureType = Type.GetType("System.Signature")!;
                 Assert.NotNull(signatureType);
@@ -139,7 +139,7 @@ namespace Inspector
         // Uses the internal Delegate.BindToMethodInfo method, which ensures that delegate and constructor have matching signatures.
         public class BindDelegateToConstructor : ReflectionExperiment
         {
-            [Fact]
+            [Fact(Explicit = true)] // TODO: Delegate.InternalAlloc is ambiguous on the current runtime
             public void BindOpenDelegate() {
                 MethodInfo internalAlloc = typeof(Delegate).GetMethod("InternalAlloc", BindingFlags.Static | BindingFlags.NonPublic)!;
                 Assert.NotNull(internalAlloc);
@@ -162,7 +162,7 @@ namespace Inspector
                 Assert.Equal(42, foo.bar);
             }
 
-            [Fact]
+            [Fact(Explicit = true)] // TODO: Delegate.InternalAlloc is ambiguous on the current runtime
             public void BindClosedDelegate() {
                 MethodInfo internalAlloc = typeof(Delegate).GetMethod("InternalAlloc", BindingFlags.Static | BindingFlags.NonPublic)!;
                 Assert.NotNull(internalAlloc);
